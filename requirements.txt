@@ -1,0 +1,28 @@
+# Flask Core
+Flask==3.0.0
+Flask-SQLAlchemy==3.1.1
+Flask-Login==0.6.3
+Flask-WTF==1.2.1
+Flask-Caching==2.1.0
+
+# Database
+pyodbc==5.0.1
+alembic==1.13.1
+
+# Security
+bcrypt==4.1.2
+Werkzeug==3.0.1
+
+# File Processing
+PyPDF2==3.0.1
+python-magic-bin==0.4.14
+
+# Email
+Flask-Mail==0.9.1
+
+# Forms and Validation
+WTForms==3.1.1
+email-validator==2.1.0
+
+# Utilities
+python-dotenv==1.0.0

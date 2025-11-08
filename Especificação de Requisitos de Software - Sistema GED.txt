@@ -1,0 +1,732 @@
+Especificação de Requisitos de Software (SRS)
+Sistema de Gestão Eletrônica de Documentos (GED)
+Versão: 1.0
+Data: 07 de Novembro de 2025
+Status: Em Desenvolvimento
+
+
+1. INTRODUÇÃO
+1.1 Propósito
+Este documento especifica os requisitos funcionais e não funcionais para o desenvolvimento de um Sistema de Gestão Eletrônica de Documentos (GED) baseado em web. O sistema será desenvolvido
+utilizando Flask como framework backend, SQL Server como banco de dados e Bootstrap para interface
+frontend.
+
+1.2 Escopo do Produto
+O Sistema GED é uma aplicação web corporativa que permite:
+
+& Digitalização e armazenamento centralizado de documentos
+
+& Organização hierárquica através de categorias e tags
+& Controle de acesso baseado em perfis de usuário
+& Pesquisa avançada por metadados e conteúdo
+
+& Versionamento e histórico de alterações
+& Workflow de aprovação de documentos
+
+& Auditoria completa de operações
+
+Objetivos principais:
+
+& Eliminar dependência de arquivos físicos
+& Aumentar produtividade na localização de documentos
+& Garantir segurança e conformidade regulatória
+
+& Facilitar colaboração entre equipes
+
+1.3 Definições, Acrônimos e Abreviações
+& GED: Gestão Eletrônica de Documentos
+
+& CRUD: Create, Read, Update, Delete
+& OCR: Optical Character Recognition
+
+& PDF: Portable Document Format
+& API: Application Programming Interface
+
+& SSL: Secure Sockets Layer
+& LGPD: Lei Geral de Proteção de Dados
+& RBAC: Role-Based Access Control
+
+1.4 Referências
+& IEEE Std 830-1998: IEEE Recommended Practice for Software Requirements Specifications
+& IEEE Std 29148-2018: Systems and software engineering — Life cycle processes — Requirements engineering
+& LGPD - Lei nº 13.709/2018
+& Flask Documentation v3.0
+
+& Microsoft SQL Server 2019 Documentation
+& Bootstrap 5.3 Documentation
+
+1.5 Visão Geral do Documento
+Este documento está organizado em três seções principais:
+
+& Seção 1: Introdução e contexto do projeto
+
+& Seção 2: Descrição geral do sistema e suas características
+& Seção 3: Requisitos específicos detalhados (funcionais e não funcionais)
+
+
+2. DESCRIÇÃO GERAL
+2.1 Perspectiva do Produto
+O Sistema GED é um produto independente que será integrado à infraestrutura corporativa existente. Ele substituirá processos manuais de arquivamento e consulta de documentos físicos.
+Interfaces do Sistema:
+
+& Interface de Usuário: Aplicação web responsiva acessível via navegadores modernos
+& Interface de Banco de Dados: SQL Server 2019 ou superior
+& Interface de Armazenamento: Sistema de arquivos local ou cloud storage
+
+& Interface de E-mail: SMTP para notificações
+& Interface de Autenticação: Suporte a LDAP/Active Directory (opcional)
+
+2.2 Funções do Produto
+1. Gerenciamento de Documentos: Upload, download, visualização, edição de metadados
+2. Organização: Estrutura de pastas, categorias e tags
+
+3. Controle de Acesso: Autenticação, autorização por perfis e permissões granulares
+4. Pesquisa: Busca por metadados, texto completo e filtros avançados
+5. Versionamento: Controle de versões com histórico de alterações
+
+6. Workflow: Processos de aprovação e tramitação de documentos
+7. Auditoria: Log completo de todas as operações
+
+8. Relatórios: Dashboards e relatórios de uso do sistema
+
+2.3 Características dos Usuários
+
+PerfilDescriçãoNível TécnicoResponsabilidadesAdministradorGerencia sistema e usuáriosAltoConfiguração, backup, manutençãoGestorSupervisiona documentos do setorMédioAprovação, organização, relatóriosUsuário PadrãoUtiliza sistema diariamenteBásicoUpload, consulta, ediçãoAuditorMonitora conformidadeMédioAnálise de logs, relatóriosVisitanteAcesso limitado para consultaBásicoVisualização de documentos públicosCC
+2.4 Restrições
+1. Tecnológicas:
+& Framework: Flask (Python 3.9+)
+
+& Banco de Dados: SQL Server 2019+
+& Frontend: Bootstrap 5.3+
+& Navegadores: Chrome 90+, Firefox 88+, Edge 90+, Safari 14+
+
+2. Regulatórias:
+& Conformidade com LGPD
+
+& Retenção de documentos conforme legislação vigente
+& Criptografia de dados sensíveis
+
+3. Operacionais:
+& Disponibilidade mínima: 99%
+
+& Backup diário automático
+& Tempo de resposta < 3 segundos para operações comuns
+
+2.5 Suposições e Dependências
+Suposições:
+
+& Infraestrutura de rede estável e confiável
+
+& Usuários possuem dispositivos compatíveis
+& Documentos serão predominantemente em formato PDF
+
+Dependências:
+
+& Servidor SQL Server configurado e disponível
+& Sistema de arquivos com capacidade adequada
+
+& Servidor SMTP para envio de e-mails
+& Certificado SSL válido para HTTPS
+
+
+3. REQUISITOS ESPECÍFICOS
+3.1 Requisitos Funcionais
+3.1.1 Autenticação e Autorização RF001 - Login de Usuário
+& Descrição: O sistema deve permitir que usuários façam login com credenciais
+& Entrada: E-mail/username e senha
+
+& Processamento: Validação no banco de dados, criação de sessão
+& Saída: Redirecionamento para dashboard ou mensagem de erro
+
+& Prioridade: Alta
+
+RF002 - Recuperação de Senha
+
+& Descrição: Usuários devem poder redefinir senha via e-mail
+
+& Entrada: E-mail cadastrado
+& Processamento: Geração de token temporário, envio por e-mail
+
+& Saída: Link de redefinição de senha
+& Prioridade: Alta
+
+RF003 - Controle de Perfis
+
+& Descrição: Sistema deve suportar múltiplos perfis de acesso
+& Perfis: Administrador, Gestor, Usuário, Auditor, Visitante
+
+& Prioridade: Alta
+
+RF004 - Gerenciamento de Permissões
+
+& Descrição: Administradores podem definir permissões por documento/pasta
+
+& Permissões: Visualizar, Editar, Excluir, Aprovar, Compartilhar
+& Prioridade: Alta
+
+3.1.2 Gerenciamento de Documentos RF005 - Upload de Documentos
+& Descrição: Usuários podem fazer upload de arquivos
+& Formatos suportados: PDF, DOC, DOCX, XLS, XLSX, JPG, PNG, TIF
+
+& Tamanho máximo: 50MB por arquivo
+& Upload múltiplo: Até 10 arquivos simultaneamente
+
+& Prioridade: Alta
+
+RF006 - Download de Documentos
+
+& Descrição: Usuários autorizados podem baixar documentos
+
+& Opções: Download individual ou em lote (ZIP)
+& Prioridade: Alta
+
+RF007 - Visualização de Documentos
+
+& Descrição: Sistema deve exibir preview de documentos no navegador
+& Formatos: PDF (nativo), imagens (nativo), Office (conversão para PDF)
+
+& Prioridade: Alta
+
+RF008 - Edição de Metadados
+
+& Descrição: Usuários podem editar informações do documento
+& Metadados: Título, descrição, categoria, tags, data, autor
+
+& Prioridade: Alta
+
+RF009 - Exclusão de Documentos
+
+& Descrição: Exclusão lógica com possibilidade de recuperação (30 dias)
+
+& Permissão: Apenas proprietário ou administrador
+& Prioridade: Média
+
+RF010 - Versionamento
+
+& Descrição: Sistema mantém histórico de versões de documentos
+& Funcionalidades: Upload de nova versão, comparação, restauração
+
+& Limite: Últimas 10 versões por documento
+& Prioridade: Média
+
+3.1.3 Organização e Classificação RF011 - Estrutura de Pastas
+& Descrição: Sistema permite criar hierarquia de pastas
+& Níveis: Até 5 níveis de profundidade
+
+& Operações: Criar, renomear, mover, excluir
+& Prioridade: Alta
+
+RF012 - Categorização
+
+& Descrição: Documentos podem ser classificados em categorias predefinidas
+& Categorias sugeridas: Contratos, Notas Fiscais, RH, Jurídico, Técnico
+
+& Hierarquia: Categorias podem ter subcategorias
+& Prioridade: Alta
+
+RF013 - Sistema de Tags
+
+& Descrição: Usuários podem adicionar tags (palavras-chave) aos documentos
+& Características: Múltiplas tags por documento, autocompletar
+
+& Prioridade: Média
+
+RF014 - Favoritos
+
+& Descrição: Usuários podem marcar documentos como favoritos
+& Acesso: Lista rápida na interface principal
+& Prioridade: Baixa
+
+3.1.4 Pesquisa e Filtros
+
+RF015 - Pesquisa Simples
+
+& Descrição: Busca por nome do arquivo e metadados
+
+& Campos pesquisados: Título, descrição, tags, categoria
+& Prioridade: Alta
+
+RF016 - Pesquisa Avançada
+
+& Descrição: Busca com múltiplos filtros combinados
+& Filtros: Data, autor, tipo, tamanho, status, categoria
+
+& Operadores: E, OU, NÃO
+& Prioridade: Alta
+
+RF017 - Pesquisa Full-Text
+
+& Descrição: Busca por conteúdo dentro de documentos PDF
+& Tecnologia: Indexação de texto com SQL Server Full-Text Search
+
+& Prioridade: Média
+
+RF018 - Filtros Rápidos
+
+& Descrição: Filtros predefinidos para acesso rápido
+& Exemplos: Meus documentos, Recentes, Pendentes de aprovação
+& Prioridade: Média
+
+3.1.5 Workflow e Aprovações RF019 - Criação de Workflows
+& Descrição: Administradores podem criar processos de aprovação
+
+& Etapas: Envio ? Revisão ? Aprovação ? Publicação
+& Configuração: Definir aprovadores por etapa
+& Prioridade: Média
+
+RF020 - Solicitação de Aprovação
+
+& Descrição: Usuários podem submeter documentos para aprovação
+
+& Notificação: E-mail automático para aprovadores
+& Prioridade: Média
+
+RF021 - Aprovar/Rejeitar Documentos
+
+& Descrição: Aprovadores podem aceitar ou rejeitar documentos
+& Obrigatoriedade: Comentário obrigatório em caso de rejeição
+
+& Prioridade: Média
+
+RF022 - Histórico de Aprovações
+
+& Descrição: Sistema registra todas as etapas do workflow
+
+& Informações: Data, hora, aprovador, decisão, comentários
+& Prioridade: Média
+
+3.1.6 Compartilhamento e Colaboração RF023 - Compartilhamento Interno
+& Descrição: Usuários podem compartilhar documentos com outros usuários
+
+& Opções: Definir permissões (visualizar/editar), prazo de acesso
+& Prioridade: Média
+
+RF024 - Link de Compartilhamento Externo
+
+& Descrição: Geração de link público com senha e data de expiração
+& Segurança: Token único, acesso rastreado
+
+& Prioridade: Baixa
+
+RF025 - Comentários
+
+& Descrição: Usuários podem adicionar comentários em documentos
+
+& Funcionalidades: Responder comentários, mencionar usuários
+& Prioridade: Baixa
+
+3.1.7 Auditoria e Relatórios RF026 - Log de Auditoria
+& Descrição: Sistema registra todas as operações realizadas
+& Eventos rastreados: Login, upload, download, edição, exclusão, acesso
+
+& Informações: Usuário, data/hora, IP, ação, documento
+& Prioridade: Alta
+
+RF027 - Relatório de Uso
+
+& Descrição: Dashboard com estatísticas do sistema
+& Métricas: Total de documentos, espaço usado, uploads por período
+
+& Visualização: Gráficos e tabelas
+& Prioridade: Média
+
+RF028 - Relatório de Acessos
+
+& Descrição: Listagem de acessos por documento ou usuário
+& Filtros: Data, usuário, documento, tipo de operação
+
+& Exportação: PDF, Excel
+& Prioridade: Média
+
+RF029 - Relatório de Documentos Expirados
+
+& Descrição: Lista documentos que ultrapassaram prazo de validade
+& Configuração: Prazo definido por categoria
+
+& Prioridade: Baixa
+
+3.1.8 Administração do Sistema RF030 - Gerenciamento de Usuários
+& Descrição: Administradores podem criar, editar e desativar usuários
+& Operações: CRUD completo, alteração de perfil, reset de senha
+
+& Prioridade: Alta
+
+RF031 - Configurações do Sistema
+
+& Descrição: Painel de configurações gerais
+
+& Parâmetros: Logo, nome do sistema, tamanho máximo de arquivo, formatos permitidos
+& Prioridade: Média
+
+RF032 - Backup e Restauração
+
+& Descrição: Interface para gerenciar backups
+& Funcionalidades: Backup manual, agendamento, restauração
+
+& Prioridade: Alta
+
+RF033 - Gestão de Armazenamento
+
+& Descrição: Monitoramento de espaço em disco
+
+& Alertas: Notificação quando atingir 80% da capacidade
+& Prioridade: Média
+
+3.2 Requisitos de Interface Externa
+3.2.1 Interface de Usuário RIU001 - Design Responsivo
+& A interface deve se adaptar a diferentes tamanhos de tela (desktop, tablet, mobile)
+
+& Utilização de Bootstrap Grid System
+
+RIU002 - Navegação Intuitiva
+
+& Menu lateral retrátil com ícones e labels
+
+& Breadcrumb para navegação hierárquica
+& Barra de pesquisa sempre visível
+
+RIU003 - Acessibilidade
+
+& Conformidade com WCAG 2.1 nível AA
+& Suporte a leitores de tela
+
+& Navegação por teclado
+
+RIU004 - Feedback Visual
+
+& Mensagens de sucesso/erro utilizando toasts ou alerts
+& Loading indicators para operações demoradas
+
+& Confirmação para ações destrutivas (exclusão)
+
+3.2.2 Interface de Hardware
+
+& Não há requisitos específicos de hardware além de dispositivos compatíveis com navegadores web modernos
+3.2.3 Interface de Software RIS001 - Banco de Dados
+& Conexão via SQL Server Native Client ou PyODBC
+
+& Connection pooling para otimização
+& Suporte a transações ACID
+
+RIS002 - Sistema de Arquivos
+
+& Leitura/escrita de arquivos no servidor
+& Suporte a diferentes backends (local, S3, Azure Blob)
+
+RIS003 - Servidor de E-mail
+
+& Conexão SMTP para envio de notificações
+& Suporte a TLS/SSL
+
+3.2.4 Interface de Comunicação RIC001 - Protocolo HTTP/HTTPS
+& Comunicação via protocolo HTTPS obrigatório em produção
+
+& APIs RESTful para operações CRUD
+
+RIC002 - WebSockets (Futuro)
+
+& Notificações em tempo real (planejado para v2.0)
+
+3.3 Requisitos de Performance
+RP001 - Tempo de Resposta
+
+& Páginas devem carregar em até 2 segundos
+
+& Operações de busca em até 3 segundos
+& Upload de arquivos: progresso visível, sem timeout antes de 5 minutos
+
+RP002 - Capacidade
+
+& Suportar até 1000 usuários simultâneos
+& Armazenar até 500.000 documentos
+
+& Capacidade de armazenamento: mínimo 2TB
+
+RP003 - Throughput
+
+& Processar até 100 uploads simultâneos
+
+& Realizar até 1000 buscas por minuto
+
+RP004 - Disponibilidade
+
+& Uptime de 99% (tempo de inatividade máximo: 7,2 horas/mês)
+& Manutenções programadas fora do horário comercial
+
+3.4 Requisitos de Segurança
+RS001 - Autenticação
+
+& Senhas devem ter mínimo 8 caracteres (letras, números, símbolos)
+
+& Hash de senhas com algoritmo bcrypt (cost factor 12)
+& Bloqueio de conta após 5 tentativas incorretas (15 minutos)
+
+RS002 - Autorização
+
+& Controle de acesso baseado em perfis (RBAC)
+& Validação de permissões em todas as operações
+
+RS003 - Criptografia
+
+& Dados em trânsito: TLS 1.2 ou superior
+
+& Dados em repouso: criptografia opcional para documentos sensíveis (AES-256)
+
+RS004 - Proteção contra Ataques
+
+& Proteção contra SQL Injection (prepared statements)
+
+& Proteção contra XSS (sanitização de entrada)
+& Proteção contra CSRF (tokens)
+
+& Rate limiting para APIs (100 requisições/minuto por IP)
+
+RS005 - Backup
+
+& Backup automático diário do banco de dados
+& Backup semanal completo de arquivos
+& Retenção de backups por 90 dias
+
+RS006 - Privacidade (LGPD)
+
+& Anonimização de dados em logs após 1 ano
+
+& Funcionalidade de exportação de dados do usuário
+& Exclusão definitiva de dados mediante solicitação
+
+3.5 Requisitos de Qualidade
+RQ001 - Confiabilidade
+
+& Taxa de falha: < 0,1% das transações
+& MTBF (Mean Time Between Failures): > 720 horas
+
+& MTTR (Mean Time To Repair): < 2 horas
+
+RQ002 - Manutenibilidade
+
+& Código deve seguir PEP 8 (Python Style Guide)
+
+& Cobertura de testes: mínimo 70%
+& Documentação inline para funções complexas
+
+RQ003 - Portabilidade
+
+& Sistema deve funcionar em Linux e Windows Server
+& Independência de fornecedor (exceto SQL Server)
+
+RQ004 - Usabilidade
+
+& Curva de aprendizado: usuário básico operacional em 30 minutos
+
+& Taxa de conclusão de tarefas: > 95%
+& Tempo médio para localizar documento: < 1 minuto
+
+3.6 Requisitos de Banco de Dados
+RBD001 - Estrutura
+
+& Normalização até 3FN (Terceira Forma Normal)
+& Índices em campos de busca frequente
+
+& Triggers para auditoria automática
+
+RBD002 - Integridade
+
+& Chaves estrangeiras para garantir integridade referencial
+
+& Constraints para validação de dados
+& Transações para operações críticas
+
+RBD003 - Performance
+
+& Views materializadas para relatórios complexos
+
+& Particionamento de tabelas com alto volume (logs)
+& Stored procedures para operações complexas
+
+RBD004 - Principais Entidades
+
+& Usuarios (id, nome, email, senha_hash, perfil, ativo, data_cadastro)
+
+& Documentos (id, nome, caminho_arquivo, tamanho, tipo_mime, categoria_id, usuario_id, data_upload)
+& Categorias (id, nome, categoria_pai_id, descricao)
+& Tags (id, nome)
+
+& DocumentoTags (documento_id, tag_id)
+& Versoes (id, documento_id, versao, caminho_arquivo, usuario_id, data_criacao)
+& Permissoes (id, documento_id, usuario_id, tipo_permissao)
+
+& LogAuditoria (id, usuario_id, acao, tabela, registro_id, dados_anteriores, dados_novos, ip, data_hora)
+& Workflows (id, nome, etapas_json, ativo)
+
+& AprovacaoDocumentos (id, documento_id, workflow_id, etapa_atual, status, data_solicitacao)
+
+3.7 Outros Requisitos
+RO001 - Requisitos Legais
+
+& Conformidade com LGPD (Lei 13.709/2018)
+
+& Assinatura digital (ICP-Brasil) - opcional para v2.0
+
+RO002 - Requisitos de Implantação
+
+& Instalação via script automatizado
+& Migração de dados de sistemas legados
+
+& Treinamento de usuários (material e sessões)
+
+RO003 - Requisitos de Documentação
+
+& Manual do usuário
+
+& Manual do administrador
+& Documentação técnica (API, arquitetura)
+
+& Guia de instalação
+
+
+4. APÊNDICES
+4.1 Modelo de Dados (Simplificado)
+
+
+??? email (UNIQUE)
+??? senha_hash
+??? perfil_id (FK)
+??? ativo
+??? data_cadastro
+
+Documentos
+??? id (PK)
+??? nome
+??? caminho_arquivo
+??? tamanho_bytes
+??? tipo_mime
+??? categoria_id (FK)
+??? pasta_id (FK)
+??? usuario_id (FK)
+??? versao_atual
+??? data_upload
+??? data_modificacao
+
+Categorias
+??? id (PK)
+??? nome
+??? categoria_pai_id (FK, self-reference)
+??? descricao
+
+Pastas
+??? id (PK)
+??? nome
+??? pasta_pai_id (FK, self-reference)
+??? usuario_proprietario_id (FK)
+
+Tags
+??? id (PK)
+??? nome (UNIQUE)
+
+DocumentoTags
+??? documento_id (FK)
+??? tag_id (FK)
+
+Versoes
+??? id (PK)
+??? documento_id (FK)
+??? numero_versao
+??? caminho_arquivo
+??? usuario_id (FK)
+??? comentario
+??? data_criacao
+
+
+Permissoes
+??? id (PK)
+??? documento_id (FK)
+??? usuario_id (FK)
+??? tipo_permissao (ENUM: visualizar, editar, excluir)
+??? data_concessao
+
+LogAuditoria
+??? id (PK)
+??? usuario_id (FK)
+??? acao
+??? tabela
+??? registro_id
+??? dados_json
+??? ip_address
+??? data_hora
+
+4.2 Casos de Uso Principais
+1. UC001 - Upload de Documento
+& Ator: Usuário
+
+& Pré-condição: Usuário autenticado
+& Fluxo: Login ? Selecionar arquivo ? Preencher metadados ? Upload ? Confirmação
+
+2. UC002 - Buscar Documento
+& Ator: Usuário
+& Pré-condição: Usuário autenticado
+
+& Fluxo: Login ? Inserir termo ? Aplicar filtros ? Visualizar resultados ? Abrir documento
+
+3. UC003 - Aprovar Documento
+& Ator: Gestor
+
+& Pré-condição: Documento em workflow de aprovação
+& Fluxo: Login ? Acessar pendências ? Revisar documento ? Aprovar/Rejeitar ? Comentário
+? Confirmação
+
+4.3 Tecnologias e Bibliotecas
+Backend (Flask):
+
+& Flask 3.0+
+
+& Flask-SQLAlchemy (ORM)
+
+& Flask-Login (autenticação)
+& Flask-WTF (formulários)
+
+& PyODBC ou pyodbc (SQL Server)
+& Werkzeug (segurança)
+
+& PyPDF2 (manipulação PDF)
+
+Frontend:
+
+& Bootstrap 5.3+
+
+& jQuery 3.7+
+& DataTables (tabelas interativas)
+
+& Select2 (campos de seleção)
+& Dropzone.js (upload de arquivos)
+& Chart.js (gráficos)
+
+Banco de Dados:
+
+& SQL Server 2019+
+
+& Full-Text Search
+
+Infraestrutura:
+
+& Gunicorn (WSGI server)
+& Nginx (reverse proxy)
+& Supervisor (process manager)
+
+4.4 Glossário
+& Metadados: Dados que descrevem outros dados (ex: título, autor, data)
+& Workflow: Fluxo de trabalho automatizado
+
+& CRUD: Operações básicas - Create, Read, Update, Delete
+& Token: Código único temporário para autenticação
+& Hash: Função criptográfica unidirecional
+
+& MIME Type: Identificador de tipo de arquivo
+
+
+5. APROVAÇÃO
+
+NomeCargoAssinaturaDataGerente de ProjetoAnalista de SistemasRepresentante do ClienteCC
+
+Histórico de Revisões:
+
+VersãoDataAutorDescrição1.007/11/2025Equipe de DesenvolvimentoVersão inicialCC
