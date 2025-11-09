@@ -1,0 +1,308 @@
+{% extends "base.html" %}
+
+{% block title %}Busca Avançada - Sistema GED{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar">
+            <div class="position-sticky pt-3">
+                <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                    <span>Filtros Rápidos</span>
+                </h6>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('search.quick_filter', filter_type='my_documents') }}">
+                            <i class="bi bi-file-earmark"></i> Meus Documentos
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('search.quick_filter', filter_type='recent') }}">
+                            <i class="bi bi-clock-history"></i> Recentes
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('search.quick_filter', filter_type='favorites') }}">
+                            <i class="bi bi-star"></i> Favoritos
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('search.quick_filter', filter_type='pending_approval') }}">
+                            <i class="bi bi-hourglass-split"></i> Pendente de Aprovação
+                        </a>
+                    </li>
+                </ul>
+                
+                <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                    <span>Outros Tipos de Busca</span>
+                </h6>
+                <ul class="nav flex-column mb-2">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('search.search') }}">
+                            <i class="bi bi-search"></i> Busca Simples
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('search.fulltext_search') }}">
+                            <i class="bi bi-file-text"></i> Busca em Conteúdo
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2"><i class="bi bi-funnel"></i> Busca Avançada</h1>
+                <div class="btn-toolbar mb-2 mb-md-0">
+                    <a href="{{ url_for('search.search') }}" class="btn btn-sm btn-outline-secondary">
+                        <i class="bi bi-arrow-left"></i> Busca Simples
+                    </a>
+                </div>
+            </div>
+
+            <!-- Error Message -->
+            {% if error %}
+            <div class="alert alert-danger" role="alert">
+                <i class="bi bi-exclamation-triangle"></i> {{ error }}
+            </div>
+            {% endif %}
+
+            <!-- Advanced Search Form -->
+            <div class="row">
+                <div class="col-lg-10 mx-auto">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Filtros de Busca</h5>
+                        </div>
+                        <div class="card-body">
+                            <form method="GET" action="{{ url_for('search.advanced_search') }}" id="advanced-search-form">
+                                <div class="row g-3">
+                                    <!-- Document Name -->
+                                    <div class="col-md-6">
+                                        <label for="nome" class="form-label">Nome do Documento</label>
+                                        <input type="text" 
+                                               class="form-control" 
+                                               id="nome" 
+                                               name="nome" 
+                                               placeholder="Nome do documento"
+                                               value="{{ request.args.get('nome', '') }}">
+                                    </div>
+
+                                    <!-- Description -->
+                                    <div class="col-md-6">
+                                        <label for="descricao" class="form-label">Descrição</label>
+                                        <input type="text" 
+                                               class="form-control" 
+                                               id="descricao" 
+                                               name="descricao" 
+                                               placeholder="Descrição do documento"
+                                               value="{{ request.args.get('descricao', '') }}">
+                                    </div>
+
+                                    <!-- Category -->
+                                    <div class="col-md-6">
+                                        <label for="categoria_id" class="form-label">Categoria</label>
+                                        <select class="form-select" id="categoria_id" name="categoria_id">
+                                            <option value="">Todas as categorias</option>
+                                            {% if categories %}
+                                                {% for cat in categories %}
+                                                <option value="{{ cat.id }}" {% if request.args.get('categoria_id', '', type=int) == cat.id %}selected{% endif %}>
+                                                    {{ cat.caminho_completo }}
+                                                </option>
+                                                {% endfor %}
+                                            {% endif %}
+                                        </select>
+                                    </div>
+
+                                    <!-- File Type -->
+                                    <div class="col-md-6">
+                                        <label for="tipo_mime" class="form-label">Tipo de Arquivo</label>
+                                        <select class="form-select" id="tipo_mime" name="tipo_mime">
+                                            <option value="">Todos os tipos</option>
+                                            <option value="application/pdf" {% if request.args.get('tipo_mime') == 'application/pdf' %}selected{% endif %}>PDF</option>
+                                            <option value="application/msword" {% if request.args.get('tipo_mime') == 'application/msword' %}selected{% endif %}>Word (DOC)</option>
+                                            <option value="application/vnd.openxmlformats-officedocument.wordprocessingml.document" {% if request.args.get('tipo_mime') == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' %}selected{% endif %}>Word (DOCX)</option>
+                                            <option value="application/vnd.ms-excel" {% if request.args.get('tipo_mime') == 'application/vnd.ms-excel' %}selected{% endif %}>Excel (XLS)</option>
+                                            <option value="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" {% if request.args.get('tipo_mime') == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' %}selected{% endif %}>Excel (XLSX)</option>
+                                            <option value="image/jpeg" {% if request.args.get('tipo_mime') == 'image/jpeg' %}selected{% endif %}>JPEG</option>
+                                            <option value="image/png" {% if request.args.get('tipo_mime') == 'image/png' %}selected{% endif %}>PNG</option>
+                                            <option value="image/tiff" {% if request.args.get('tipo_mime') == 'image/tiff' %}selected{% endif %}>TIFF</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Tags -->
+                                    <div class="col-md-6">
+                                        <label for="tags" class="form-label">Tags</label>
+                                        <input type="text" 
+                                               class="form-control" 
+                                               id="tags" 
+                                               name="tags" 
+                                               placeholder="Separe as tags com vírgulas"
+                                               value="{{ request.args.get('tags', '') }}">
+                                        <small class="form-text text-muted">Ex: contrato, urgente, 2024</small>
+                                    </div>
+
+                                    <!-- Author -->
+                                    <div class="col-md-6">
+                                        <label for="autor_id" class="form-label">Autor</label>
+                                        <select class="form-select" id="autor_id" name="autor_id">
+                                            <option value="">Todos os autores</option>
+                                            {% if users %}
+                                                {% for user in users %}
+                                                <option value="{{ user.id }}" {% if request.args.get('autor_id', '', type=int) == user.id %}selected{% endif %}>
+                                                    {{ user.nome }}
+                                                </option>
+                                                {% endfor %}
+                                            {% endif %}
+                                        </select>
+                                    </div>
+
+                                    <!-- Date Range -->
+                                    <div class="col-md-6">
+                                        <label for="data_inicio" class="form-label">Data Inicial</label>
+                                        <input type="date" 
+                                               class="form-control" 
+                                               id="data_inicio" 
+                                               name="data_inicio"
+                                               value="{{ request.args.get('data_inicio', '') }}">
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="data_fim" class="form-label">Data Final</label>
+                                        <input type="date" 
+                                               class="form-control" 
+                                               id="data_fim" 
+                                               name="data_fim"
+                                               value="{{ request.args.get('data_fim', '') }}">
+                                    </div>
+
+                                    <!-- File Size -->
+                                    <div class="col-md-6">
+                                        <label for="tamanho_min" class="form-label">Tamanho Mínimo</label>
+                                        <div class="input-group">
+                                            <input type="number" 
+                                                   class="form-control" 
+                                                   id="tamanho_min" 
+                                                   name="tamanho_min" 
+                                                   placeholder="0"
+                                                   value="{{ request.args.get('tamanho_min', '') }}">
+                                            <span class="input-group-text">bytes</span>
+                                        </div>
+                                        <small class="form-text text-muted">1 MB = 1048576 bytes</small>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="tamanho_max" class="form-label">Tamanho Máximo</label>
+                                        <div class="input-group">
+                                            <input type="number" 
+                                                   class="form-control" 
+                                                   id="tamanho_max" 
+                                                   name="tamanho_max" 
+                                                   placeholder="Sem limite"
+                                                   value="{{ request.args.get('tamanho_max', '') }}">
+                                            <span class="input-group-text">bytes</span>
+                                        </div>
+                                        <small class="form-text text-muted">50 MB = 52428800 bytes</small>
+                                    </div>
+
+                                    <!-- Sort By -->
+                                    <div class="col-md-6">
+                                        <label for="sort_by" class="form-label">Ordenar por</label>
+                                        <select class="form-select" id="sort_by" name="sort_by">
+                                            <option value="data_upload_desc" {% if request.args.get('sort_by', 'data_upload_desc') == 'data_upload_desc' %}selected{% endif %}>Data de Upload (Mais Recente)</option>
+                                            <option value="data_upload_asc" {% if request.args.get('sort_by') == 'data_upload_asc' %}selected{% endif %}>Data de Upload (Mais Antigo)</option>
+                                            <option value="nome_asc" {% if request.args.get('sort_by') == 'nome_asc' %}selected{% endif %}>Nome (A-Z)</option>
+                                            <option value="nome_desc" {% if request.args.get('sort_by') == 'nome_desc' %}selected{% endif %}>Nome (Z-A)</option>
+                                            <option value="tamanho_desc" {% if request.args.get('sort_by') == 'tamanho_desc' %}selected{% endif %}>Tamanho (Maior)</option>
+                                            <option value="tamanho_asc" {% if request.args.get('sort_by') == 'tamanho_asc' %}selected{% endif %}>Tamanho (Menor)</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Results per page -->
+                                    <div class="col-md-6">
+                                        <label for="per_page" class="form-label">Resultados por página</label>
+                                        <select class="form-select" id="per_page" name="per_page">
+                                            <option value="20" {% if request.args.get('per_page', '20', type=int) == 20 %}selected{% endif %}>20</option>
+                                            <option value="50" {% if request.args.get('per_page', '20', type=int) == 50 %}selected{% endif %}>50</option>
+                                            <option value="100" {% if request.args.get('per_page', '20', type=int) == 100 %}selected{% endif %}>100</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="mt-4 d-flex justify-content-between">
+                                    <button type="button" class="btn btn-secondary" id="clear-filters">
+                                        <i class="bi bi-x-circle"></i> Limpar Filtros
+                                    </button>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bi bi-search"></i> Buscar
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<style>
+.sidebar {
+    position: fixed;
+    top: 56px;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    padding: 0;
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+    overflow-y: auto;
+}
+
+.sidebar .nav-link {
+    font-weight: 500;
+    color: #333;
+    padding: 0.75rem 1rem;
+}
+
+.sidebar .nav-link:hover {
+    background-color: #e9ecef;
+}
+
+.sidebar .nav-link i {
+    margin-right: 0.5rem;
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    // Clear filters button
+    $('#clear-filters').on('click', function() {
+        window.location.href = '{{ url_for("search.advanced_search") }}';
+    });
+    
+    // Tag autocomplete
+    $('#tags').on('input', function() {
+        const input = $(this);
+        const value = input.val();
+        const lastComma = value.lastIndexOf(',');
+        const currentTag = lastComma >= 0 ? value.substring(lastComma + 1).trim() : value.trim();
+        
+        if (currentTag.length >= 2) {
+            $.ajax({
+                url: '{{ url_for("search.tag_autocomplete") }}',
+                data: { q: currentTag, limit: 10 },
+                success: function(tags) {
+                    // Could implement a dropdown here
+                    console.log('Tag suggestions:', tags);
+                }
+            });
+        }
+    });
+});
+</script>
+{% endblock %}

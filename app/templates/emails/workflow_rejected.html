@@ -1,0 +1,28 @@
+{% extends "emails/base.html" %}
+
+{% block content %}
+<h2>Documento Rejeitado</h2>
+
+<p>Olá {{ submitter_name }},</p>
+
+<p>Seu documento foi rejeitado por {{ approver_name }}.</p>
+
+<div class="warning-box">
+    <strong>Documento:</strong> {{ document_name }}<br>
+    <strong>Workflow:</strong> {{ workflow_name }}<br>
+    <strong>Rejeitado por:</strong> {{ approver_name }}<br>
+    <strong>Data de Rejeição:</strong> {{ rejection_date }}<br>
+    {% if comment %}
+    <strong>Motivo:</strong> {{ comment }}
+    {% endif %}
+</div>
+
+<p style="text-align: center;">
+    <a href="{{ document_url }}" class="button">Visualizar Documento</a>
+</p>
+
+<p>Por favor, revise os comentários e faça as correções necessárias antes de reenviar.</p>
+
+<p>Atenciosamente,<br>
+Equipe Sistema GED</p>
+{% endblock %}

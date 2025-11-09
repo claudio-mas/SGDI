@@ -8,6 +8,8 @@ from app.services.storage_service import StorageService
 from app.services.notification_service import NotificationService
 from app.services.workflow_service import WorkflowService
 from app.services.audit_service import AuditService
+from app.services.permission_service import PermissionService
+from app.services.category_service import CategoryService, FolderService
 
 __all__ = [
     'AuthService',
@@ -16,5 +18,8 @@ __all__ = [
     'StorageService',
     'NotificationService',
     'WorkflowService',
-    'AuditService'
+    'AuditService',
+    'PermissionService',
+    'CategoryService',
+    'FolderService'
 ]

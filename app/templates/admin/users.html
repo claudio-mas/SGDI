@@ -1,0 +1,240 @@
+{% extends "base.html" %}
+
+{% block title %}Gerenciar Usuários - Sistema GED{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h1 class="h3 mb-0">
+                    <i class="fas fa-users-cog"></i> Gerenciar Usuários
+                </h1>
+                <a href="{{ url_for('admin.user_create') }}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Novo Usuário
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-body">
+                    <form method="GET" action="{{ url_for('admin.users') }}" class="form-inline">
+                        <div class="form-group mr-3 mb-2">
+                            <input type="text" name="q" class="form-control" 
+                                   placeholder="Buscar por nome ou email" 
+                                   value="{{ search_query }}">
+                        </div>
+                        
+                        <div class="form-group mr-3 mb-2">
+                            <select name="perfil" class="form-control">
+                                <option value="">Todos os Perfis</option>
+                                {% for perfil in perfis %}
+                                <option value="{{ perfil.id }}" 
+                                        {% if perfil_filter == perfil.id %}selected{% endif %}>
+                                    {{ perfil.nome }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div class="form-group mr-3 mb-2">
+                            <select name="status" class="form-control">
+                                <option value="">Todos os Status</option>
+                                <option value="active" {% if status_filter == 'active' %}selected{% endif %}>
+                                    Ativos
+                                </option>
+                                <option value="inactive" {% if status_filter == 'inactive' %}selected{% endif %}>
+                                    Inativos
+                                </option>
+                            </select>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary mb-2 mr-2">
+                            <i class="fas fa-search"></i> Filtrar
+                        </button>
+                        
+                        <a href="{{ url_for('admin.users') }}" class="btn btn-secondary mb-2">
+                            <i class="fas fa-times"></i> Limpar
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Users Table -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="usersTable">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nome</th>
+                                    <th>Email</th>
+                                    <th>Perfil</th>
+                                    <th>Status</th>
+                                    <th>Último Acesso</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user in users %}
+                                <tr id="user-row-{{ user.id }}">
+                                    <td>{{ user.id }}</td>
+                                    <td>
+                                        <strong>{{ user.nome }}</strong>
+                                        {% if user.bloqueado_ate and user.bloqueado_ate > now %}
+                                        <span class="badge badge-danger ml-1" title="Conta bloqueada">
+                                            <i class="fas fa-lock"></i>
+                                        </span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ user.email }}</td>
+                                    <td>
+                                        <span class="badge badge-info">
+                                            {{ user.perfil.nome if user.perfil else 'N/A' }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-{{ 'success' if user.ativo else 'secondary' }}" 
+                                              id="status-badge-{{ user.id }}">
+                                            {{ 'Ativo' if user.ativo else 'Inativo' }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {% if user.ultimo_acesso %}
+                                        {{ user.ultimo_acesso.strftime('%d/%m/%Y %H:%M') }}
+                                        {% else %}
+                                        <span class="text-muted">Nunca</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a href="{{ url_for('admin.user_edit', user_id=user.id) }}" 
+                                               class="btn btn-sm btn-info" title="Editar">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            
+                                            <button type="button" 
+                                                    class="btn btn-sm btn-{{ 'warning' if user.ativo else 'success' }} toggle-status-btn"
+                                                    data-user-id="{{ user.id }}"
+                                                    data-user-name="{{ user.nome }}"
+                                                    data-current-status="{{ 'active' if user.ativo else 'inactive' }}"
+                                                    title="{{ 'Desativar' if user.ativo else 'Ativar' }}"
+                                                    {% if user.id == current_user.id %}disabled{% endif %}>
+                                                <i class="fas fa-{{ 'ban' if user.ativo else 'check' }}"></i>
+                                            </button>
+                                            
+                                            <a href="{{ url_for('admin.user_reset_password', user_id=user.id) }}" 
+                                               class="btn btn-sm btn-secondary" title="Redefinir Senha">
+                                                <i class="fas fa-key"></i>
+                                            </a>
+                                            
+                                            <a href="{{ url_for('admin.audit_user_activity', usuario_id=user.id) }}" 
+                                               class="btn btn-sm btn-primary" title="Ver Atividade">
+                                                <i class="fas fa-history"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td colspan="7" class="text-center text-muted">
+                                        Nenhum usuário encontrado
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+$(document).ready(function() {
+    // Initialize DataTables
+    $('#usersTable').DataTable({
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/1.13.4/i18n/pt-BR.json"
+        },
+        "pageLength": 25,
+        "order": [[0, "desc"]]
+    });
+    
+    // Toggle user status
+    $('.toggle-status-btn').click(function() {
+        const userId = $(this).data('user-id');
+        const userName = $(this).data('user-name');
+        const currentStatus = $(this).data('current-status');
+        const newStatus = currentStatus === 'active' ? 'inativo' : 'ativo';
+        
+        if (!confirm(`Tem certeza que deseja ${newStatus === 'ativo' ? 'ativar' : 'desativar'} o usuário ${userName}?`)) {
+            return;
+        }
+        
+        $.ajax({
+            url: `/admin/users/${userId}/toggle-status`,
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token() }}'
+            },
+            success: function(response) {
+                if (response.success) {
+                    // Update badge
+                    const badge = $(`#status-badge-${userId}`);
+                    if (response.ativo) {
+                        badge.removeClass('badge-secondary').addClass('badge-success').text('Ativo');
+                        $(`.toggle-status-btn[data-user-id="${userId}"]`)
+                            .removeClass('btn-success').addClass('btn-warning')
+                            .attr('title', 'Desativar')
+                            .data('current-status', 'active')
+                            .html('<i class="fas fa-ban"></i>');
+                    } else {
+                        badge.removeClass('badge-success').addClass('badge-secondary').text('Inativo');
+                        $(`.toggle-status-btn[data-user-id="${userId}"]`)
+                            .removeClass('btn-warning').addClass('btn-success')
+                            .attr('title', 'Ativar')
+                            .data('current-status', 'inactive')
+                            .html('<i class="fas fa-check"></i>');
+                    }
+                    
+                    // Show success message
+                    showAlert('success', response.message);
+                } else {
+                    showAlert('danger', response.error || 'Erro ao alterar status do usuário');
+                }
+            },
+            error: function(xhr) {
+                const error = xhr.responseJSON?.error || 'Erro ao alterar status do usuário';
+                showAlert('danger', error);
+            }
+        });
+    });
+    
+    function showAlert(type, message) {
+        const alert = $(`
+            <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                ${message}
+                <button type="button" class="close" data-dismiss="alert">
+                    <span>&times;</span>
+                </button>
+            </div>
+        `);
+        $('.container-fluid').prepend(alert);
+        setTimeout(() => alert.alert('close'), 5000);
+    }
+});
+</script>
+{% endblock %}

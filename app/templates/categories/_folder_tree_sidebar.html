@@ -1,0 +1,94 @@
+<!-- Folder Tree Sidebar Component -->
+<div class="card mb-3">
+    <div class="card-header bg-warning text-dark">
+        <h6 class="mb-0">
+            <i class="fas fa-folder-tree"></i> Minhas Pastas
+            <a href="{{ url_for('categories.create_folder') }}" class="btn btn-sm btn-outline-dark float-end" title="Nova Pasta">
+                <i class="fas fa-plus"></i>
+            </a>
+        </h6>
+    </div>
+    <div class="card-body p-2" style="max-height: 400px; overflow-y: auto;">
+        <div id="folder-tree-sidebar">
+            <!-- Tree will be loaded via JavaScript -->
+            <div class="text-center py-3">
+                <div class="spinner-border spinner-border-sm text-primary" role="status">
+                    <span class="visually-hidden">Carregando...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Load folder tree on page load
+document.addEventListener('DOMContentLoaded', function() {
+    loadFolderTree();
+});
+
+function loadFolderTree() {
+    fetch("{{ url_for('categories.api_folder_hierarchy') }}")
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                renderFolderTree(data.data);
+            } else {
+                document.getElementById('folder-tree-sidebar').innerHTML = 
+                    '<p class="text-muted small">Erro ao carregar pastas</p>';
+            }
+        })
+        .catch(error => {
+            console.error('Error loading folder tree:', error);
+            document.getElementById('folder-tree-sidebar').innerHTML = 
+                '<p class="text-muted small">Nenhuma pasta criada</p>';
+        });
+}
+
+function renderFolderTree(nodes, parentElement = null) {
+    if (!parentElement) {
+        parentElement = document.getElementById('folder-tree-sidebar');
+        parentElement.innerHTML = '';
+    }
+    
+    if (!nodes || nodes.length === 0) {
+        if (!parentElement.id) return;
+        parentElement.innerHTML = '<p class="text-muted small">Nenhuma pasta criada</p>';
+        return;
+    }
+    
+    const ul = document.createElement('ul');
+    ul.className = 'list-unstyled mb-0';
+    
+    nodes.forEach(node => {
+        const li = document.createElement('li');
+        li.className = 'mb-1';
+        
+        const link = document.createElement('a');
+        link.href = "{{ url_for('categories.view_folder', id=0) }}".replace('0', node.id);
+        link.className = 'text-decoration-none d-block py-1 px-2 rounded hover-bg-light';
+        link.innerHTML = `
+            <i class="fas fa-folder" style="color: ${node.cor || '#ffc107'}"></i>
+            <small>${node.nome}</small>
+        `;
+        
+        li.appendChild(link);
+        
+        if (node.children && node.children.length > 0) {
+            const childContainer = document.createElement('div');
+            childContainer.className = 'ms-3';
+            renderFolderTree(node.children, childContainer);
+            li.appendChild(childContainer);
+        }
+        
+        ul.appendChild(li);
+    });
+    
+    parentElement.appendChild(ul);
+}
+</script>
+
+<style>
+.hover-bg-light:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+</style>

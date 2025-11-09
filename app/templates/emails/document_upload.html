@@ -1,0 +1,26 @@
+{% extends "emails/base.html" %}
+
+{% block content %}
+<h2>Documento Enviado com Sucesso</h2>
+
+<p>Olá {{ user_name }},</p>
+
+<p>Seu documento foi enviado com sucesso para o Sistema GED.</p>
+
+<div class="info-box">
+    <strong>Documento:</strong> {{ document_name }}<br>
+    {% if document_description %}
+    <strong>Descrição:</strong> {{ document_description }}<br>
+    {% endif %}
+    <strong>Categoria:</strong> {{ category_name }}<br>
+    <strong>Tamanho:</strong> {{ file_size }}<br>
+    <strong>Data de Upload:</strong> {{ upload_date }}
+</div>
+
+<p style="text-align: center;">
+    <a href="{{ document_url }}" class="button">Visualizar Documento</a>
+</p>
+
+<p>Atenciosamente,<br>
+Equipe Sistema GED</p>
+{% endblock %}

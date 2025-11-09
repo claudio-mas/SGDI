@@ -1,0 +1,221 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-10 offset-md-1">
+            <div class="card">
+                <div class="card-header">
+                    <h4>
+                        <i class="fas fa-project-diagram"></i>
+                        {{ 'Editar Workflow' if workflow else 'Novo Workflow' }}
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" id="workflow-form">
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="mb-3">
+                            {{ form.nome.label(class="form-label") }}
+                            {{ form.nome(class="form-control" + (" is-invalid" if form.nome.errors else "")) }}
+                            {% if form.nome.errors %}
+                                <div class="invalid-feedback">
+                                    {{ form.nome.errors[0] }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.descricao.label(class="form-label") }}
+                            {{ form.descricao(class="form-control" + (" is-invalid" if form.descricao.errors else "")) }}
+                            {% if form.descricao.errors %}
+                                <div class="invalid-feedback">
+                                    {{ form.descricao.errors[0] }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check form-switch">
+                                {{ form.ativo(class="form-check-input") }}
+                                {{ form.ativo.label(class="form-check-label") }}
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <h5 class="mb-3">Estágios de Aprovação</h5>
+                        
+                        <div id="stages-container">
+                            <!-- Stages will be added here dynamically -->
+                        </div>
+
+                        <button type="button" class="btn btn-outline-primary mb-3" onclick="addStage()">
+                            <i class="fas fa-plus"></i> Adicionar Estágio
+                        </button>
+
+                        {{ form.stages_json }}
+
+                        <hr>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ url_for('workflows.list_workflows') }}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Salvar Workflow
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let stageCounter = 0;
+let stages = [];
+
+// User data for approver selection
+const users = {{ users|tojson }};
+
+// Load existing stages if editing
+{% if workflow %}
+const existingStages = {{ workflow.configuracao.stages|tojson }};
+{% else %}
+const existingStages = [];
+{% endif %}
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Load existing stages or add first stage
+    if (existingStages.length > 0) {
+        existingStages.forEach(stage => {
+            addStage(stage);
+        });
+    } else {
+        addStage();
+    }
+});
+
+function addStage(stageData = null) {
+    const stageId = stageCounter++;
+    const stageName = stageData ? stageData.name : '';
+    const stageApprovers = stageData ? stageData.approvers : [];
+    const requireAll = stageData ? stageData.require_all : false;
+    
+    const stageDiv = document.createElement('div');
+    stageDiv.className = 'card mb-3';
+    stageDiv.id = `stage-${stageId}`;
+    stageDiv.innerHTML = `
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h6 class="mb-0">Estágio ${stageId + 1}</h6>
+                <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeStage(${stageId})">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label">Nome do Estágio</label>
+                <input type="text" class="form-control stage-name" value="${stageName}" 
+                       placeholder="Ex: Revisão Inicial, Aprovação Final..." required>
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label">Aprovadores</label>
+                <select class="form-select stage-approvers" multiple size="5" required>
+                    ${users.map(user => `
+                        <option value="${user.id}" ${stageApprovers.includes(user.id) ? 'selected' : ''}>
+                            ${user.nome} (${user.email})
+                        </option>
+                    `).join('')}
+                </select>
+                <small class="form-text text-muted">
+                    Segure Ctrl (Cmd no Mac) para selecionar múltiplos aprovadores
+                </small>
+            </div>
+            
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input stage-require-all" ${requireAll ? 'checked' : ''}>
+                <label class="form-check-label">
+                    Requer aprovação de todos os aprovadores
+                </label>
+            </div>
+        </div>
+    `;
+    
+    document.getElementById('stages-container').appendChild(stageDiv);
+    updateStagesJson();
+}
+
+function removeStage(stageId) {
+    if (document.querySelectorAll('[id^="stage-"]').length <= 1) {
+        alert('É necessário pelo menos um estágio no workflow');
+        return;
+    }
+    
+    if (confirm('Deseja remover este estágio?')) {
+        document.getElementById(`stage-${stageId}`).remove();
+        updateStagesJson();
+        updateStageNumbers();
+    }
+}
+
+function updateStageNumbers() {
+    const stageCards = document.querySelectorAll('[id^="stage-"]');
+    stageCards.forEach((card, index) => {
+        card.querySelector('h6').textContent = `Estágio ${index + 1}`;
+    });
+}
+
+function updateStagesJson() {
+    const stageCards = document.querySelectorAll('[id^="stage-"]');
+    const stagesData = [];
+    
+    stageCards.forEach(card => {
+        const name = card.querySelector('.stage-name').value;
+        const approversSelect = card.querySelector('.stage-approvers');
+        const approvers = Array.from(approversSelect.selectedOptions).map(opt => parseInt(opt.value));
+        const requireAll = card.querySelector('.stage-require-all').checked;
+        
+        stagesData.push({
+            name: name,
+            approvers: approvers,
+            require_all: requireAll
+        });
+    });
+    
+    document.getElementById('stages_json').value = JSON.stringify(stagesData);
+}
+
+// Update JSON before form submission
+document.getElementById('workflow-form').addEventListener('submit', function(e) {
+    updateStagesJson();
+    
+    // Validate that all stages have at least one approver
+    const stagesData = JSON.parse(document.getElementById('stages_json').value);
+    for (let i = 0; i < stagesData.length; i++) {
+        if (!stagesData[i].name || stagesData[i].name.trim() === '') {
+            e.preventDefault();
+            alert(`Por favor, preencha o nome do Estágio ${i + 1}`);
+            return false;
+        }
+        if (stagesData[i].approvers.length === 0) {
+            e.preventDefault();
+            alert(`Por favor, selecione pelo menos um aprovador para o Estágio ${i + 1}`);
+            return false;
+        }
+    }
+});
+
+// Update JSON when fields change
+document.addEventListener('change', function(e) {
+    if (e.target.classList.contains('stage-name') || 
+        e.target.classList.contains('stage-approvers') || 
+        e.target.classList.contains('stage-require-all')) {
+        updateStagesJson();
+    }
+});
+</script>
+{% endblock %}

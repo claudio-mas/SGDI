@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h2><i class="fas fa-tasks"></i> Aprovações Pendentes</h2>
+            <p class="text-muted">Documentos aguardando sua aprovação</p>
+        </div>
+    </div>
+
+    {% if approvals %}
+    <div class="row">
+        {% for approval in approvals %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-warning text-dark">
+                    <h6 class="mb-0">
+                        <i class="fas fa-clock"></i> Pendente
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ approval.documento.nome }}</h5>
+                    
+                    <div class="mb-2">
+                        <small class="text-muted">
+                            <i class="fas fa-project-diagram"></i> 
+                            <strong>Workflow:</strong> {{ approval.workflow.nome }}
+                        </small>
+                    </div>
+                    
+                    <div class="mb-2">
+                        <small class="text-muted">
+                            <i class="fas fa-layer-group"></i> 
+                            <strong>Estágio:</strong> 
+                            {{ approval.estagio_atual }} de {{ approval.workflow.configuracao.stages|length }}
+                        </small>
+                    </div>
+                    
+                    <div class="mb-2">
+                        <small class="text-muted">
+                            <i class="fas fa-user"></i> 
+                            <strong>Submetido por:</strong> {{ approval.submissor.nome }}
+                        </small>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <small class="text-muted">
+                            <i class="fas fa-calendar"></i> 
+                            {{ approval.data_submissao.strftime('%d/%m/%Y %H:%M') }}
+                        </small>
+                    </div>
+                    
+                    {% if approval.documento.descricao %}
+                    <p class="card-text small">
+                        {{ approval.documento.descricao[:100] }}{% if approval.documento.descricao|length > 100 %}...{% endif %}
+                    </p>
+                    {% endif %}
+                </div>
+                <div class="card-footer">
+                    <a href="{{ url_for('workflows.view_approval', id=approval.id) }}" 
+                       class="btn btn-primary btn-sm w-100">
+                        <i class="fas fa-eye"></i> Ver Detalhes e Aprovar
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle"></i> Você não tem aprovações pendentes no momento.
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

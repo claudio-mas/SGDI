@@ -1,0 +1,466 @@
+{% extends "base.html" %}
+
+{% block title %}{{ documento.nome }} - Sistema GED{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    .document-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 0.375rem;
+        margin-bottom: 2rem;
+    }
+    .document-icon-large {
+        font-size: 4rem;
+        opacity: 0.9;
+    }
+    .metadata-item {
+        padding: 0.75rem 0;
+        border-bottom: 1px solid #dee2e6;
+    }
+    .metadata-item:last-child {
+        border-bottom: none;
+    }
+    .metadata-label {
+        font-weight: 600;
+        color: #6c757d;
+        margin-bottom: 0.25rem;
+    }
+    .metadata-value {
+        color: #212529;
+    }
+    .tag-badge {
+        display: inline-block;
+        padding: 0.375rem 0.75rem;
+        margin: 0.25rem;
+        background: #e9ecef;
+        border-radius: 1rem;
+        font-size: 0.875rem;
+    }
+    .version-item {
+        padding: 1rem;
+        border: 1px solid #dee2e6;
+        border-radius: 0.375rem;
+        margin-bottom: 0.75rem;
+        transition: all 0.2s;
+    }
+    .version-item:hover {
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    }
+    .version-current {
+        border-color: #0d6efd;
+        background: #f8f9ff;
+    }
+    .permission-item {
+        display: flex;
+        align-items: center;
+        padding: 0.75rem;
+        border: 1px solid #dee2e6;
+        border-radius: 0.375rem;
+        margin-bottom: 0.5rem;
+    }
+    .preview-container {
+        border: 1px solid #dee2e6;
+        border-radius: 0.375rem;
+        padding: 1rem;
+        background: #f8f9fa;
+        text-align: center;
+        min-height: 400px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .preview-container img {
+        max-width: 100%;
+        max-height: 600px;
+        border-radius: 0.375rem;
+    }
+    .preview-container iframe {
+        width: 100%;
+        height: 600px;
+        border: none;
+        border-radius: 0.375rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <!-- Document Header -->
+    <div class="document-header">
+        <div class="d-flex align-items-center">
+            <div class="document-icon-large me-4">
+                <i class="fas {{ documento.extensao|get_file_icon }}"></i>
+            </div>
+            <div class="flex-grow-1">
+                <h1 class="mb-2">{{ documento.nome }}</h1>
+                <p class="mb-0 opacity-75">
+                    <i class="fas fa-user me-2"></i>{{ documento.usuario.nome }}
+                    <span class="mx-2">•</span>
+                    <i class="fas fa-calendar me-2"></i>{{ documento.data_upload.strftime('%d/%m/%Y %H:%M') }}
+                    <span class="mx-2">•</span>
+                    <i class="fas fa-hdd me-2"></i>{{ documento.tamanho_formatado }}
+                </p>
+            </div>
+            <div>
+                <a href="{{ url_for('documents.download_document', id=documento.id) }}" class="btn btn-light btn-lg me-2">
+                    <i class="fas fa-download me-2"></i>Download
+                </a>
+                {% if can_edit %}
+                <a href="{{ url_for('documents.edit_document', id=documento.id) }}" class="btn btn-light btn-lg me-2">
+                    <i class="fas fa-edit me-2"></i>Editar
+                </a>
+                {% endif %}
+                <a href="{{ url_for('documents.list_documents') }}" class="btn btn-outline-light btn-lg">
+                    <i class="fas fa-arrow-left me-2"></i>Voltar
+                </a>
+            </div>
+        </div>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="row">
+        <!-- Main Content -->
+        <div class="col-lg-8">
+            <!-- Preview -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-eye me-2"></i>Visualização</h5>
+                </div>
+                <div class="card-body">
+                    <div class="preview-container">
+                        {% if documento.tipo_mime == 'application/pdf' %}
+                            <iframe src="{{ url_for('documents.preview_document', id=documento.id) }}"></iframe>
+                        {% elif documento.tipo_mime.startswith('image/') %}
+                            <img src="{{ url_for('documents.preview_document', id=documento.id) }}" alt="{{ documento.nome }}">
+                        {% else %}
+                            <div class="text-center">
+                                <i class="fas {{ documento.extensao|get_file_icon }} fa-5x mb-3 text-muted"></i>
+                                <p class="text-muted">Visualização não disponível para este tipo de arquivo</p>
+                                <a href="{{ url_for('documents.download_document', id=documento.id) }}" class="btn btn-primary">
+                                    <i class="fas fa-download me-2"></i>Fazer Download
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Description -->
+            {% if documento.descricao %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-align-left me-2"></i>Descrição</h5>
+                </div>
+                <div class="card-body">
+                    <p class="mb-0">{{ documento.descricao }}</p>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Version History -->
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="fas fa-history me-2"></i>Histórico de Versões</h5>
+                    {% if can_edit %}
+                    <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#newVersionModal">
+                        <i class="fas fa-plus me-1"></i>Nova Versão
+                    </button>
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    {% if versoes %}
+                        {% for versao in versoes %}
+                        <div class="version-item {% if versao.numero_versao == documento.versao_atual %}version-current{% endif %}">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-grow-1">
+                                    <div class="fw-bold">
+                                        Versão {{ versao.numero_versao }}
+                                        {% if versao.numero_versao == documento.versao_atual %}
+                                        <span class="badge bg-primary ms-2">Atual</span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="text-muted small">
+                                        {{ versao.usuario.nome }} • {{ versao.data_criacao.strftime('%d/%m/%Y %H:%M') }} • {{ versao.tamanho_bytes|format_file_size }}
+                                    </div>
+                                    {% if versao.comentario %}
+                                    <div class="mt-2">
+                                        <i class="fas fa-comment me-1"></i>{{ versao.comentario }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                {% if can_edit and versao.numero_versao != documento.versao_atual %}
+                                <button class="btn btn-sm btn-outline-primary" onclick="restoreVersion({{ versao.numero_versao }})">
+                                    <i class="fas fa-undo me-1"></i>Restaurar
+                                </button>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted mb-0">Nenhuma versão anterior</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- Metadata -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Informações</h5>
+                </div>
+                <div class="card-body">
+                    <div class="metadata-item">
+                        <div class="metadata-label">Tipo de Arquivo</div>
+                        <div class="metadata-value">{{ documento.tipo_mime }}</div>
+                    </div>
+                    <div class="metadata-item">
+                        <div class="metadata-label">Tamanho</div>
+                        <div class="metadata-value">{{ documento.tamanho_formatado }}</div>
+                    </div>
+                    <div class="metadata-item">
+                        <div class="metadata-label">Categoria</div>
+                        <div class="metadata-value">
+                            {% if documento.categoria %}
+                                <span class="badge bg-secondary">{{ documento.categoria.nome }}</span>
+                            {% else %}
+                                <span class="text-muted">Sem categoria</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="metadata-item">
+                        <div class="metadata-label">Pasta</div>
+                        <div class="metadata-value">
+                            {% if documento.pasta %}
+                                <i class="fas fa-folder me-1"></i>{{ documento.pasta.nome }}
+                            {% else %}
+                                <span class="text-muted">Sem pasta</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="metadata-item">
+                        <div class="metadata-label">Data de Upload</div>
+                        <div class="metadata-value">{{ documento.data_upload.strftime('%d/%m/%Y %H:%M') }}</div>
+                    </div>
+                    {% if documento.data_modificacao %}
+                    <div class="metadata-item">
+                        <div class="metadata-label">Última Modificação</div>
+                        <div class="metadata-value">{{ documento.data_modificacao.strftime('%d/%m/%Y %H:%M') }}</div>
+                    </div>
+                    {% endif %}
+                    <div class="metadata-item">
+                        <div class="metadata-label">Versão Atual</div>
+                        <div class="metadata-value">{{ documento.versao_atual }}</div>
+                    </div>
+                    <div class="metadata-item">
+                        <div class="metadata-label">Status</div>
+                        <div class="metadata-value">
+                            {% if documento.status == 'ativo' %}
+                                <span class="badge bg-success">Ativo</span>
+                            {% elif documento.status == 'arquivado' %}
+                                <span class="badge bg-warning">Arquivado</span>
+                            {% else %}
+                                <span class="badge bg-danger">Excluído</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tags -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-tags me-2"></i>Tags</h5>
+                </div>
+                <div class="card-body">
+                    {% if tags %}
+                        {% for tag in tags %}
+                        <span class="tag-badge">
+                            <i class="fas fa-tag me-1"></i>{{ tag }}
+                        </span>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted mb-0">Sem tags</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Permissions -->
+            {% if is_owner or can_share %}
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="fas fa-lock me-2"></i>Permissões</h5>
+                    {% if can_share %}
+                    <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#shareModal">
+                        <i class="fas fa-share me-1"></i>Compartilhar
+                    </button>
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    {% if permissoes %}
+                        {% for permissao in permissoes %}
+                        <div class="permission-item">
+                            <div class="flex-grow-1">
+                                <div class="fw-bold">{{ permissao.usuario.nome }}</div>
+                                <div class="text-muted small">
+                                    <span class="badge bg-info">{{ permissao.tipo_permissao }}</span>
+                                    {% if permissao.data_expiracao %}
+                                    • Expira em {{ permissao.data_expiracao.strftime('%d/%m/%Y') }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% if is_owner %}
+                            <button class="btn btn-sm btn-outline-danger" onclick="revokePermission({{ permissao.id }})">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted mb-0">Nenhuma permissão compartilhada</p>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Actions -->
+            {% if is_owner %}
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-cog me-2"></i>Ações</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        {% if can_delete %}
+                        <button class="btn btn-danger" onclick="deleteDocument()">
+                            <i class="fas fa-trash me-2"></i>Excluir Documento
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- New Version Modal -->
+<div class="modal fade" id="newVersionModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Nova Versão</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form action="{{ url_for('documents.upload_version', id=documento.id) }}" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Arquivo</label>
+                        <input type="file" name="file" class="form-control" required>
+                        <small class="form-text text-muted">Deve ser do mesmo tipo do arquivo original</small>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Comentário</label>
+                        <textarea name="comentario" class="form-control" rows="3" required placeholder="Descreva as mudanças nesta versão"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Enviar Nova Versão</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function deleteDocument() {
+    if (confirm('Tem certeza que deseja excluir este documento? Ele será movido para a lixeira.')) {
+        fetch(`/documents/{{ documento.id }}/delete`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token() }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.href = '{{ url_for("documents.list_documents") }}';
+            } else {
+                alert('Erro ao excluir documento: ' + data.message);
+            }
+        })
+        .catch(error => {
+            alert('Erro ao excluir documento');
+            console.error(error);
+        });
+    }
+}
+
+function restoreVersion(versionNumber) {
+    if (confirm(`Deseja restaurar a versão ${versionNumber}? Isso criará uma nova versão com o conteúdo da versão selecionada.`)) {
+        fetch(`/documents/{{ documento.id }}/restore-version/${versionNumber}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token() }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.reload();
+            } else {
+                alert('Erro ao restaurar versão: ' + data.message);
+            }
+        })
+        .catch(error => {
+            alert('Erro ao restaurar versão');
+            console.error(error);
+        });
+    }
+}
+
+function revokePermission(permissionId) {
+    if (confirm('Deseja revogar esta permissão?')) {
+        fetch(`/documents/{{ documento.id }}/revoke-permission/${permissionId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token() }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.reload();
+            } else {
+                alert('Erro ao revogar permissão: ' + data.message);
+            }
+        })
+        .catch(error => {
+            alert('Erro ao revogar permissão');
+            console.error(error);
+        });
+    }
+}
+</script>
+{% endblock %}

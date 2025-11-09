@@ -1,0 +1,422 @@
+{% extends "base.html" %}
+
+{% block title %}Documentos - Sistema GED{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    .document-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+    .document-card {
+        border: 1px solid #dee2e6;
+        border-radius: 0.375rem;
+        padding: 1rem;
+        text-align: center;
+        transition: all 0.2s;
+        cursor: pointer;
+    }
+    .document-card:hover {
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        transform: translateY(-2px);
+    }
+    .document-icon {
+        font-size: 3rem;
+        margin-bottom: 0.5rem;
+    }
+    .document-name {
+        font-weight: 500;
+        margin-bottom: 0.25rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .document-meta {
+        font-size: 0.875rem;
+        color: #6c757d;
+    }
+    .filter-pills {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        margin-bottom: 1rem;
+    }
+    .filter-pill {
+        padding: 0.375rem 0.75rem;
+        border-radius: 1rem;
+        text-decoration: none;
+        transition: all 0.2s;
+    }
+    .filter-pill.active {
+        background-color: #0d6efd;
+        color: white;
+    }
+    .filter-pill:not(.active) {
+        background-color: #e9ecef;
+        color: #495057;
+    }
+    .filter-pill:not(.active):hover {
+        background-color: #dee2e6;
+    }
+    .view-toggle {
+        display: flex;
+        gap: 0.25rem;
+    }
+    .view-toggle .btn {
+        padding: 0.375rem 0.75rem;
+    }
+    .bulk-actions {
+        display: none;
+        margin-bottom: 1rem;
+    }
+    .bulk-actions.show {
+        display: block;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="fas fa-folder-open me-2"></i>Documentos</h1>
+        <div class="d-flex gap-2">
+            <a href="{{ url_for('documents.upload') }}" class="btn btn-primary">
+                <i class="fas fa-upload me-2"></i>Enviar Documento
+            </a>
+        </div>
+    </div>
+
+    <!-- Quick Filters -->
+    <div class="filter-pills">
+        <a href="{{ url_for('documents.list_documents', filter='all') }}" 
+           class="filter-pill {% if filter_type == 'all' %}active{% endif %}">
+            <i class="fas fa-list me-1"></i>Todos
+        </a>
+        <a href="{{ url_for('documents.list_documents', filter='my') }}" 
+           class="filter-pill {% if filter_type == 'my' %}active{% endif %}">
+            <i class="fas fa-user me-1"></i>Meus Documentos
+        </a>
+        <a href="{{ url_for('documents.list_documents', filter='recent') }}" 
+           class="filter-pill {% if filter_type == 'recent' %}active{% endif %}">
+            <i class="fas fa-clock me-1"></i>Recentes
+        </a>
+        <a href="{{ url_for('documents.list_documents', filter='trash') }}" 
+           class="filter-pill {% if filter_type == 'trash' %}active{% endif %}">
+            <i class="fas fa-trash me-1"></i>Lixeira
+        </a>
+    </div>
+
+    <!-- Search and Filters -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="GET" action="{{ url_for('documents.list_documents') }}" class="row g-3">
+                <input type="hidden" name="filter" value="{{ filter_type }}">
+                <div class="col-md-6">
+                    <input type="text" name="q" class="form-control" placeholder="Buscar documentos..." value="{{ search_query }}">
+                </div>
+                <div class="col-md-3">
+                    <select name="categoria_id" class="form-select">
+                        <option value="">Todas as Categorias</option>
+                        {% for categoria in categorias %}
+                        <option value="{{ categoria.id }}" {% if selected_categoria == categoria.id %}selected{% endif %}>
+                            {{ categoria.nome }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary flex-grow-1">
+                            <i class="fas fa-search me-1"></i>Buscar
+                        </button>
+                        <a href="{{ url_for('documents.list_documents', filter=filter_type) }}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- View Toggle and Bulk Actions -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="bulk-actions" id="bulkActions">
+            <button class="btn btn-sm btn-danger" onclick="bulkDelete()">
+                <i class="fas fa-trash me-1"></i>Excluir Selecionados
+            </button>
+        </div>
+        <div class="ms-auto view-toggle">
+            <a href="{{ url_for('documents.list_documents', filter=filter_type, view='table', q=search_query, categoria_id=selected_categoria) }}" 
+               class="btn btn-sm {% if view_mode == 'table' %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                <i class="fas fa-list"></i>
+            </a>
+            <a href="{{ url_for('documents.list_documents', filter=filter_type, view='grid', q=search_query, categoria_id=selected_categoria) }}" 
+               class="btn btn-sm {% if view_mode == 'grid' %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                <i class="fas fa-th"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- Document List -->
+    {% if documentos %}
+        {% if view_mode == 'table' %}
+        <!-- Table View -->
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover" id="documentsTable">
+                        <thead>
+                            <tr>
+                                <th style="width: 30px;">
+                                    <input type="checkbox" id="selectAll" onchange="toggleSelectAll(this)">
+                                </th>
+                                <th>Nome</th>
+                                <th>Categoria</th>
+                                <th>Tamanho</th>
+                                <th>Data Upload</th>
+                                <th>Proprietário</th>
+                                <th style="width: 150px;">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for doc in documentos %}
+                            <tr>
+                                <td>
+                                    <input type="checkbox" class="doc-checkbox" value="{{ doc.id }}" onchange="updateBulkActions()">
+                                </td>
+                                <td>
+                                    <i class="fas {{ get_file_icon(doc.extensao) }} me-2"></i>
+                                    <a href="{{ url_for('documents.view_document', id=doc.id) }}">{{ doc.nome }}</a>
+                                </td>
+                                <td>
+                                    {% if doc.categoria %}
+                                        <span class="badge bg-secondary">{{ doc.categoria.nome }}</span>
+                                    {% else %}
+                                        <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ doc.tamanho_formatado }}</td>
+                                <td>{{ doc.data_upload.strftime('%d/%m/%Y %H:%M') }}</td>
+                                <td>{{ doc.usuario.nome }}</td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="{{ url_for('documents.view_document', id=doc.id) }}" 
+                                           class="btn btn-outline-primary" title="Visualizar">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="{{ url_for('documents.download_document', id=doc.id) }}" 
+                                           class="btn btn-outline-success" title="Download">
+                                            <i class="fas fa-download"></i>
+                                        </a>
+                                        {% if doc.usuario_id == current_user.id %}
+                                        <a href="{{ url_for('documents.edit_document', id=doc.id) }}" 
+                                           class="btn btn-outline-warning" title="Editar">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        {% if filter_type == 'trash' %}
+                                        <button onclick="restoreDocument({{ doc.id }})" 
+                                                class="btn btn-outline-info" title="Restaurar">
+                                            <i class="fas fa-undo"></i>
+                                        </button>
+                                        {% else %}
+                                        <button onclick="deleteDocument({{ doc.id }})" 
+                                                class="btn btn-outline-danger" title="Excluir">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                        {% endif %}
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <!-- Grid View -->
+        <div class="document-grid">
+            {% for doc in documentos %}
+            <div class="document-card" onclick="window.location.href='{{ url_for('documents.view_document', id=doc.id) }}'">
+                <div class="document-icon">
+                    <i class="fas {{ get_file_icon(doc.extensao) }}"></i>
+                </div>
+                <div class="document-name" title="{{ doc.nome }}">{{ doc.nome }}</div>
+                <div class="document-meta">
+                    {{ doc.tamanho_formatado }}<br>
+                    {{ doc.data_upload.strftime('%d/%m/%Y') }}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Pagination -->
+        {% if pagination.pages > 1 %}
+        <nav aria-label="Navegação de páginas" class="mt-4">
+            <ul class="pagination justify-content-center">
+                <li class="page-item {% if not pagination.has_prev %}disabled{% endif %}">
+                    <a class="page-link" href="{{ url_for('documents.list_documents', page=pagination.prev_num, filter=filter_type, view=view_mode, q=search_query, categoria_id=selected_categoria) }}">
+                        Anterior
+                    </a>
+                </li>
+                {% for page_num in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+                    {% if page_num %}
+                        <li class="page-item {% if page_num == pagination.page %}active{% endif %}">
+                            <a class="page-link" href="{{ url_for('documents.list_documents', page=page_num, filter=filter_type, view=view_mode, q=search_query, categoria_id=selected_categoria) }}">
+                                {{ page_num }}
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                    {% endif %}
+                {% endfor %}
+                <li class="page-item {% if not pagination.has_next %}disabled{% endif %}">
+                    <a class="page-link" href="{{ url_for('documents.list_documents', page=pagination.next_num, filter=filter_type, view=view_mode, q=search_query, categoria_id=selected_categoria) }}">
+                        Próxima
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        {% endif %}
+    {% else %}
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle me-2"></i>
+            {% if filter_type == 'trash' %}
+                Nenhum documento na lixeira.
+            {% elif search_query %}
+                Nenhum documento encontrado para "{{ search_query }}".
+            {% else %}
+                Nenhum documento encontrado. <a href="{{ url_for('documents.upload') }}">Envie seu primeiro documento</a>.
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar Exclusão</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                Tem certeza que deseja excluir este documento? Ele será movido para a lixeira.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="confirmDelete">Excluir</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let documentToDelete = null;
+
+function toggleSelectAll(checkbox) {
+    const checkboxes = document.querySelectorAll('.doc-checkbox');
+    checkboxes.forEach(cb => cb.checked = checkbox.checked);
+    updateBulkActions();
+}
+
+function updateBulkActions() {
+    const checkedBoxes = document.querySelectorAll('.doc-checkbox:checked');
+    const bulkActions = document.getElementById('bulkActions');
+    if (checkedBoxes.length > 0) {
+        bulkActions.classList.add('show');
+    } else {
+        bulkActions.classList.remove('show');
+    }
+}
+
+function deleteDocument(id) {
+    documentToDelete = id;
+    const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+    modal.show();
+}
+
+document.getElementById('confirmDelete').addEventListener('click', function() {
+    if (documentToDelete) {
+        fetch(`/documents/${documentToDelete}/delete`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token() }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.reload();
+            } else {
+                alert('Erro ao excluir documento: ' + data.message);
+            }
+        })
+        .catch(error => {
+            alert('Erro ao excluir documento');
+            console.error(error);
+        });
+    }
+});
+
+function restoreDocument(id) {
+    if (confirm('Deseja restaurar este documento?')) {
+        fetch(`/documents/${id}/restore`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token() }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.reload();
+            } else {
+                alert('Erro ao restaurar documento: ' + data.message);
+            }
+        })
+        .catch(error => {
+            alert('Erro ao restaurar documento');
+            console.error(error);
+        });
+    }
+}
+
+function bulkDelete() {
+    const checkedBoxes = document.querySelectorAll('.doc-checkbox:checked');
+    const ids = Array.from(checkedBoxes).map(cb => cb.value);
+    
+    if (confirm(`Deseja excluir ${ids.length} documento(s)?`)) {
+        fetch('/documents/bulk-delete', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({ ids: ids })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.reload();
+            } else {
+                alert('Erro ao excluir documentos: ' + data.message);
+            }
+        })
+        .catch(error => {
+            alert('Erro ao excluir documentos');
+            console.error(error);
+        });
+    }
+}
+</script>
+{% endblock %}

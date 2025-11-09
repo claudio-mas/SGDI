@@ -1,0 +1,238 @@
+{% extends "base.html" %}
+
+{% block title %}Resultados da Busca - Sistema GED{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar">
+            <div class="position-sticky pt-3">
+                <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                    <span>Filtros Rápidos</span>
+                </h6>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('search.quick_filter', filter_type='my_documents') }}">
+                            <i class="bi bi-file-earmark"></i> Meus Documentos
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('search.quick_filter', filter_type='recent') }}">
+                            <i class="bi bi-clock-history"></i> Recentes
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('search.quick_filter', filter_type='favorites') }}">
+                            <i class="bi bi-star"></i> Favoritos
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('search.quick_filter', filter_type='pending_approval') }}">
+                            <i class="bi bi-hourglass-split"></i> Pendente de Aprovação
+                        </a>
+                    </li>
+                </ul>
+                
+                <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                    <span>Busca Avançada</span>
+                </h6>
+                <ul class="nav flex-column mb-2">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('search.advanced_search') }}">
+                            <i class="bi bi-funnel"></i> Busca Avançada
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('search.fulltext_search') }}">
+                            <i class="bi bi-file-text"></i> Busca em Conteúdo
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">Resultados da Busca</h1>
+                <div class="btn-toolbar mb-2 mb-md-0">
+                    <a href="{{ url_for('search.search') }}" class="btn btn-sm btn-outline-secondary">
+                        <i class="bi bi-arrow-left"></i> Nova Busca
+                    </a>
+                </div>
+            </div>
+
+            <!-- Search Query Display -->
+            <div class="mb-3">
+                <p class="text-muted">
+                    Buscando por: <strong>"{{ query }}"</strong>
+                    {% if total_count is defined %}
+                    - <span class="badge bg-primary">{{ total_count }} resultado(s) encontrado(s)</span>
+                    {% endif %}
+                </p>
+            </div>
+
+            <!-- Error Message -->
+            {% if error %}
+            <div class="alert alert-danger" role="alert">
+                <i class="bi bi-exclamation-triangle"></i> {{ error }}
+            </div>
+            {% endif %}
+
+            <!-- Results -->
+            {% if results %}
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <p class="text-muted">
+                        Mostrando {{ ((page - 1) * per_page) + 1 }} - {{ min(page * per_page, total_count) }} de {{ total_count }}
+                    </p>
+                </div>
+                <div class="col-md-6 text-end">
+                    <div class="btn-group btn-group-sm" role="group">
+                        <a href="{{ url_for('search.search', q=query, page=page, per_page=20) }}" 
+                           class="btn btn-outline-secondary {% if per_page == 20 %}active{% endif %}">20</a>
+                        <a href="{{ url_for('search.search', q=query, page=page, per_page=50) }}" 
+                           class="btn btn-outline-secondary {% if per_page == 50 %}active{% endif %}">50</a>
+                        <a href="{{ url_for('search.search', q=query, page=page, per_page=100) }}" 
+                           class="btn btn-outline-secondary {% if per_page == 100 %}active{% endif %}">100</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Categoria</th>
+                            <th>Tipo</th>
+                            <th>Tamanho</th>
+                            <th>Data Upload</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for doc in results %}
+                        <tr>
+                            <td>
+                                <i class="bi bi-file-earmark-{{ 'pdf' if doc.tipo_mime == 'application/pdf' else 'text' }}"></i>
+                                <a href="{{ url_for('documents.view_document', document_id=doc.id) }}">
+                                    {{ doc.nome }}
+                                </a>
+                                {% if doc.descricao %}
+                                <br><small class="text-muted">{{ doc.descricao[:100] }}{% if doc.descricao|length > 100 %}...{% endif %}</small>
+                                {% endif %}
+                                {% if doc.tags %}
+                                <br>
+                                {% for tag in doc.tags %}
+                                <span class="badge bg-secondary">{{ tag.nome }}</span>
+                                {% endfor %}
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if doc.categoria %}
+                                {{ doc.categoria.nome }}
+                                {% else %}
+                                <span class="text-muted">-</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="badge bg-info">{{ doc.extensao }}</span>
+                            </td>
+                            <td>{{ doc.tamanho_formatado }}</td>
+                            <td>{{ doc.data_upload.strftime('%d/%m/%Y %H:%M') }}</td>
+                            <td>
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <a href="{{ url_for('documents.view_document', document_id=doc.id) }}" 
+                                       class="btn btn-outline-primary" title="Visualizar">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a href="{{ url_for('documents.download_document', document_id=doc.id) }}" 
+                                       class="btn btn-outline-success" title="Download">
+                                        <i class="bi bi-download"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            {% if total_pages > 1 %}
+            <nav aria-label="Navegação de resultados">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item {% if page == 1 %}disabled{% endif %}">
+                        <a class="page-link" href="{{ url_for('search.search', q=query, page=page-1, per_page=per_page) }}">
+                            Anterior
+                        </a>
+                    </li>
+                    
+                    {% for p in range(1, total_pages + 1) %}
+                        {% if p == 1 or p == total_pages or (p >= page - 2 and p <= page + 2) %}
+                        <li class="page-item {% if p == page %}active{% endif %}">
+                            <a class="page-link" href="{{ url_for('search.search', q=query, page=p, per_page=per_page) }}">
+                                {{ p }}
+                            </a>
+                        </li>
+                        {% elif p == page - 3 or p == page + 3 %}
+                        <li class="page-item disabled">
+                            <span class="page-link">...</span>
+                        </li>
+                        {% endif %}
+                    {% endfor %}
+                    
+                    <li class="page-item {% if page == total_pages %}disabled{% endif %}">
+                        <a class="page-link" href="{{ url_for('search.search', q=query, page=page+1, per_page=per_page) }}">
+                            Próximo
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            {% endif %}
+            {% elif query %}
+            <div class="alert alert-info" role="alert">
+                <i class="bi bi-info-circle"></i> Nenhum documento encontrado para a busca "{{ query }}".
+                <br><br>
+                <strong>Sugestões:</strong>
+                <ul>
+                    <li>Verifique a ortografia dos termos de busca</li>
+                    <li>Tente usar palavras-chave diferentes</li>
+                    <li>Use termos mais genéricos</li>
+                    <li>Tente a <a href="{{ url_for('search.advanced_search') }}">busca avançada</a> com filtros específicos</li>
+                </ul>
+            </div>
+            {% endif %}
+        </main>
+    </div>
+</div>
+
+<style>
+.sidebar {
+    position: fixed;
+    top: 56px;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    padding: 0;
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+    overflow-y: auto;
+}
+
+.sidebar .nav-link {
+    font-weight: 500;
+    color: #333;
+    padding: 0.75rem 1rem;
+}
+
+.sidebar .nav-link:hover {
+    background-color: #e9ecef;
+}
+
+.sidebar .nav-link i {
+    margin-right: 0.5rem;
+}
+</style>
+{% endblock %}

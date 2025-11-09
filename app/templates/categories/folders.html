@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+
+{% block title %}Minhas Pastas - Sistema GED{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h2><i class="fas fa-folder-open"></i> Minhas Pastas</h2>
+            <p class="text-muted">Organize seus documentos em pastas personalizadas</p>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="{{ url_for('categories.create_folder') }}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Nova Pasta
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Folder Tree Sidebar -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-sitemap"></i> Árvore de Pastas</h5>
+                </div>
+                <div class="card-body">
+                    <div id="folder-tree">
+                        {% if hierarchy %}
+                            {{ render_folder_tree(hierarchy, folder_stats) }}
+                        {% else %}
+                            <p class="text-muted">Nenhuma pasta criada</p>
+                            <a href="{{ url_for('categories.create_folder') }}" class="btn btn-sm btn-primary">
+                                <i class="fas fa-plus"></i> Criar primeira pasta
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Folder List -->
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-list"></i> Todas as Pastas</h5>
+                </div>
+                <div class="card-body">
+                    {% if folders %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Caminho</th>
+                                    <th>Documentos</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for pasta in folders %}
+                                <tr>
+                                    <td>
+                                        <i class="fas fa-folder" style="color: {{ pasta.cor or '#ffc107' }}"></i>
+                                        <a href="{{ url_for('categories.view_folder', id=pasta.id) }}">
+                                            {{ pasta.nome }}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <small class="text-muted">{{ pasta.caminho_completo }}</small>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-info">{{ folder_stats.get(pasta.id, 0) }}</span>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="{{ url_for('categories.view_folder', id=pasta.id) }}" 
+                                               class="btn btn-outline-primary" title="Ver">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <a href="{{ url_for('categories.edit_folder', id=pasta.id) }}" 
+                                               class="btn btn-outline-secondary" title="Editar">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <button type="button" class="btn btn-outline-danger" 
+                                                    onclick="confirmDelete({{ pasta.id }}, '{{ pasta.nome }}')" 
+                                                    title="Excluir">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-folder-open fa-4x text-muted mb-3"></i>
+                        <p class="text-muted">Você ainda não criou nenhuma pasta</p>
+                        <a href="{{ url_for('categories.create_folder') }}" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Criar primeira pasta
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar Exclusão</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Tem certeza que deseja excluir a pasta <strong id="folderName"></strong>?</p>
+                <p class="text-danger"><small>Esta ação não pode ser desfeita. A pasta só pode ser excluída se estiver vazia.</small></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <form id="deleteForm" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">Excluir</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% macro render_folder_tree(nodes, stats) %}
+<ul class="list-unstyled ms-3">
+    {% for node in nodes %}
+    <li class="mb-2">
+        <i class="fas fa-folder" style="color: {{ node.cor or '#ffc107' }}"></i>
+        <a href="{{ url_for('categories.view_folder', id=node.id) }}">{{ node.nome }}</a>
+        <span class="badge bg-secondary">{{ stats.get(node.id, 0) }}</span>
+        {% if node.children %}
+            {{ render_folder_tree(node.children, stats) }}
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>
+{% endmacro %}
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+function confirmDelete(folderId, folderName) {
+    document.getElementById('folderName').textContent = folderName;
+    document.getElementById('deleteForm').action = "{{ url_for('categories.delete_folder', id=0) }}".replace('0', folderId);
+    new bootstrap.Modal(document.getElementById('deleteModal')).show();
+}
+</script>
+{% endblock %}

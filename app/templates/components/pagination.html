@@ -1,0 +1,108 @@
+{# Pagination Component #}
+
+{% macro pagination(pagination_obj, endpoint, **kwargs) %}
+{% if pagination_obj and pagination_obj.pages > 1 %}
+<nav aria-label="Navegação de páginas">
+    <ul class="pagination justify-content-center">
+        <!-- Previous Button -->
+        <li class="page-item {% if not pagination_obj.has_prev %}disabled{% endif %}">
+            {% if pagination_obj.has_prev %}
+                <a class="page-link" href="{{ url_for(endpoint, page=pagination_obj.prev_num, **kwargs) }}" aria-label="Anterior">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            {% else %}
+                <span class="page-link" aria-label="Anterior">
+                    <span aria-hidden="true">&laquo;</span>
+                </span>
+            {% endif %}
+        </li>
+        
+        <!-- First Page -->
+        {% if pagination_obj.page > 3 %}
+        <li class="page-item">
+            <a class="page-link" href="{{ url_for(endpoint, page=1, **kwargs) }}">1</a>
+        </li>
+        {% if pagination_obj.page > 4 %}
+        <li class="page-item disabled">
+            <span class="page-link">...</span>
+        </li>
+        {% endif %}
+        {% endif %}
+        
+        <!-- Page Numbers -->
+        {% for page_num in range(pagination_obj.page - 2, pagination_obj.page + 3) %}
+            {% if page_num > 0 and page_num <= pagination_obj.pages %}
+            <li class="page-item {% if page_num == pagination_obj.page %}active{% endif %}">
+                <a class="page-link" href="{{ url_for(endpoint, page=page_num, **kwargs) }}">
+                    {{ page_num }}
+                    {% if page_num == pagination_obj.page %}
+                        <span class="visually-hidden">(atual)</span>
+                    {% endif %}
+                </a>
+            </li>
+            {% endif %}
+        {% endfor %}
+        
+        <!-- Last Page -->
+        {% if pagination_obj.page < pagination_obj.pages - 2 %}
+        {% if pagination_obj.page < pagination_obj.pages - 3 %}
+        <li class="page-item disabled">
+            <span class="page-link">...</span>
+        </li>
+        {% endif %}
+        <li class="page-item">
+            <a class="page-link" href="{{ url_for(endpoint, page=pagination_obj.pages, **kwargs) }}">{{ pagination_obj.pages }}</a>
+        </li>
+        {% endif %}
+        
+        <!-- Next Button -->
+        <li class="page-item {% if not pagination_obj.has_next %}disabled{% endif %}">
+            {% if pagination_obj.has_next %}
+                <a class="page-link" href="{{ url_for(endpoint, page=pagination_obj.next_num, **kwargs) }}" aria-label="Próxima">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            {% else %}
+                <span class="page-link" aria-label="Próxima">
+                    <span aria-hidden="true">&raquo;</span>
+                </span>
+            {% endif %}
+        </li>
+    </ul>
+</nav>
+
+<!-- Pagination Info -->
+<div class="text-center text-muted mb-3">
+    <small>
+        Mostrando {{ ((pagination_obj.page - 1) * pagination_obj.per_page) + 1 }} 
+        a {{ [pagination_obj.page * pagination_obj.per_page, pagination_obj.total] | min }} 
+        de {{ pagination_obj.total }} resultados
+    </small>
+</div>
+{% endif %}
+{% endmacro %}
+
+{% macro simple_pagination(pagination_obj, endpoint, **kwargs) %}
+{% if pagination_obj and pagination_obj.pages > 1 %}
+<nav aria-label="Navegação de páginas">
+    <ul class="pagination justify-content-center">
+        <li class="page-item {% if not pagination_obj.has_prev %}disabled{% endif %}">
+            {% if pagination_obj.has_prev %}
+                <a class="page-link" href="{{ url_for(endpoint, page=pagination_obj.prev_num, **kwargs) }}">Anterior</a>
+            {% else %}
+                <span class="page-link">Anterior</span>
+            {% endif %}
+        </li>
+        <li class="page-item disabled">
+            <span class="page-link">Página {{ pagination_obj.page }} de {{ pagination_obj.pages }}</span>
+        </li>
+        <li class="page-item {% if not pagination_obj.has_next %}disabled{% endif %}">
+            {% if pagination_obj.has_next %}
+                <a class="page-link" href="{{ url_for(endpoint, page=pagination_obj.next_num, **kwargs) }}">Próxima</a>
+            {% else %}
+                <span class="page-link">Próxima</span>
+            {% endif %}
+        </li>
+    </ul>
+</nav>
+{% endif %}
+{% endmacro %}

@@ -1,0 +1,250 @@
+{% extends "base.html" %}
+
+{% block title %}Relatório de Armazenamento - Sistema GED{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h1 class="h3 mb-0">
+                    <i class="fas fa-hdd"></i> Relatório de Armazenamento
+                </h1>
+                <div>
+                    <a href="{{ url_for('admin.report_storage', export='csv') }}" 
+                       class="btn btn-success">
+                        <i class="fas fa-file-csv"></i> Exportar CSV
+                    </a>
+                    <a href="{{ url_for('admin.reports') }}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Voltar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Total Storage Card -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-left-success shadow">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Armazenamento Total Utilizado
+                            </div>
+                            <div class="h3 mb-0 font-weight-bold text-gray-800">
+                                {{ report.total_storage_formatted }}
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-database fa-3x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Storage by User -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-users"></i> Armazenamento por Usuário
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="userStorageTable">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Nome</th>
+                                    <th>Email</th>
+                                    <th>Perfil</th>
+                                    <th>Documentos</th>
+                                    <th>Armazenamento</th>
+                                    <th>% do Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user in report.by_user %}
+                                <tr>
+                                    <td>{{ loop.index }}</td>
+                                    <td>{{ user.name }}</td>
+                                    <td>{{ user.email }}</td>
+                                    <td>
+                                        <span class="badge badge-info">{{ user.profile }}</span>
+                                    </td>
+                                    <td>{{ user.document_count }}</td>
+                                    <td>{{ user.total_formatted }}</td>
+                                    <td>
+                                        {% set percentage = (user.total_bytes / report.total_storage_bytes * 100) if report.total_storage_bytes > 0 else 0 %}
+                                        <div class="progress" style="height: 20px;">
+                                            <div class="progress-bar" role="progressbar" 
+                                                 style="width: {{ percentage }}%" 
+                                                 aria-valuenow="{{ percentage }}" 
+                                                 aria-valuemin="0" aria-valuemax="100">
+                                                {{ "%.1f"|format(percentage) }}%
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td colspan="7" class="text-center text-muted">
+                                        Nenhum dado disponível
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Storage by File Type -->
+    <div class="row">
+        <div class="col-lg-8 mb-4">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-file"></i> Armazenamento por Tipo de Arquivo
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="typeStorageTable">
+                            <thead>
+                                <tr>
+                                    <th>Tipo MIME</th>
+                                    <th>Documentos</th>
+                                    <th>Armazenamento</th>
+                                    <th>% do Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for file_type in report.by_type %}
+                                <tr>
+                                    <td><code>{{ file_type.mime_type }}</code></td>
+                                    <td>{{ file_type.document_count }}</td>
+                                    <td>{{ file_type.total_formatted }}</td>
+                                    <td>
+                                        {% set percentage = (file_type.total_bytes / report.total_storage_bytes * 100) if report.total_storage_bytes > 0 else 0 %}
+                                        {{ "%.1f"|format(percentage) }}%
+                                    </td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted">
+                                        Nenhum dado disponível
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-chart-pie"></i> Distribuição por Tipo
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <canvas id="typeChart" height="250"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('#userStorageTable').DataTable({
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/1.13.4/i18n/pt-BR.json"
+        },
+        "pageLength": 25,
+        "order": [[5, "desc"]]
+    });
+    
+    $('#typeStorageTable').DataTable({
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/1.13.4/i18n/pt-BR.json"
+        },
+        "pageLength": 10,
+        "order": [[2, "desc"]]
+    });
+});
+
+// Type Distribution Chart
+const typeData = {{ report.by_type | tojson }};
+const ctx = document.getElementById('typeChart').getContext('2d');
+
+new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+        labels: typeData.map(t => t.mime_type),
+        datasets: [{
+            data: typeData.map(t => t.total_bytes),
+            backgroundColor: [
+                'rgb(78, 115, 223)',
+                'rgb(28, 200, 138)',
+                'rgb(54, 185, 204)',
+                'rgb(246, 194, 62)',
+                'rgb(231, 74, 59)',
+                'rgb(133, 135, 150)',
+                'rgb(255, 99, 132)',
+                'rgb(255, 159, 64)',
+                'rgb(255, 205, 86)',
+                'rgb(75, 192, 192)'
+            ]
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+            legend: {
+                position: 'bottom',
+                labels: {
+                    boxWidth: 12,
+                    font: {
+                        size: 10
+                    }
+                }
+            },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        const bytes = context.parsed;
+                        const formatted = formatBytes(bytes);
+                        return context.label + ': ' + formatted;
+                    }
+                }
+            }
+        }
+    }
+});
+
+function formatBytes(bytes) {
+    if (bytes === 0) return '0 B';
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
+</script>
+{% endblock %}

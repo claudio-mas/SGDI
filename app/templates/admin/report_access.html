@@ -1,0 +1,207 @@
+{% extends "base.html" %}
+
+{% block title %}Relatório de Acessos - Sistema GED{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h1 class="h3 mb-0">
+                    <i class="fas fa-eye"></i> Relatório de Acessos
+                </h1>
+                <div>
+                    <a href="{{ url_for('admin.report_access', export='csv', data_inicio=request.args.get('data_inicio'), data_fim=request.args.get('data_fim'), usuario_id=request.args.get('usuario_id'), documento_id=request.args.get('documento_id')) }}" 
+                       class="btn btn-success">
+                        <i class="fas fa-file-csv"></i> Exportar CSV
+                    </a>
+                    <a href="{{ url_for('admin.reports') }}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Voltar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-body">
+                    <form method="GET" action="{{ url_for('admin.report_access') }}" class="form-row">
+                        <div class="col-md-3 mb-2">
+                            <label>Data Início:</label>
+                            <input type="date" name="data_inicio" class="form-control" 
+                                   value="{{ request.args.get('data_inicio', '') }}">
+                        </div>
+                        
+                        <div class="col-md-3 mb-2">
+                            <label>Data Fim:</label>
+                            <input type="date" name="data_fim" class="form-control" 
+                                   value="{{ request.args.get('data_fim', '') }}">
+                        </div>
+                        
+                        <div class="col-md-3 mb-2">
+                            <label>Usuário:</label>
+                            <select name="usuario_id" class="form-control">
+                                <option value="">Todos os Usuários</option>
+                                {% for user in users %}
+                                <option value="{{ user.id }}" 
+                                        {% if request.args.get('usuario_id')|int == user.id %}selected{% endif %}>
+                                    {{ user.nome }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-2 mb-2">
+                            <label>ID Documento:</label>
+                            <input type="number" name="documento_id" class="form-control" 
+                                   value="{{ request.args.get('documento_id', '') }}" 
+                                   placeholder="ID">
+                        </div>
+                        
+                        <div class="col-md-1 mb-2 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary btn-block">
+                                <i class="fas fa-filter"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Summary -->
+    <div class="row mb-4">
+        <div class="col-md-4 mb-3">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Visualizações
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                {{ report.summary.get('document_view', 0) }}
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-eye fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Downloads
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                {{ report.summary.get('document_download', 0) }}
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-download fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Uploads
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                {{ report.summary.get('document_upload', 0) }}
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-upload fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Access Logs Table -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-list"></i> Logs de Acesso (Últimos 1000)
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover" id="accessTable">
+                            <thead>
+                                <tr>
+                                    <th>Data/Hora</th>
+                                    <th>Usuário</th>
+                                    <th>Ação</th>
+                                    <th>ID Documento</th>
+                                    <th>IP</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for log in report.access_logs %}
+                                <tr>
+                                    <td>{{ log.timestamp[:19] if log.timestamp else '-' }}</td>
+                                    <td>{{ log.user_name }}</td>
+                                    <td>
+                                        {% if log.action == 'document_view' %}
+                                        <span class="badge badge-primary">Visualização</span>
+                                        {% elif log.action == 'document_download' %}
+                                        <span class="badge badge-success">Download</span>
+                                        {% elif log.action == 'document_upload' %}
+                                        <span class="badge badge-info">Upload</span>
+                                        {% else %}
+                                        <span class="badge badge-secondary">{{ log.action }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ log.document_id }}</td>
+                                    <td><small>{{ log.ip_address or '-' }}</small></td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td colspan="5" class="text-center text-muted">
+                                        Nenhum acesso registrado no período
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+$(document).ready(function() {
+    $('#accessTable').DataTable({
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/1.13.4/i18n/pt-BR.json"
+        },
+        "pageLength": 50,
+        "order": [[0, "desc"]]
+    });
+});
+</script>
+{% endblock %}

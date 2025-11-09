@@ -1,0 +1,26 @@
+{% extends "emails/base.html" %}
+
+{% block content %}
+<h2>Documento Aprovado</h2>
+
+<p>Olá {{ submitter_name }},</p>
+
+<p>Seu documento foi aprovado por {{ approver_name }}.</p>
+
+<div class="info-box">
+    <strong>Documento:</strong> {{ document_name }}<br>
+    <strong>Workflow:</strong> {{ workflow_name }}<br>
+    <strong>Aprovador:</strong> {{ approver_name }}<br>
+    <strong>Data de Aprovação:</strong> {{ approval_date }}<br>
+    {% if comment %}
+    <strong>Comentário:</strong> {{ comment }}
+    {% endif %}
+</div>
+
+<p style="text-align: center;">
+    <a href="{{ document_url }}" class="button">Visualizar Documento</a>
+</p>
+
+<p>Atenciosamente,<br>
+Equipe Sistema GED</p>
+{% endblock %}

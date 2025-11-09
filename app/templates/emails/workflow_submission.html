@@ -1,0 +1,28 @@
+{% extends "emails/base.html" %}
+
+{% block content %}
+<h2>Solicitação de Aprovação</h2>
+
+<p>Olá {{ approver_name }},</p>
+
+<p>{{ submitter_name }} enviou um documento para sua aprovação no Sistema GED.</p>
+
+<div class="info-box">
+    <strong>Documento:</strong> {{ document_name }}<br>
+    {% if document_description %}
+    <strong>Descrição:</strong> {{ document_description }}<br>
+    {% endif %}
+    <strong>Workflow:</strong> {{ workflow_name }}<br>
+    <strong>Etapa:</strong> {{ stage_name }}<br>
+    <strong>Data de Submissão:</strong> {{ submission_date }}
+</div>
+
+<p style="text-align: center;">
+    <a href="{{ approval_url }}" class="button">Revisar e Aprovar</a>
+</p>
+
+<p>Por favor, revise o documento e tome uma decisão o mais breve possível.</p>
+
+<p>Atenciosamente,<br>
+Equipe Sistema GED</p>
+{% endblock %}

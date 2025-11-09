@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block title %}{{ 'Novo Usuário' if action == 'create' else 'Editar Usuário' }} - Sistema GED{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h4 class="mb-0">
+                        <i class="fas fa-user-{{ 'plus' if action == 'create' else 'edit' }}"></i>
+                        {{ 'Novo Usuário' if action == 'create' else 'Editar Usuário' }}
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" novalidate>
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="form-group">
+                            {{ form.nome.label(class="form-label") }}
+                            {{ form.nome(class="form-control" + (" is-invalid" if form.nome.errors else "")) }}
+                            {% if form.nome.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.nome.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group">
+                            {{ form.email.label(class="form-label") }}
+                            {{ form.email(class="form-control" + (" is-invalid" if form.email.errors else ""), type="email") }}
+                            {% if form.email.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.email.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        {% if action == 'create' %}
+                        <div class="form-group">
+                            {{ form.senha.label(class="form-label") }}
+                            {{ form.senha(class="form-control" + (" is-invalid" if form.senha.errors else "")) }}
+                            {% if form.senha.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.senha.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <small class="form-text text-muted">
+                                Mínimo de 8 caracteres
+                            </small>
+                        </div>
+                        {% endif %}
+                        
+                        <div class="form-group">
+                            {{ form.perfil_id.label(class="form-label") }}
+                            {{ form.perfil_id(class="form-control" + (" is-invalid" if form.perfil_id.errors else "")) }}
+                            {% if form.perfil_id.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.perfil_id.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group">
+                            <div class="custom-control custom-checkbox">
+                                {{ form.ativo(class="custom-control-input") }}
+                                {{ form.ativo.label(class="custom-control-label") }}
+                            </div>
+                        </div>
+                        
+                        <div class="form-group mt-4">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i>
+                                {{ 'Criar Usuário' if action == 'create' else 'Salvar Alterações' }}
+                            </button>
+                            <a href="{{ url_for('admin.users') }}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Cancelar
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            {% if action == 'edit' and user %}
+            <div class="card shadow mt-3">
+                <div class="card-body">
+                    <h6 class="card-title">Informações Adicionais</h6>
+                    <ul class="list-unstyled mb-0">
+                        <li><strong>ID:</strong> {{ user.id }}</li>
+                        <li><strong>Data de Cadastro:</strong> 
+                            {{ user.data_cadastro.strftime('%d/%m/%Y %H:%M') if user.data_cadastro else 'N/A' }}
+                        </li>
+                        <li><strong>Último Acesso:</strong> 
+                            {{ user.ultimo_acesso.strftime('%d/%m/%Y %H:%M') if user.ultimo_acesso else 'Nunca' }}
+                        </li>
+                        <li><strong>Tentativas de Login:</strong> {{ user.tentativas_login }}</li>
+                        {% if user.bloqueado_ate %}
+                        <li class="text-danger">
+                            <strong>Bloqueado até:</strong> 
+                            {{ user.bloqueado_ate.strftime('%d/%m/%Y %H:%M') }}
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

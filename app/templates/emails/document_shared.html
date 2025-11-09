@@ -1,0 +1,29 @@
+{% extends "emails/base.html" %}
+
+{% block content %}
+<h2>Documento Compartilhado</h2>
+
+<p>Olá {{ recipient_name }},</p>
+
+<p>{{ sender_name }} compartilhou um documento com você no Sistema GED.</p>
+
+<div class="info-box">
+    <strong>Documento:</strong> {{ document_name }}<br>
+    {% if document_description %}
+    <strong>Descrição:</strong> {{ document_description }}<br>
+    {% endif %}
+    <strong>Permissões:</strong> {{ permissions }}<br>
+    {% if expiration_date %}
+    <strong>Válido até:</strong> {{ expiration_date }}<br>
+    {% endif %}
+</div>
+
+<p style="text-align: center;">
+    <a href="{{ document_url }}" class="button">Visualizar Documento</a>
+</p>
+
+<p>Você pode acessar este documento a qualquer momento através do Sistema GED.</p>
+
+<p>Atenciosamente,<br>
+Equipe Sistema GED</p>
+{% endblock %}

@@ -1,0 +1,208 @@
+{% extends "base.html" %}
+
+{% block title %}Editar Documento - Sistema GED{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1><i class="fas fa-edit me-2"></i>Editar Documento</h1>
+                <a href="{{ url_for('documents.view_document', id=documento.id) }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Voltar
+                </a>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <!-- Document Info Card -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="me-3">
+                            <i class="fas {{ documento.extensao|get_file_icon }} fa-3x"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-1">{{ documento.nome_arquivo_original }}</h5>
+                            <p class="text-muted mb-0">
+                                {{ documento.tamanho_formatado }} • 
+                                Enviado em {{ documento.data_upload.strftime('%d/%m/%Y %H:%M') }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Edit Form -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Informações do Documento</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('documents.edit_document', id=documento.id) }}">
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="mb-3">
+                            <label for="nome" class="form-label">Nome do Documento <span class="text-danger">*</span></label>
+                            {{ form.nome(class="form-control" + (" is-invalid" if form.nome.errors else "")) }}
+                            {% if form.nome.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.nome.errors %}{{ error }}{% endfor %}
+                                </div>
+                            {% endif %}
+                            <small class="form-text text-muted">
+                                Nome de exibição do documento no sistema
+                            </small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="descricao" class="form-label">Descrição</label>
+                            {{ form.descricao(class="form-control", rows="4", placeholder="Descreva o conteúdo do documento") }}
+                            {% if form.descricao.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.descricao.errors %}{{ error }}{% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="categoria_id" class="form-label">Categoria</label>
+                                {{ form.categoria_id(class="form-select") }}
+                                {% if form.categoria_id.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {% for error in form.categoria_id.errors %}{{ error }}{% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="pasta_id" class="form-label">Pasta</label>
+                                {{ form.pasta_id(class="form-select") }}
+                                {% if form.pasta_id.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {% for error in form.pasta_id.errors %}{{ error }}{% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="tags" class="form-label">Tags</label>
+                            {{ form.tags(class="form-control", id="tagsInput") }}
+                            {% if form.tags.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.tags.errors %}{{ error }}{% endfor %}
+                                </div>
+                            {% endif %}
+                            <small class="form-text text-muted">
+                                Separe as tags com vírgulas (ex: contrato, financeiro, 2024)
+                            </small>
+                        </div>
+
+                        <div class="d-flex gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary flex-grow-1">
+                                <i class="fas fa-save me-2"></i>Salvar Alterações
+                            </button>
+                            <a href="{{ url_for('documents.view_document', id=documento.id) }}" class="btn btn-secondary">
+                                Cancelar
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Additional Actions -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-cog me-2"></i>Ações Adicionais</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="d-grid">
+                                <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#newVersionModal">
+                                    <i class="fas fa-file-upload me-2"></i>Enviar Nova Versão
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-grid">
+                                <a href="{{ url_for('documents.download_document', id=documento.id) }}" class="btn btn-outline-success">
+                                    <i class="fas fa-download me-2"></i>Baixar Documento
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- New Version Modal -->
+<div class="modal fade" id="newVersionModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Enviar Nova Versão</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form action="{{ url_for('documents.upload_version', id=documento.id) }}" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="modal-body">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        A nova versão deve ser do mesmo tipo do arquivo original ({{ documento.tipo_mime }})
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Arquivo <span class="text-danger">*</span></label>
+                        <input type="file" name="file" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Comentário <span class="text-danger">*</span></label>
+                        <textarea name="comentario" class="form-control" rows="3" required placeholder="Descreva as mudanças nesta versão"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-upload me-2"></i>Enviar Nova Versão
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+$(document).ready(function() {
+    // Initialize Select2 for tags
+    $('#tagsInput').select2({
+        tags: true,
+        tokenSeparators: [','],
+        theme: 'bootstrap-5',
+        placeholder: 'Digite as tags e pressione Enter',
+        allowClear: true
+    });
+});
+</script>
+{% endblock %}

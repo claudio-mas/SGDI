@@ -1,0 +1,49 @@
+{# Modal Dialog Component #}
+
+{% macro modal(id, title, size='', centered=false, scrollable=false, static_backdrop=false) %}
+<div class="modal fade" id="{{ id }}" tabindex="-1" aria-labelledby="{{ id }}Label" aria-hidden="true" 
+     {% if static_backdrop %}data-bs-backdrop="static" data-bs-keyboard="false"{% endif %}>
+    <div class="modal-dialog {% if size %}modal-{{ size }}{% endif %} {% if centered %}modal-dialog-centered{% endif %} {% if scrollable %}modal-dialog-scrollable{% endif %}">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="{{ id }}Label">{{ title }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {{ caller() }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endmacro %}
+
+{% macro confirm_modal(id, title, message, confirm_text='Confirmar', cancel_text='Cancelar', confirm_class='btn-danger') %}
+<div class="modal fade" id="{{ id }}" tabindex="-1" aria-labelledby="{{ id }}Label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="{{ id }}Label">{{ title }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>{{ message }}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ cancel_text }}</button>
+                <button type="button" class="btn {{ confirm_class }}" id="{{ id }}Confirm">{{ confirm_text }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endmacro %}
+
+{% macro delete_modal(id, item_name='este item') %}
+{{ confirm_modal(
+    id=id,
+    title='Confirmar Exclusão',
+    message='Tem certeza que deseja excluir ' ~ item_name ~ '? Esta ação não pode ser desfeita.',
+    confirm_text='Excluir',
+    cancel_text='Cancelar',
+    confirm_class='btn-danger'
+) }}
+{% endmacro %}

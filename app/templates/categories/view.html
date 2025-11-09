@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+
+{% block title %}{{ categoria.nome }} - Sistema GED{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('categories.list_categories') }}">Categorias</a></li>
+            {% for cat in breadcrumb %}
+                {% if loop.last %}
+                    <li class="breadcrumb-item active" aria-current="page">{{ cat.nome }}</li>
+                {% else %}
+                    <li class="breadcrumb-item"><a href="{{ url_for('categories.view_category', id=cat.id) }}">{{ cat.nome }}</a></li>
+                {% endif %}
+            {% endfor %}
+        </ol>
+    </nav>
+
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h2>
+                {% if categoria.icone %}
+                <i class="fas {{ categoria.icone }}" style="color: {{ categoria.cor or '#007bff' }}"></i>
+                {% else %}
+                <i class="fas fa-folder" style="color: {{ categoria.cor or '#007bff' }}"></i>
+                {% endif %}
+                {{ categoria.nome }}
+            </h2>
+            {% if categoria.descricao %}
+            <p class="text-muted">{{ categoria.descricao }}</p>
+            {% endif %}
+        </div>
+        <div class="col-md-4 text-end">
+            {% if current_user.perfil and current_user.perfil.nome in ['Administrador', 'Gerente'] %}
+            <a href="{{ url_for('categories.edit_category', id=categoria.id) }}" class="btn btn-secondary">
+                <i class="fas fa-edit"></i> Editar
+            </a>
+            <button type="button" class="btn btn-danger" onclick="confirmDelete()">
+                <i class="fas fa-trash"></i> Excluir
+            </button>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Statistics -->
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-chart-bar"></i> Estatísticas</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <h6>Documentos nesta categoria</h6>
+                        <h3 class="text-primary">{{ document_count }}</h3>
+                    </div>
+                    <div class="mb-3">
+                        <h6>Total (incluindo subcategorias)</h6>
+                        <h3 class="text-info">{{ document_count_total }}</h3>
+                    </div>
+                    <div>
+                        <h6>Subcategorias</h6>
+                        <h3 class="text-secondary">{{ subcategories|length }}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Subcategories -->
+        <div class="col-md-8 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-folder-tree"></i> Subcategorias</h5>
+                </div>
+                <div class="card-body">
+                    {% if subcategories %}
+                    <div class="list-group">
+                        {% for subcat in subcategories %}
+                        <a href="{{ url_for('categories.view_category', id=subcat.id) }}" 
+                           class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between align-items-center">
+                                <div>
+                                    {% if subcat.icone %}
+                                    <i class="fas {{ subcat.icone }}" style="color: {{ subcat.cor or '#007bff' }}"></i>
+                                    {% else %}
+                                    <i class="fas fa-folder" style="color: {{ subcat.cor or '#007bff' }}"></i>
+                                    {% endif %}
+                                    <strong>{{ subcat.nome }}</strong>
+                                    {% if subcat.descricao %}
+                                    <br><small class="text-muted">{{ subcat.descricao }}</small>
+                                    {% endif %}
+                                </div>
+                                <span class="badge bg-primary rounded-pill">
+                                    {{ subcat.documentos.filter_by(status='ativo').count() }} docs
+                                </span>
+                            </div>
+                        </a>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-muted">Nenhuma subcategoria</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Documents in this category -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-file"></i> Documentos</h5>
+                </div>
+                <div class="card-body">
+                    <a href="{{ url_for('documents.list_documents', categoria_id=categoria.id) }}" class="btn btn-primary">
+                        <i class="fas fa-list"></i> Ver todos os documentos desta categoria
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar Exclusão</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Tem certeza que deseja excluir a categoria <strong>{{ categoria.nome }}</strong>?</p>
+                <p class="text-danger"><small>Esta ação não pode ser desfeita. A categoria só pode ser excluída se não tiver documentos associados.</small></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <form method="POST" action="{{ url_for('categories.delete_category', id=categoria.id) }}" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">Excluir</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function confirmDelete() {
+    new bootstrap.Modal(document.getElementById('deleteModal')).show();
+}
+</script>
+{% endblock %}

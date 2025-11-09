@@ -1,0 +1,75 @@
+{# File Icon Component #}
+
+{% macro file_icon(filename_or_extension, size='2x', color='') %}
+{% set extension = filename_or_extension.split('.')[-1].lower() if '.' in filename_or_extension else filename_or_extension.lower() %}
+{% set icon_class = 'bi-file-earmark' %}
+{% set icon_color = color if color else 'text-secondary' %}
+
+{# Document types #}
+{% if extension in ['pdf'] %}
+    {% set icon_class = 'bi-file-earmark-pdf' %}
+    {% set icon_color = 'text-danger' if not color else color %}
+{% elif extension in ['doc', 'docx'] %}
+    {% set icon_class = 'bi-file-earmark-word' %}
+    {% set icon_color = 'text-primary' if not color else color %}
+{% elif extension in ['xls', 'xlsx', 'csv'] %}
+    {% set icon_class = 'bi-file-earmark-excel' %}
+    {% set icon_color = 'text-success' if not color else color %}
+{% elif extension in ['ppt', 'pptx'] %}
+    {% set icon_class = 'bi-file-earmark-ppt' %}
+    {% set icon_color = 'text-warning' if not color else color %}
+{% elif extension in ['txt', 'log'] %}
+    {% set icon_class = 'bi-file-earmark-text' %}
+    {% set icon_color = 'text-secondary' if not color else color %}
+{% elif extension in ['zip', 'rar', '7z', 'tar', 'gz'] %}
+    {% set icon_class = 'bi-file-earmark-zip' %}
+    {% set icon_color = 'text-warning' if not color else color %}
+{% elif extension in ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg', 'webp'] %}
+    {% set icon_class = 'bi-file-earmark-image' %}
+    {% set icon_color = 'text-info' if not color else color %}
+{% elif extension in ['mp4', 'avi', 'mov', 'wmv', 'flv', 'mkv'] %}
+    {% set icon_class = 'bi-file-earmark-play' %}
+    {% set icon_color = 'text-danger' if not color else color %}
+{% elif extension in ['mp3', 'wav', 'ogg', 'flac', 'aac'] %}
+    {% set icon_class = 'bi-file-earmark-music' %}
+    {% set icon_color = 'text-purple' if not color else color %}
+{% elif extension in ['html', 'css', 'js', 'json', 'xml', 'py', 'java', 'cpp', 'c', 'php'] %}
+    {% set icon_class = 'bi-file-earmark-code' %}
+    {% set icon_color = 'text-success' if not color else color %}
+{% endif %}
+
+<i class="bi {{ icon_class }} fs-{{ size }} {{ icon_color }}"></i>
+{% endmacro %}
+
+{% macro file_badge(filename_or_extension) %}
+{% set extension = filename_or_extension.split('.')[-1].upper() if '.' in filename_or_extension else filename_or_extension.upper() %}
+{% set badge_class = 'bg-secondary' %}
+
+{% if extension == 'PDF' %}
+    {% set badge_class = 'bg-danger' %}
+{% elif extension in ['DOC', 'DOCX'] %}
+    {% set badge_class = 'bg-primary' %}
+{% elif extension in ['XLS', 'XLSX'] %}
+    {% set badge_class = 'bg-success' %}
+{% elif extension in ['PPT', 'PPTX'] %}
+    {% set badge_class = 'bg-warning text-dark' %}
+{% elif extension in ['JPG', 'JPEG', 'PNG', 'GIF'] %}
+    {% set badge_class = 'bg-info' %}
+{% elif extension in ['ZIP', 'RAR'] %}
+    {% set badge_class = 'bg-warning text-dark' %}
+{% endif %}
+
+<span class="badge {{ badge_class }}">{{ extension }}</span>
+{% endmacro %}
+
+{% macro file_size(bytes) %}
+{% if bytes < 1024 %}
+    {{ bytes }} B
+{% elif bytes < 1048576 %}
+    {{ "%.2f"|format(bytes / 1024) }} KB
+{% elif bytes < 1073741824 %}
+    {{ "%.2f"|format(bytes / 1048576) }} MB
+{% else %}
+    {{ "%.2f"|format(bytes / 1073741824) }} GB
+{% endif %}
+{% endmacro %}

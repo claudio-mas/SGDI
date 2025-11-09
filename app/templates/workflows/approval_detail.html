@@ -1,0 +1,218 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header bg-{{ 'warning' if approval.status == 'pendente' else ('success' if approval.status == 'aprovado' else 'danger') }} text-{{ 'dark' if approval.status == 'pendente' else 'white' }}">
+                    <h4 class="mb-0">
+                        <i class="fas fa-{{ 'clock' if approval.status == 'pendente' else ('check-circle' if approval.status == 'aprovado' else 'times-circle') }}"></i>
+                        Aprovação {{ approval.status.capitalize() }}
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <h3>{{ approval.documento.nome }}</h3>
+                    
+                    {% if approval.documento.descricao %}
+                    <p class="text-muted">{{ approval.documento.descricao }}</p>
+                    {% endif %}
+                    
+                    <hr>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <p><strong><i class="fas fa-project-diagram"></i> Workflow:</strong><br>
+                            {{ approval.workflow.nome }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong><i class="fas fa-layer-group"></i> Estágio Atual:</strong><br>
+                            {{ approval.estagio_atual }} de {{ approval.workflow.configuracao.stages|length }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <p><strong><i class="fas fa-user"></i> Submetido por:</strong><br>
+                            {{ approval.submissor.nome }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong><i class="fas fa-calendar"></i> Data de Submissão:</strong><br>
+                            {{ approval.data_submissao.strftime('%d/%m/%Y %H:%M') }}</p>
+                        </div>
+                    </div>
+                    
+                    {% if approval.data_conclusao %}
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <p><strong><i class="fas fa-calendar-check"></i> Data de Conclusão:</strong><br>
+                            {{ approval.data_conclusao.strftime('%d/%m/%Y %H:%M') }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <hr>
+                    
+                    <h5>Informações do Documento</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><small class="text-muted">Tipo:</small><br>
+                            {{ approval.documento.tipo_mime }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><small class="text-muted">Tamanho:</small><br>
+                            {{ approval.documento.tamanho_formatado }}</p>
+                        </div>
+                    </div>
+                    
+                    <a href="{{ url_for('documents.download', id=approval.documento.id) }}" 
+                       class="btn btn-outline-primary" target="_blank">
+                        <i class="fas fa-download"></i> Baixar Documento
+                    </a>
+                    <a href="{{ url_for('documents.view_document', id=approval.documento.id) }}" 
+                       class="btn btn-outline-secondary" target="_blank">
+                        <i class="fas fa-eye"></i> Ver Documento
+                    </a>
+                </div>
+            </div>
+            
+            {% if approval.status == 'pendente' and is_approver %}
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Ação de Aprovação</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" id="approval-form">
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="mb-3">
+                            {{ form.comentario.label(class="form-label") }}
+                            {{ form.comentario(class="form-control" + (" is-invalid" if form.comentario.errors else "")) }}
+                            {% if form.comentario.errors %}
+                                <div class="invalid-feedback">
+                                    {{ form.comentario.errors[0] }}
+                                </div>
+                            {% endif %}
+                            <small class="form-text text-muted">
+                                Adicione seus comentários sobre a decisão (obrigatório)
+                            </small>
+                        </div>
+                        
+                        {{ form.acao }}
+                        
+                        <div class="d-flex justify-content-between">
+                            <button type="button" class="btn btn-danger" onclick="submitAction('reject')">
+                                <i class="fas fa-times"></i> Rejeitar
+                            </button>
+                            <button type="button" class="btn btn-success" onclick="submitAction('approve')">
+                                <i class="fas fa-check"></i> Aprovar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            {% elif approval.status == 'pendente' and not is_approver %}
+            <div class="alert alert-warning">
+                <i class="fas fa-exclamation-triangle"></i> 
+                Você não está autorizado a aprovar este documento no estágio atual.
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Histórico de Aprovação</h5>
+                </div>
+                <div class="card-body">
+                    {% if history %}
+                    <div class="timeline">
+                        {% for item in history %}
+                        <div class="timeline-item mb-3">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0">
+                                    <span class="badge bg-{{ 'success' if item.acao == 'aprovado' else 'danger' }} rounded-circle p-2">
+                                        <i class="fas fa-{{ 'check' if item.acao == 'aprovado' else 'times' }}"></i>
+                                    </span>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="mb-1">
+                                        Estágio {{ item.estagio }} - {{ item.acao.capitalize() }}
+                                    </h6>
+                                    <p class="mb-1"><strong>{{ item.aprovador.nome }}</strong></p>
+                                    <p class="mb-1 small text-muted">{{ item.comentario }}</p>
+                                    <p class="mb-0 small text-muted">
+                                        <i class="fas fa-clock"></i> 
+                                        {{ item.data_acao.strftime('%d/%m/%Y %H:%M') }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        {% if not loop.last %}
+                        <hr>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-muted">Nenhuma ação registrada ainda.</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h6 class="mb-0">Estágios do Workflow</h6>
+                </div>
+                <div class="card-body">
+                    {% for stage in approval.workflow.configuracao.stages %}
+                    <div class="mb-3">
+                        <div class="d-flex align-items-center mb-1">
+                            {% if loop.index < approval.estagio_atual %}
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            {% elif loop.index == approval.estagio_atual %}
+                            <i class="fas fa-clock text-warning me-2"></i>
+                            {% else %}
+                            <i class="far fa-circle text-muted me-2"></i>
+                            {% endif %}
+                            <strong>{{ loop.index }}. {{ stage.name }}</strong>
+                        </div>
+                        <small class="text-muted ms-4">
+                            {{ stage.approvers|length }} aprovador(es)
+                            {% if stage.require_all %}
+                            <br><em>(Todos devem aprovar)</em>
+                            {% endif %}
+                        </small>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function submitAction(action) {
+    const form = document.getElementById('approval-form');
+    const comentario = form.querySelector('[name="comentario"]').value.trim();
+    
+    if (!comentario) {
+        alert('Por favor, adicione um comentário sobre sua decisão.');
+        return;
+    }
+    
+    const actionText = action === 'approve' ? 'aprovar' : 'rejeitar';
+    if (!confirm(`Tem certeza que deseja ${actionText} este documento?`)) {
+        return;
+    }
+    
+    // Set action and submit to appropriate endpoint
+    const approvalId = {{ approval.id }};
+    const url = action === 'approve' 
+        ? `/workflows/approval/${approvalId}/approve`
+        : `/workflows/approval/${approvalId}/reject`;
+    
+    form.action = url;
+    form.submit();
+}
+</script>
+{% endblock %}

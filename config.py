@@ -11,6 +11,7 @@ class Config:
     
     # Flask Core
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev-secret-key-change-in-production'
+    ENV = os.environ.get('FLASK_ENV', 'development')
     
     # Database Configuration
     DATABASE_SERVER = os.environ.get('DATABASE_SERVER', 'localhost')
@@ -56,6 +57,9 @@ class Config:
     MAX_VERSIONS_PER_DOCUMENT = int(os.environ.get('MAX_VERSIONS_PER_DOCUMENT', 10))
     TRASH_RETENTION_DAYS = int(os.environ.get('TRASH_RETENTION_DAYS', 30))
     
+    # Rate Limiting
+    RATE_LIMIT_PER_MINUTE = int(os.environ.get('RATE_LIMIT_PER_MINUTE', 100))
+    
     # Caching
     CACHE_TYPE = 'SimpleCache'
     CACHE_DEFAULT_TIMEOUT = 300
@@ -64,12 +68,14 @@ class Config:
 class DevelopmentConfig(Config):
     """Development configuration"""
     DEBUG = True
+    ENV = 'development'
     SQLALCHEMY_ECHO = True
 
 
 class TestingConfig(Config):
     """Testing configuration"""
     TESTING = True
+    ENV = 'testing'
     SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
     WTF_CSRF_ENABLED = False
 
@@ -77,6 +83,7 @@ class TestingConfig(Config):
 class ProductionConfig(Config):
     """Production configuration"""
     DEBUG = False
+    ENV = 'production'
     SESSION_COOKIE_SECURE = True
     SQLALCHEMY_ECHO = False
 

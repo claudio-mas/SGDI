@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h2><i class="fas fa-project-diagram"></i> Workflows de Aprovação</h2>
+            <p class="text-muted">Gerencie processos de aprovação de documentos</p>
+        </div>
+        <div class="col-md-4 text-end">
+            {% if current_user.has_permission('approve') %}
+            <a href="{{ url_for('workflows.create_workflow') }}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Novo Workflow
+            </a>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if workflows %}
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Descrição</th>
+                            <th>Estágios</th>
+                            <th>Status</th>
+                            <th>Criado em</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for workflow in workflows %}
+                        <tr>
+                            <td>
+                                <strong>{{ workflow.nome }}</strong>
+                            </td>
+                            <td>
+                                <small class="text-muted">
+                                    {{ workflow.descricao[:100] }}{% if workflow.descricao|length > 100 %}...{% endif %}
+                                </small>
+                            </td>
+                            <td>
+                                <span class="badge bg-info">
+                                    {{ workflow.configuracao.stages|length }} estágio(s)
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge bg-{{ 'success' if workflow.ativo else 'secondary' }}" id="status-badge-{{ workflow.id }}">
+                                    {{ 'Ativo' if workflow.ativo else 'Inativo' }}
+                                </span>
+                            </td>
+                            <td>
+                                <small>{{ workflow.data_criacao.strftime('%d/%m/%Y') }}</small>
+                            </td>
+                            <td>
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <a href="{{ url_for('workflows.edit_workflow', id=workflow.id) }}" 
+                                       class="btn btn-outline-primary" 
+                                       title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <button type="button" 
+                                            class="btn btn-outline-{{ 'secondary' if workflow.ativo else 'success' }}" 
+                                            onclick="toggleWorkflow({{ workflow.id }})"
+                                            id="toggle-btn-{{ workflow.id }}"
+                                            title="{{ 'Desativar' if workflow.ativo else 'Ativar' }}">
+                                        <i class="fas fa-{{ 'pause' if workflow.ativo else 'play' }}"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle"></i> Nenhum workflow cadastrado.
+        {% if current_user.has_permission('approve') %}
+        <a href="{{ url_for('workflows.create_workflow') }}">Criar o primeiro workflow</a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+
+<script>
+function toggleWorkflow(workflowId) {
+    if (!confirm('Deseja alterar o status deste workflow?')) {
+        return;
+    }
+    
+    fetch(`/workflows/${workflowId}/toggle`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token() }}'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Update badge
+            const badge = document.getElementById(`status-badge-${workflowId}`);
+            badge.textContent = data.ativo ? 'Ativo' : 'Inativo';
+            badge.className = `badge bg-${data.ativo ? 'success' : 'secondary'}`;
+            
+            // Update button
+            const btn = document.getElementById(`toggle-btn-${workflowId}`);
+            btn.className = `btn btn-outline-${data.ativo ? 'secondary' : 'success'}`;
+            btn.title = data.ativo ? 'Desativar' : 'Ativar';
+            btn.innerHTML = `<i class="fas fa-${data.ativo ? 'pause' : 'play'}"></i>`;
+            
+            // Show success message
+            showAlert(data.message, 'success');
+        } else {
+            showAlert(data.message, 'danger');
+        }
+    })
+    .catch(error => {
+        showAlert('Erro ao alterar status do workflow', 'danger');
+        console.error('Error:', error);
+    });
+}
+
+function showAlert(message, type) {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+    alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    document.querySelector('.container-fluid').insertBefore(alertDiv, document.querySelector('.row'));
+    
+    setTimeout(() => {
+        alertDiv.remove();
+    }, 3000);
+}
+</script>
+{% endblock %}

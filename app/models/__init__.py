@@ -7,6 +7,7 @@ from app.models.version import Versao
 from app.models.permission import Permissao
 from app.models.workflow import Workflow, AprovacaoDocumento, HistoricoAprovacao
 from app.models.audit import LogAuditoria
+from app.models.settings import SystemSettings
 
 __all__ = [
     'User',
@@ -22,5 +23,6 @@ __all__ = [
     'Workflow',
     'AprovacaoDocumento',
     'HistoricoAprovacao',
-    'LogAuditoria'
+    'LogAuditoria',
+    'SystemSettings'
 ]

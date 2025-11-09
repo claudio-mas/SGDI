@@ -1,0 +1,34 @@
+{# Alert/Notification Component #}
+
+{% macro alert(message, category='info', dismissible=true, icon=true) %}
+<div class="alert alert-{{ category }} {% if dismissible %}alert-dismissible{% endif %} fade show" role="alert">
+    {% if icon %}
+        {% if category == 'success' %}
+            <i class="bi bi-check-circle-fill me-2"></i>
+        {% elif category == 'danger' or category == 'error' %}
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        {% elif category == 'warning' %}
+            <i class="bi bi-exclamation-circle-fill me-2"></i>
+        {% elif category == 'info' %}
+            <i class="bi bi-info-circle-fill me-2"></i>
+        {% endif %}
+    {% endif %}
+    {{ message }}
+    {% if dismissible %}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    {% endif %}
+</div>
+{% endmacro %}
+
+{% macro toast(id, title, message, category='info', autohide=true, delay=5000) %}
+<div class="toast align-items-center text-bg-{{ category }} border-0" id="{{ id }}" role="alert" aria-live="assertive" aria-atomic="true" 
+     {% if autohide %}data-bs-autohide="true" data-bs-delay="{{ delay }}"{% else %}data-bs-autohide="false"{% endif %}>
+    <div class="d-flex">
+        <div class="toast-body">
+            <strong>{{ title }}</strong><br>
+            {{ message }}
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+</div>
+{% endmacro %}

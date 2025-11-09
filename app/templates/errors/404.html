@@ -5,12 +5,39 @@
 {% block content %}
 <div class="container mt-5">
     <div class="row justify-content-center">
-        <div class="col-md-6 text-center">
-            <h1 class="display-1">404</h1>
-            <h2>Página não encontrada</h2>
-            <p class="lead">A página que você está procurando não existe.</p>
-            <a href="/" class="btn btn-primary">Voltar para o início</a>
+        <div class="col-md-8 text-center">
+            <div class="error-template">
+                <h1 class="display-1 text-primary">404</h1>
+                <h2 class="mb-4">Página não encontrada</h2>
+                <div class="error-details mb-4">
+                    <p class="lead">A página que você está procurando não existe ou foi movida.</p>
+                    <p class="text-muted">Verifique se o endereço está correto ou use o menu de navegação.</p>
+                </div>
+                <div class="error-actions">
+                    <a href="{{ url_for('document.list_documents') if current_user.is_authenticated else url_for('auth.login') }}" class="btn btn-primary btn-lg me-2">
+                        <i class="fas fa-home"></i> Voltar ao Início
+                    </a>
+                    {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('search.search_page') }}" class="btn btn-outline-secondary btn-lg">
+                        <i class="fas fa-search"></i> Buscar Documentos
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+<style>
+.error-template {
+    padding: 40px 15px;
+}
+.error-template h1 {
+    font-size: 8rem;
+    font-weight: bold;
+}
+.error-actions {
+    margin-top: 30px;
+}
+</style>
 {% endblock %}
