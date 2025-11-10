@@ -15,7 +15,7 @@ Werkzeug==3.0.1
 
 # File Processing
 PyPDF2==3.0.1
-python-magic-bin==0.4.14
+python-magic-bin
 
 # Email
 Flask-Mail==0.9.1
