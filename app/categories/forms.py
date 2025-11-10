@@ -8,6 +8,16 @@ from app.models.document import Categoria, Pasta
 from app.repositories.category_repository import CategoryRepository, FolderRepository
 
 
+def coerce_int_or_none(value):
+    """Coerce to int or None for empty values"""
+    if value == '' or value is None:
+        return None
+    try:
+        return int(value)
+    except (ValueError, TypeError):
+        return None
+
+
 class CategoryForm(FlaskForm):
     """Form for creating/editing categories"""
     nome = StringField(
@@ -22,14 +32,14 @@ class CategoryForm(FlaskForm):
     )
     categoria_pai_id = SelectField(
         'Categoria Pai',
-        coerce=int,
+        coerce=coerce_int_or_none,
         validators=[Optional()],
         choices=[]
     )
     icone = StringField(
         'Ícone',
         validators=[Optional(), Length(max=50)],
-        render_kw={'placeholder': 'Ex: fa-folder, fa-file-contract'}
+        render_kw={'placeholder': 'Ex: bi-folder-fill, bi-file-earmark-text'}
     )
     cor = StringField(
         'Cor',
@@ -92,7 +102,7 @@ class FolderForm(FlaskForm):
     )
     pasta_pai_id = SelectField(
         'Pasta Pai',
-        coerce=int,
+        coerce=coerce_int_or_none,
         validators=[Optional()],
         choices=[]
     )

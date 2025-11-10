@@ -1,5 +1,5 @@
 """
-Unified backup script for Sistema GED
+Unified backup script for Sistema SGDI
 Performs both database and file storage backups
 """
 import os
@@ -16,7 +16,7 @@ from backup_files import FileStorageBackup
 def main():
     """Execute complete backup process"""
     print("=" * 60)
-    print("Sistema GED - Complete System Backup")
+    print("Sistema SGDI - Complete System Backup")
     print("=" * 60)
     print(f"Started at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
     

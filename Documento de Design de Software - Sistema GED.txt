@@ -1,47 +1,47 @@
 Documento de Design de Software (SDD)
-Sistema de Gestão Eletrônica de Documentos (GED)
-Versão: 1.0
+Sistema de Gestï¿½o Eletrï¿½nica de Documentos (GED)
+Versï¿½o: 1.0
 Data: 07 de Novembro de 2025
 Status: Em Desenvolvimento
 
 
-1. INTRODUÇÃO
-1.1 Propósito
-Este documento descreve o design arquitetural e detalhado do Sistema de Gestão Eletrônica de Documentos (GED), fornecendo uma visão completa da estrutura, componentes, interfaces e decisões de design que guiarão a implementação do sistema.
+1. INTRODUï¿½ï¿½O
+1.1 Propï¿½sito
+Este documento descreve o design arquitetural e detalhado do Sistema de Gestï¿½o Eletrï¿½nica de Documentos (GED), fornecendo uma visï¿½o completa da estrutura, componentes, interfaces e decisï¿½es de design que guiarï¿½o a implementaï¿½ï¿½o do sistema.
 
 1.2 Escopo
 O documento abrange:
 & Arquitetura geral do sistema
-& Design de componentes e módulos
+& Design de componentes e mï¿½dulos
 & Estrutura de banco de dados
-& Interfaces de usuário
-& Padrões de design aplicados
-& Considerações de segurança e performance
-1.3 Referências
+& Interfaces de usuï¿½rio
+& Padrï¿½es de design aplicados
+& Consideraï¿½ï¿½es de seguranï¿½a e performance
+1.3 Referï¿½ncias
 
-& Especificação de Requisitos de Software (SRS) v1.0
+& Especificaï¿½ï¿½o de Requisitos de Software (SRS) v1.0
 & Flask Documentation v3.0
 & SQL Server 2019 Technical Documentation
 & Bootstrap 5.3 Documentation
 & Python PEP 8 Style Guide
 & Design Patterns: Elements of Reusable Object-Oriented Software (GoF)
 
-1.4 Visão Geral
-O documento está organizado em:
-& Seção 2: Arquitetura do Sistema
-& Seção 3: Design de Componentes
-& Seção 4: Design de Dados
-& Seção 5: Design de Interface
-& Seção 6: Considerações de Implementação
+1.4 Visï¿½o Geral
+O documento estï¿½ organizado em:
+& Seï¿½ï¿½o 2: Arquitetura do Sistema
+& Seï¿½ï¿½o 3: Design de Componentes
+& Seï¿½ï¿½o 4: Design de Dados
+& Seï¿½ï¿½o 5: Design de Interface
+& Seï¿½ï¿½o 6: Consideraï¿½ï¿½es de Implementaï¿½ï¿½o
 
 
 2. ARQUITETURA DO SISTEMA
-2.1 Visão Arquitetural
-O sistema GED segue uma arquitetura em camadas (Layered Architecture) com padrão MVC (Model-View- Controller) adaptado para Flask, combinada com princípios de Clean Architecture para garantir separação de responsabilidades e testabilidade.
+2.1 Visï¿½o Arquitetural
+O Sistema SGDI segue uma arquitetura em camadas (Layered Architecture) com padrï¿½o MVC (Model-View- Controller) adaptado para Flask, combinada com princï¿½pios de Clean Architecture para garantir separaï¿½ï¿½o de responsabilidades e testabilidade.
 
 
 ???????????????????????????????????????????????????????????????
-?	CAMADA DE APRESENTAÇÃO	?
+?	CAMADA DE APRESENTAï¿½ï¿½O	?
 ? ???????????????? ???????????????? ????????????????	?
 ? ? Templates  ? ?  Bootstrap ? ? JavaScript ?	?
 ? ?  (Jinja2)  ? ?  CSS/HTML  ? ?  Libraries ?	?
@@ -50,10 +50,28 @@ O sistema GED segue uma arquitetura em camadas (Layered Architecture) com padrão
 ?
 ???????????????????????????????????????????????????????????????
 
-?CAMADA DE APLICAÇÃO (FLASK)	?????????????????? ???????????????? ??????????????????? Controllers ? ?  Services  ? ? Middleware ?	???  (Routes)  ? ?  (Business ? ? (Auth, CORS)?	???	? ?	Logic)  ? ?	?	?????????????????? ???????????????? ????????????????????????????????????????????????????????????????????????????????
+?
+CAMADA DE APLICAï¿½ï¿½O (FLASK)	?
+
+?
+???????????????? ???????????????? ????????????????
+?
+?
+? Controllers ? ?  Services  ? ? Middleware ?	?
+
+?
+?  (Routes)  ? ?  (Business ? ? (Auth, CORS)?	?
+
+?
+?	? ?	Logic)  ? ?	?	?
+
+?
+???????????????? ???????????????? ????????????????
 ?
 ???????????????????????????????????????????????????????????????
-?	CAMADA DE DOMÍNIO	?
+?
+???????????????????????????????????????????????????????????????
+?	CAMADA DE DOMï¿½NIO	?
 ? ???????????????? ???????????????? ????????????????	?
 ? ?  Models	? ?  Schemas	? ? Validators ?	?
 ? ? (Entities)  ? ?	(DTO)	? ?	?	?
@@ -71,42 +89,54 @@ O sistema GED segue uma arquitetura em camadas (Layered Architecture) com padrão
 ???????????????????????????????????????????????????????????????
 ?	CAMADA DE DADOS	?
 
-????????????????? ??????????????????? SQL Server ? ? File Storage ?	???  Database  ? ?  (Uploads) ?	?????????????????? ????????????????????????????????????????????????????????????????????????????????
+?
+???????????????? ????????????????
+?
+?
+? SQL Server ? ? File Storage ?	?
+
+?
+?  Database  ? ?  (Uploads) ?	?
+
+?
+???????????????? ????????????????
+?
+???????????????????????????????????????????????????????????????
 
 
-2.2 Padrões Arquiteturais Aplicados
+2.2 Padrï¿½es Arquiteturais Aplicados
 2.2.1 MVC (Model-View-Controller)
 
-& Model: Classes de domínio (SQLAlchemy models)
+& Model: Classes de domï¿½nio (SQLAlchemy models)
 & View: Templates Jinja2 + Bootstrap
-& Controller: Flask Blueprints com rotas e lógica de controle
+& Controller: Flask Blueprints com rotas e lï¿½gica de controle
 
 2.2.2 Repository Pattern
 
-& Abstração da camada de acesso a dados
-& Facilita testes unitários com mocks
-& Centraliza queries e operações de banco
+& Abstraï¿½ï¿½o da camada de acesso a dados
+& Facilita testes unitï¿½rios com mocks
+& Centraliza queries e operaï¿½ï¿½es de banco
 
 2.2.3 Service Layer Pattern
 
-& Lógica de negócio isolada dos controllers
-& Reutilização de código entre diferentes endpoints
-& Transações e operações complexas
+& Lï¿½gica de negï¿½cio isolada dos controllers
+& Reutilizaï¿½ï¿½o de cï¿½digo entre diferentes endpoints
+& Transaï¿½ï¿½es e operaï¿½ï¿½es complexas
 
 2.2.4 Dependency Injection
 
-& Injeção de dependências via Flask application context
-& Facilita substituição de implementações (ex: storage providers)
-2.3 Estrutura de Diretórios
+& Injeï¿½ï¿½o de dependï¿½ncias via Flask application context
+& Facilita substituiï¿½ï¿½o de implementaï¿½ï¿½es (ex: storage providers)
+2.3 Estrutura de Diretï¿½rios
 
 
 ged_system/
 ?
 ??? app/
 ?  ???   init  .py	# Application factory
-?  ??? config.py	# Configurações
+?  ??? config.py	# Configuraï¿½ï¿½es
 ?  ?
-?  ??? models/	# Camada de Domínio
+?  ??? models/	# Camada de Domï¿½nio
 ?  ?  ???   init  .py
 ?  ?  ??? user.py
 ?  ?  ??? document.py
@@ -117,7 +147,7 @@ ged_system/
 ?  ?  ??? workflow.py
 ?  ?  ??? audit_log.py
 ?  ?
-?  ??? schemas/	# DTOs e Validação
+?  ??? schemas/	# DTOs e Validaï¿½ï¿½o
 ?  ?  ???   init  .py
 ?  ?  ??? user_schema.py
 ?  ?  ??? document_schema.py
@@ -131,7 +161,7 @@ ged_system/
 ?  ?  ??? category_repository.py
 ?  ?  ??? audit_repository.py
 ?  ?
-?  ??? services/	# Lógica de Negócio
+?  ??? services/	# Lï¿½gica de Negï¿½cio
 ?  ?  ???   init  .py
 ?  ?  ??? auth_service.py
 ?  ?  ??? document_service.py
@@ -157,7 +187,7 @@ ged_system/
 ?  ?  ??? permission_middleware.py
 ?  ?  ??? rate_limit_middleware.py
 ?  ?
-?  ??? utils/	# Utilitários
+?  ??? utils/	# Utilitï¿½rios
 ?  ?  ???   init  .py
 ?  ?  ??? validators.py
 ?  ?  ??? file_handler.py
@@ -182,7 +212,7 @@ ged_system/
 ?  ?	??? sidebar.html
 ?  ?	??? alerts.html
 ?  ?
-?  ??? static/	# Recursos Estáticos
+?  ??? static/	# Recursos Estï¿½ticos
 ?	??? css/
 ?	?  ??? custom.css
 ?	?  ??? themes/
@@ -192,7 +222,7 @@ ged_system/
 
 ?	?  ??? search.js
 ?	??? images/
-?	??? uploads/	# Arquivos temporários
+?	??? uploads/	# Arquivos temporï¿½rios
 ?
 ??? migrations/	# Database Migrations
 ?  ??? versions/
@@ -202,16 +232,16 @@ ged_system/
 ?  ??? integration/
 ?  ??? e2e/
 ?
-??? scripts/	# Scripts Utilitários
+??? scripts/	# Scripts Utilitï¿½rios
 ?  ??? init_db.py
 ?  ??? seed_data.py
 ?
-??? docs/	# Documentação
+??? docs/	# Documentaï¿½ï¿½o
 ?  ??? api/
 ?  ??? user_manual/
 ?
-??? .env.example	# Exemplo de variáveis de ambiente
-??? requirements.txt	# Dependências Python
+??? .env.example	# Exemplo de variï¿½veis de ambiente
+??? requirements.txt	# Dependï¿½ncias Python
 ??? wsgi.py	# Entry point WSGI
 ??? README.md
 
@@ -229,7 +259,7 @@ db = SQLAlchemy() login_manager = LoginManager()
 
 def create_app(config_class=Config): app = Flask( name ) app.config.from_object(config_class)
 
-# Inicializar extensões db.init_app(app) login_manager.init_app(app)
+# Inicializar extensï¿½es db.init_app(app) login_manager.init_app(app)
 
 # Registrar blueprints
 from app.controllers import auth_bp, document_bp, admin_bp app.register_blueprint(auth_bp) app.register_blueprint(document_bp) app.register_blueprint(admin_bp)
@@ -237,16 +267,16 @@ from app.controllers import auth_bp, document_bp, admin_bp app.register_blueprin
 return app
 
 
-2.4.2 Blueprints (Módulos)
+2.4.2 Blueprints (Mï¿½dulos)
 
-& auth_bp: Autenticação e autorização
+& auth_bp: Autenticaï¿½ï¿½o e autorizaï¿½ï¿½o
 & document_bp: Gerenciamento de documentos
-& category_bp: Categorias e organização
+& category_bp: Categorias e organizaï¿½ï¿½o
 & search_bp: Pesquisa e filtros
-& workflow_bp: Aprovações e workflows
-& admin_bp: Administração do sistema
+& workflow_bp: Aprovaï¿½ï¿½es e workflows
+& admin_bp: Administraï¿½ï¿½o do sistema
 & api_bp: API REST (futuro)
-2.5 Fluxo de Requisição
+2.5 Fluxo de Requisiï¿½ï¿½o
 
 
 Cliente (Browser)
@@ -367,12 +397,12 @@ return os.path.splitext(self.nome_arquivo_original)[1].lower()
 @property
 
 def tamanho_formatado(self):
-"""Retorna tamanho em formato legível""" for unit in ['B', 'KB', 'MB', 'GB']:
+"""Retorna tamanho em formato legï¿½vel""" for unit in ['B', 'KB', 'MB', 'GB']:
 if self.tamanho_bytes < 1024.0:
   return f"{self.tamanho_bytes:.2f} {unit}" self.tamanho_bytes /= 1024.0
 return f"{self.tamanho_bytes:.2f} TB"
 
-def soft_delete(self): """Exclusão lógica""" self.status = 'excluido'
+def soft_delete(self): """Exclusï¿½o lï¿½gica""" self.status = 'excluido'
 self.data_exclusao = datetime.utcnow()
 
 def   repr  (self):
@@ -400,14 +430,14 @@ subcategorias = db.relationship('Categoria', backref=db.backref('pai', remote_si
 
 @property
 def caminho_completo(self):
-"""Retorna caminho hierárquico da categoria""" if self.pai:
+"""Retorna caminho hierï¿½rquico da categoria""" if self.pai:
   return f"{self.pai.caminho_completo} > {self.nome}" return self.nome
 
 def   repr  (self):
 return f'<Categoria {self.nome}>'
 
 
-3.2 Camada de Repositório (Repositories)
+3.2 Camada de Repositï¿½rio (Repositories)
 3.2.1 Base Repository
 
 python
@@ -417,7 +447,7 @@ from app import db
 from sqlalchemy import desc
 
 class BaseRepository:
-"""Classe base para repositórios com operações CRUD genéricas"""
+"""Classe base para repositï¿½rios com operaï¿½ï¿½es CRUD genï¿½ricas"""
 
 def  init (self, model): self.model = model
 
@@ -459,10 +489,10 @@ from datetime import datetime, timedelta
 class DocumentRepository(BaseRepository): def  init (self):
 super().  init  (Documento)
 
-def search(self, query, filters=None, user_id=None): """Busca avançada de documentos"""
+def search(self, query, filters=None, user_id=None): """Busca avanï¿½ada de documentos"""
 search = self.model.query
 
-# Filtro de permissões do usuário
+# Filtro de permissï¿½es do usuï¿½rio
 if user_id:
 search = search.filter( or_(
 self.model.usuario_id == user_id, self.model.permissoes.any(usuario_id=user_id)
@@ -487,7 +517,7 @@ search = search.filter(self.model.tags.any(nome=tag))
 
 return search.filter_by(status='ativo').all()
 
-def get_recent(self, user_id, days=7, limit=10): """Retorna documentos recentes do usuário""" date_limit = datetime.utcnow() - timedelta(days=days) return self.model.query.filter(
+def get_recent(self, user_id, days=7, limit=10): """Retorna documentos recentes do usuï¿½rio""" date_limit = datetime.utcnow() - timedelta(days=days) return self.model.query.filter(
 and_(
 self.model.usuario_id == user_id, self.model.data_upload >= date_limit, self.model.status == 'ativo'
 )
@@ -501,19 +531,19 @@ self.model.usuario_id == user_id, self.model.permissoes.any(usuario_id=user_id)
 )
 return query.all()
 
-def get_deleted(self, user_id=None): """Retorna documentos excluídos (lixeira)"""
+def get_deleted(self, user_id=None): """Retorna documentos excluï¿½dos (lixeira)"""
 query = self.model.query.filter_by(status='excluido') if user_id:
   query = query.filter_by(usuario_id=user_id) return query.all()
 
-def permanent_delete(self, id): """Exclusão física do documento""" documento = self.get_by_id(id)
+def permanent_delete(self, id): """Exclusï¿½o fï¿½sica do documento""" documento = self.get_by_id(id)
 if documento and documento.status == 'excluido':
-# Excluir arquivo físico
+# Excluir arquivo fï¿½sico
 import os
 if os.path.exists(documento.caminho_arquivo): os.remove(documento.caminho_arquivo)
 # Excluir do banco
   return super().delete(id) return False
 
-3.3 Camada de Serviço (Services)
+3.3 Camada de Serviï¿½o (Services)
 3.3.1 Document Service
 
 python
@@ -531,9 +561,9 @@ def upload_document(self, file, metadata, user_id): """Processa upload de docume
 try:
 # Validar arquivo
 if not self.file_handler.validate_file(file):
-raise ValueError("Arquivo inválido ou formato não suportado")
+raise ValueError("Arquivo invï¿½lido ou formato nï¿½o suportado")
 
-# Gerar nome único
+# Gerar nome ï¿½nico
 filename = secure_filename(file.filename)
 unique_filename = self.file_handler.generate_unique_filename(filename)
 
@@ -542,7 +572,7 @@ file_hash = self._calculate_hash(file)
 
 # Verificar duplicatas
 existing = self.repository.filter_by(hash_arquivo=file_hash, status='ativo') if existing:
-raise ValueError("Documento duplicado já existe no sistema")
+raise ValueError("Documento duplicado jï¿½ existe no sistema")
 
 # Salvar arquivo
 file_path = self.storage_service.save_file(file, unique_filename, user_id)
@@ -556,7 +586,7 @@ tamanho_bytes=file.content_length or 0, tipo_mime=file.content_type, hash_arquiv
 # Processar tags
 if metadata.get('tags'): self._add_tags(documento.id, metadata['tags'])
 
-# Indexar para busca full-text (assíncrono)
+# Indexar para busca full-text (assï¿½ncrono)
 if documento.tipo_mime == 'application/pdf': self.file_handler.extract_text_async(file_path, documento.id)
 
 # Notificar
@@ -570,11 +600,11 @@ def download_document(self, document_id, user_id): """Prepara documento para dow
 documento = self.repository.get_by_id(document_id)
 
 if not documento:
-raise ValueError("Documento não encontrado")
+raise ValueError("Documento nï¿½o encontrado")
 
-# Verificar permissão
+# Verificar permissï¿½o
 if not self._has_permission(documento, user_id, 'visualizar'):
-raise PermissionError("Sem permissão para acessar este documento")
+raise PermissionError("Sem permissï¿½o para acessar este documento")
 
 # Registrar acesso
 self._log_access(documento, user_id, 'download')
@@ -585,7 +615,7 @@ self._log_access(documento, user_id, 'download')
 documento = self.repository.get_by_id(document_id)
 
 if not self._has_permission(documento, user_id, 'editar'):
-raise PermissionError("Sem permissão para editar este documento")
+raise PermissionError("Sem permissï¿½o para editar este documento")
 
 # Atualizar campos permitidos
 allowed_fields = ['nome', 'descricao', 'categoria_id', 'pasta_id'] update_data = {k: v for k, v in metadata.items() if k in allowed_fields}
@@ -595,25 +625,25 @@ self.repository.update(document_id, **update_data)
 # Atualizar tags
 if 'tags' in metadata: self._update_tags(document_id, metadata['tags'])
   return self.repository.get_by_id(document_id) def delete_document(self, document_id, user_id):
-"""Exclusão lógica de documento"""
+"""Exclusï¿½o lï¿½gica de documento"""
 documento = self.repository.get_by_id(document_id)
 
 if not self._has_permission(documento, user_id, 'excluir'):
-raise PermissionError("Sem permissão para excluir este documento")
+raise PermissionError("Sem permissï¿½o para excluir este documento")
 
 documento.soft_delete()
 self.repository.update(document_id, status='excluido', data_exclusao=datetime.utcnow()) return True
-def create_version(self, document_id, new_file, user_id, comment=''): """Cria nova versão do documento"""
+def create_version(self, document_id, new_file, user_id, comment=''): """Cria nova versï¿½o do documento"""
 documento = self.repository.get_by_id(document_id)
 
 if not self._has_permission(documento, user_id, 'editar'):
-raise PermissionError("Sem permissão para criar versão")
+raise PermissionError("Sem permissï¿½o para criar versï¿½o")
 
-# Salvar nova versão
+# Salvar nova versï¿½o
 filename = secure_filename(new_file.filename)
 unique_filename = self.file_handler.generate_unique_filename(filename) file_path = self.storage_service.save_file(new_file, unique_filename, user_id)
 
-# Criar registro de versão
+# Criar registro de versï¿½o
 from app.models.version import Versao
 
 from app import db
@@ -633,11 +663,11 @@ for chunk in iter(lambda: file.read(4096), b""): sha256.update(chunk)
 file.seek(0) # Reset file pointer
 return sha256.hexdigest()
 
-def _has_permission(self, documento, user_id, permission_type): """Verifica se usuário tem permissão específica"""
-# Proprietário tem todas as permissões
+def _has_permission(self, documento, user_id, permission_type): """Verifica se usuï¿½rio tem permissï¿½o especï¿½fica"""
+# Proprietï¿½rio tem todas as permissï¿½es
 if documento.usuario_id == user_id: return True
 
-# Verificar permissões explícitas
+# Verificar permissï¿½es explï¿½citas
 from app.models.permission import Permissao permissao = Permissao.query.filter_by(
 documento_id=documento.id, usuario_id=user_id, tipo_permissao=permission_type
 ).first()
@@ -680,20 +710,20 @@ class AuthService:
 def   init  (self):
 self.repository = UserRepository()
 
-def authenticate(self, email, password, ip_address): """Autentica usuário"""
+def authenticate(self, email, password, ip_address): """Autentica usuï¿½rio"""
 user = self.repository.get_by_email(email)
 
 if not user:
-return None, "Usuário não encontrado"
+return None, "Usuï¿½rio nï¿½o encontrado"
 
-# Verificar se está bloqueado
+# Verificar se estï¿½ bloqueado
 if user.bloqueado_ate and user.bloqueado_ate > datetime.utcnow(): tempo_restante = (user.bloqueado_ate - datetime.utcnow()).seconds // 60
 return None, f"Conta bloqueada. Tente novamente em {tempo_restante} minutos"
 
 # Verificar senha
 if not user.check_password(password): user.tentativas_login += 1
 
-# Bloquear após 5 tentativas
+# Bloquear apï¿½s 5 tentativas
 if user.tentativas_login >= 5:
 user.bloqueado_ate = datetime.utcnow() + timedelta(minutes=15)
 
@@ -709,12 +739,12 @@ ultimo_acesso=datetime.utcnow())
 
 # Registrar log
 self._log_login(user.id, ip_address) return user, None
-def register(self, user_data): """Registra novo usuário""" # Verificar se email já existe
-if self.repository.get_by_email(user_data['email']): raise ValueError("Email já cadastrado")
+def register(self, user_data): """Registra novo usuï¿½rio""" # Verificar se email jï¿½ existe
+if self.repository.get_by_email(user_data['email']): raise ValueError("Email jï¿½ cadastrado")
 
-# Criar usuário
+# Criar usuï¿½rio
 user = User( nome=user_data['nome'], email=user_data['email'],
-perfil_id=user_data.get('perfil_id', 3) # Usuário padrão
+perfil_id=user_data.get('perfil_id', 3) # Usuï¿½rio padrï¿½o
 )
 user.set_password(user_data['password'])
 
@@ -722,7 +752,7 @@ from app import db db.session.add(user) db.session.commit()
 
 return user
 
-def request_password_reset(self, email): """Solicita recuperação de senha"""
+def request_password_reset(self, email): """Solicita recuperaï¿½ï¿½o de senha"""
 user = self.repository.get_by_email(email)
 
 if not user: return None
@@ -745,7 +775,7 @@ return token
 def reset_password(self, token, new_password): """Redefine senha usando token"""
 from app.models.password_reset import PasswordReset
 reset = PasswordReset.query.filter_by(token=token, usado=False).first() if not reset or reset.expiracao < datetime.utcnow():
-raise ValueError("Token inválido ou expirado")
+raise ValueError("Token invï¿½lido ou expirado")
 
 # Atualizar senha
 user = self.repository.get_by_id(reset.usuario_id) user.set_password(new_password)
@@ -777,7 +807,7 @@ self.repository = DocumentRepository()
 def search(self, query, filters=None, user_id=None, page=1, per_page=20): """Busca unificada de documentos"""
 results = self.repository.search(query, filters, user_id)
 
-# Paginação
+# Paginaï¿½ï¿½o
 start = (page - 1) * per_page end = start + per_page
 
 return {
@@ -786,7 +816,7 @@ return {
 'pages': (len(results) + per_page - 1) // per_page
 }
 
-def fulltext_search(self, query, user_id=None): """Busca full-text em conteúdo de documentos""" from app import db
+def fulltext_search(self, query, user_id=None): """Busca full-text em conteï¿½do de documentos""" from app import db
 
 # Query usando SQL Server Full-Text Search
 sql = text("""
@@ -797,18 +827,18 @@ WHERE d.status = 'ativo'
 
 results = db.session.execute(sql, {'query': query}).fetchall()
 
-# Filtrar por permissões do usuário
+# Filtrar por permissï¿½es do usuï¿½rio
 if user_id:
 results = [r for r in results if self._has_access(r.id, user_id)]
 
 return results
 
-def get_suggestions(self, partial_query, limit=5): """Retorna sugestões de busca (autocomplete)""" from app.models.document import Documento
+def get_suggestions(self, partial_query, limit=5): """Retorna sugestï¿½es de busca (autocomplete)""" from app.models.document import Documento
 
 results = Documento.query.filter( Documento.nome.ilike(f'%{partial_query}%')
 ).limit(limit).all()
   return [{'id': d.id, 'nome': d.nome} for d in results] def _has_access(self, document_id, user_id):
-"""Verifica acesso do usuário ao documento""" documento = self.repository.get_by_id(document_id) return documento.usuario_id == user_id or \
+"""Verifica acesso do usuï¿½rio ao documento""" documento = self.repository.get_by_id(document_id) return documento.usuario_id == user_id or \
 any(p.usuario_id == user_id for p in documento.permissoes)
 
 
@@ -825,7 +855,7 @@ document_bp = Blueprint('document',  name , url_prefix='/documents') document_se
 
 @document_bp.route('/') @login_required
 def index():
-"""Lista documentos do usuário"""
+"""Lista documentos do usuï¿½rio"""
 page = request.args.get('page', 1, type=int) per_page = 20
 
 documentos = document_service.repository.paginate( page=page,
@@ -853,7 +883,7 @@ return redirect(url_for('document.view', id=documento.id))
 except Exception as e:
 flash(f'Erro ao enviar documento: {str(e)}', 'error') return redirect(url_for('document.upload'))
 
-# GET - exibir formulário
+# GET - exibir formulï¿½rio
 from app.models.category import Categoria
 categorias = Categoria.query.filter_by(ativo=True).all()
 return render_template('documents/upload.html', categorias=categorias)
@@ -864,13 +894,13 @@ def view(id):
 documento = document_service.repository.get_by_id(id)
 
 if not documento:
-flash('Documento não encontrado', 'error') return redirect(url_for('document.index'))
+flash('Documento nï¿½o encontrado', 'error') return redirect(url_for('document.index'))
 
-# Verificar permissão
-if not document_service._has_permission(documento, current_user.id, 'visualizar'): flash('Você não tem permissão para visualizar este documento', 'error')
+# Verificar permissï¿½o
+if not document_service._has_permission(documento, current_user.id, 'visualizar'): flash('Vocï¿½ nï¿½o tem permissï¿½o para visualizar este documento', 'error')
 return redirect(url_for('document.index'))
 
-# Registrar visualização
+# Registrar visualizaï¿½ï¿½o
 document_service._log_access(documento, current_user.id, 'visualizacao') return render_template('documents/view.html', documento=documento)
 @document_bp.route('/<int:id>/download') @login_required
 def download(id):
@@ -890,7 +920,7 @@ def edit(id):
 documento = document_service.repository.get_by_id(id)
 
 if not documento:
-flash('Documento não encontrado', 'error') return redirect(url_for('document.index'))
+flash('Documento nï¿½o encontrado', 'error') return redirect(url_for('document.index'))
 
 if request.method == 'POST': try:
 metadata = {
@@ -910,7 +940,7 @@ return render_template('documents/edit.html', documento=documento, categorias=ca
 
 @document_bp.route('/<int:id>/delete', methods=['POST']) @login_required
 def delete(id):
-"""Exclusão lógica de documento""" try:
+"""Exclusï¿½o lï¿½gica de documento""" try:
 document_service.delete_document(id, current_user.id) flash('Documento movido para lixeira', 'success')
 except Exception as e:
 flash(f'Erro ao excluir documento: {str(e)}', 'error')
@@ -919,16 +949,16 @@ return redirect(url_for('document.index'))
 
 @document_bp.route('/<int:id>/versions', methods=['GET', 'POST']) @login_required
 def versions(id):
-"""Gerencia versões do documento"""
+"""Gerencia versï¿½es do documento"""
 documento = document_service.repository.get_by_id(id)
 
 if request.method == 'POST': try:
 new_file = request.files.get('file') comment = request.form.get('comment', '')
 
-document_service.create_version(id, new_file, current_user.id, comment) flash('Nova versão criada com sucesso!', 'success')
+document_service.create_version(id, new_file, current_user.id, comment) flash('Nova versï¿½o criada com sucesso!', 'success')
 
 except Exception as e:
-flash(f'Erro ao criar versão: {str(e)}', 'error')
+flash(f'Erro ao criar versï¿½o: {str(e)}', 'error')
   return render_template('documents/versions.html', documento=documento) @document_bp.route('/search')
 @login_required def search():
 """Busca de documentos""" query = request.args.get('q', '')
@@ -1012,7 +1042,21 @@ results=results)
 ? nome	?	? nome	?
 ? categoria_pai  ???	? pasta_pai_id(FK)???
 
-? _id (FK)? ?? usuario_id (FK) ? ?? descricao? ???????????????????? ?? icone? ??? cor? ?Self-Referencing	???????????????????? ???	?
+? _id (FK)
+? ?
+? usuario_id (FK) ? ?
+? descricao
+? ?
+??????????????????? ?
+? icone
+? ?
+?
+? cor
+? ?
+Self-Referencing	?
+??????????????????? ?
+?
+?	?
 Self-Referencing  ?	?
 ??????????????????????????????
 
@@ -1053,7 +1097,7 @@ Self-Referencing  ?	?
 ???????????????????????????
 
 
-4.2 Scripts SQL de Criação
+4.2 Scripts SQL de Criaï¿½ï¿½o
 
 sql
 
@@ -1063,7 +1107,7 @@ id INT IDENTITY(1,1) PRIMARY KEY, nome NVARCHAR(50) NOT NULL UNIQUE,
 descricao NVARCHAR(255), ativo BIT DEFAULT 1
 );
 
--- Tabela de Usuários
+-- Tabela de Usuï¿½rios
 CREATE TABLE usuarios (
 id INT IDENTITY(1,1) PRIMARY KEY, nome NVARCHAR(100) NOT NULL,
 email NVARCHAR(120) NOT NULL UNIQUE,
@@ -1137,7 +1181,7 @@ PRIMARY KEY (documento_id, tag_id),
 CONSTRAINT FK_documento_tags_documento FOREIGN KEY (documento_id) REFERENCES documentos(id) CONSTRAINT FK_documento_tags_tag FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCAD
 );
 
--- Tabela de Versões
+-- Tabela de Versï¿½es
 CREATE TABLE versoes (
 id INT IDENTITY(1,1) PRIMARY KEY,
 documento_id INT NOT NULL, numero_versao INT NOT NULL,
@@ -1150,7 +1194,7 @@ CONSTRAINT UK_versoes_documento_numero UNIQUE (documento_id, numero_versao)
 
 CREATE INDEX IX_versoes_documento ON versoes(documento_id, numero_versao DESC);
 
--- Tabela de Permissões
+-- Tabela de Permissï¿½es
 CREATE TABLE permissoes (
 id INT IDENTITY(1,1) PRIMARY KEY,
 documento_id INT NOT NULL, usuario_id INT NOT NULL,
@@ -1183,7 +1227,7 @@ etapas_json NVARCHAR(MAX) NOT NULL, ativo BIT DEFAULT 1,
 data_criacao DATETIME2 DEFAULT GETUTCDATE()
 );
 
--- Tabela de Aprovação de Documentos
+-- Tabela de Aprovaï¿½ï¿½o de Documentos
 CREATE TABLE aprovacao_documentos ( id INT IDENTITY(1,1) PRIMARY KEY,
 documento_id INT NOT NULL, workflow_id INT NOT NULL, etapa_atual INT DEFAULT 1,
 status NVARCHAR(20) DEFAULT 'pendente', solicitante_id INT NOT NULL,
@@ -1193,7 +1237,7 @@ CONSTRAINT FK_aprovacao_solicitante FOREIGN KEY (solicitante_id) REFERENCES usua
 
 );
 
--- Tabela de Histórico de Aprovações
+-- Tabela de Histï¿½rico de Aprovaï¿½ï¿½es
 CREATE TABLE historico_aprovacoes (
 id INT IDENTITY(1,1) PRIMARY KEY,
 aprovacao_id INT NOT NULL, etapa INT NOT NULL, aprovador_id INT NOT NULL,
@@ -1204,7 +1248,7 @@ CONSTRAINT FK_historico_aprovacao FOREIGN KEY (aprovacao_id) REFERENCES aprovaca
 CONSTRAINT CHK_decisao CHECK (decisao IN ('aprovado', 'rejeitado'))
 );
 
--- Tabela de Recuperação de Senha
+-- Tabela de Recuperaï¿½ï¿½o de Senha
 CREATE TABLE password_resets (
 id INT IDENTITY(1,1) PRIMARY KEY,
 usuario_id INT NOT NULL,
@@ -1216,19 +1260,19 @@ CONSTRAINT FK_password_reset_usuario FOREIGN KEY (usuario_id) REFERENCES usuario
 
 CREATE INDEX IX_password_reset_token ON password_resets(token);
 
--- Configuração Full-Text Search (opcional)
+-- Configuraï¿½ï¿½o Full-Text Search (opcional)
 CREATE FULLTEXT CATALOG ftCatalog AS DEFAULT;
 CREATE FULLTEXT INDEX ON documentos(nome, descricao) KEY INDEX PK document id
 ON ftCatalog
 WITH STOPLIST = SYSTEM;
 
--- Inserir Perfis Padrão
+-- Inserir Perfis Padrï¿½o
 INSERT INTO perfis (nome, descricao) VALUES ('Administrador', 'Acesso total ao sistema'),
-('Gestor', 'Gerencia documentos e aprova workflows'), ('Usuário', 'Acesso padrão para upload e consulta'), ('Auditor', 'Acesso somente leitura e relatórios'), ('Visitante', 'Acesso limitado a documentos públicos');
+('Gestor', 'Gerencia documentos e aprova workflows'), ('Usuï¿½rio', 'Acesso padrï¿½o para upload e consulta'), ('Auditor', 'Acesso somente leitura e relatï¿½rios'), ('Visitante', 'Acesso limitado a documentos pï¿½blicos');
 
--- Inserir Categorias Padrão
+-- Inserir Categorias Padrï¿½o
 INSERT INTO categorias (nome, descricao, icone, cor) VALUES ('Contratos', 'Contratos e acordos', 'file-text', '#007bff'),
-('Notas Fiscais', 'Documentos fiscais', 'file-invoice', '#28a745'), ('Recursos Humanos', 'Documentos de RH', 'users', '#17a2b8'), ('Jurídico', 'Documentos jurídicos', 'gavel', '#ffc107'), ('Técnico', 'Documentação técnica', 'code', '#6f42c1'),
+('Notas Fiscais', 'Documentos fiscais', 'file-invoice', '#28a745'), ('Recursos Humanos', 'Documentos de RH', 'users', '#17a2b8'), ('Jurï¿½dico', 'Documentos jurï¿½dicos', 'gavel', '#ffc107'), ('Tï¿½cnico', 'Documentaï¿½ï¿½o tï¿½cnica', 'code', '#6f42c1'),
 ('Administrativo', 'Documentos administrativos', 'briefcase', '#6c757d');
 
 
@@ -1236,7 +1280,7 @@ INSERT INTO categorias (nome, descricao, icone, cor) VALUES ('Contratos', 'Contr
 
 sql
 
--- Procedure: Buscar Documentos por Usuário
+-- Procedure: Buscar Documentos por Usuï¿½rio
 CREATE PROCEDURE sp_BuscarDocumentos @usuario_id INT,
 @termo_busca NVARCHAR(255) = NULL, @categoria_id INT = NULL,
 @data_inicio DATETIME2 = NULL, @data_fim DATETIME2 = NULL, @status NVARCHAR(20) = 'ativo', @page INT = 1,
@@ -1272,27 +1316,27 @@ BEGIN TRANSACTION;
 -- Inserir log
 INSERT INTO log_auditoria (usuario_id, acao, tabela, registro_id, ip_address) VALUES (@usuario_id, @acao, 'documentos', @documento_id, @ip_address);
 
--- Atualizar último acesso do usuário
+-- Atualizar ï¿½ltimo acesso do usuï¿½rio
 UPDATE usuarios
 SET ultimo_acesso = GETUTCDATE() WHERE id = @usuario_id;
 
   COMMIT TRANSACTION; END;
 GO
 
--- Procedure: Limpar Documentos Excluídos (após 30 dias) CREATE PROCEDURE sp_LimparDocumentosExcluidos AS
+-- Procedure: Limpar Documentos Excluï¿½dos (apï¿½s 30 dias) CREATE PROCEDURE sp_LimparDocumentosExcluidos AS
 BEGIN
 SET NOCOUNT ON;
 
 DECLARE @data_limite DATETIME2 = DATEADD(DAY, -30, GETUTCDATE());
 
--- Selecionar documentos para exclusão permanente
+-- Selecionar documentos para exclusï¿½o permanente
 DECLARE @documentos_excluir TABLE (id INT, caminho_arquivo NVARCHAR(500));
 
 INSERT INTO @documentos_excluir SELECT id, caminho_arquivo
 FROM documentos
 WHERE status = 'excluido' AND data_exclusao < @data_limite;
 
--- Log da exclusão
+-- Log da exclusï¿½o
 INSERT INTO log_auditoria (usuario_id, acao, tabela, registro_id, dados_json) SELECT NULL, 'exclusao_permanente', 'documentos', id,
     '{"caminho": "' + caminho_arquivo + '"}' FROM @documentos_excluir;
 
@@ -1301,11 +1345,11 @@ INSERT INTO log_auditoria (usuario_id, acao, tabela, registro_id, dados_json) SE
 DELETE FROM documentos
 WHERE id IN (SELECT id FROM @documentos_excluir);
 
--- Retornar quantidade excluída
+-- Retornar quantidade excluï¿½da
   SELECT COUNT(*) AS documentos_excluidos FROM @documentos_excluir; END;
 GO
 
--- Procedure: Gerar Relatório de Uso por Usuário
+-- Procedure: Gerar Relatï¿½rio de Uso por Usuï¿½rio
 CREATE PROCEDURE sp_RelatorioUsoPorUsuario @data_inicio DATETIME2,
   @data_fim DATETIME2 AS
 BEGIN
@@ -1325,7 +1369,7 @@ END; GO
 
 sql
 
--- Trigger: Auditoria Automática de Documentos
+-- Trigger: Auditoria Automï¿½tica de Documentos
 CREATE TRIGGER tr_DocumentosAuditoria ON documentos
 AFTER INSERT, UPDATE, DELETE AS
 BEGIN
@@ -1357,7 +1401,7 @@ usuario_id,
   (SELECT * FROM deleted d WHERE d.id = deleted.id FOR JSON PATH, WITHOUT_ARRAY_WRAPPER) FROM deleted;
   END END; GO
 
--- Trigger: Validar Limite de Armazenamento por Usuário
+-- Trigger: Validar Limite de Armazenamento por Usuï¿½rio
 CREATE TRIGGER tr_ValidarLimiteArmazenamento ON documentos
 AFTER INSERT, UPDATE AS
 BEGIN
@@ -1373,7 +1417,7 @@ WHERE usuario_id = u.id AND status = 'ativo'
 ) > @limite_bytes
 )
 BEGIN
-RAISERROR ('Limite de armazenamento excedido para o usuário', 16, 1); ROLLBACK TRANSACTION;
+RAISERROR ('Limite de armazenamento excedido para o usuï¿½rio', 16, 1); ROLLBACK TRANSACTION;
   END END; GO
 
 
@@ -1439,7 +1483,7 @@ html
 </a>
 <ul class="dropdown-menu dropdown-menu-end">
 <li><a class="dropdown-item" href="{{ url_for('auth.profile') }}">Meu Perfil</a></li>
-<li><a class="dropdown-item" href="{{ url_for('auth.settings') }}">Configurações</a></li>
+<li><a class="dropdown-item" href="{{ url_for('auth.settings') }}">Configuraï¿½ï¿½es</a></li>
 <li><hr class="dropdown-divider"></li>
 <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Sair</a></li>
 </ul>
@@ -1458,7 +1502,7 @@ html
 <ul class="nav flex-column">
 <li class="nav-item">
 <a class="nav-link active" href="{{ url_for('document.index') }}">
-<i class="bi bi-house-door"></i> Início
+<i class="bi bi-house-door"></i> Inï¿½cio
 </a>
 </li>
 <li class="nav-item">
@@ -1502,7 +1546,7 @@ html
 </ul>
 
 {% if current_user.perfil.nome in ['Administrador', 'Gestor'] %}
-<h6 class="sidebar-heading px-3 mt-4 mb-1 text-muted">Administração</h6>
+<h6 class="sidebar-heading px-3 mt-4 mb-1 text-muted">Administraï¿½ï¿½o</h6>
 <ul class="nav flex-column mb-2">
 <li class="nav-item">
 <a class="nav-link" href="{{ url_for('admin.dashboard') }}">
@@ -1511,12 +1555,12 @@ html
 </li>
 <li class="nav-item">
 <a class="nav-link" href="{{ url_for('admin.users') }}">
-<i class="bi bi-people"></i> Usuários
+<i class="bi bi-people"></i> Usuï¿½rios
 </a>
 </li>
 <li class="nav-item">
 <a class="nav-link" href="{{ url_for('admin.reports') }}">
-<i class="bi bi-bar-chart"></i> Relatórios
+<i class="bi bi-bar-chart"></i> Relatï¿½rios
 </a>
 </li>
 
@@ -1525,14 +1569,14 @@ html
 </div>
 </nav>
 
-<!-- Conteúdo Principal -->
+<!-- Conteï¿½do Principal -->
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
 <!-- Breadcrumb -->
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 bor
 <nav aria-label="breadcrumb">
 <ol class="breadcrumb">
 {% block breadcrumb %}
-<li class="breadcrumb-item"><a href="{{ url_for('document.index') }}">Início</a></li>
+<li class="breadcrumb-item"><a href="{{ url_for('document.index') }}">Inï¿½cio</a></li>
 {% endblock %}
 </ol>
 </nav>
@@ -1552,7 +1596,7 @@ html
 {% endif %}
 {% endwith %}
 
-<!-- Conteúdo da Página -->
+<!-- Conteï¿½do da Pï¿½gina -->
 {% block content %}{% endblock %}
 </main>
 </div>
@@ -1572,7 +1616,7 @@ html
 </html>
 
 
-5.1.2 Página de Lista de Documentos
+5.1.2 Pï¿½gina de Lista de Documentos
 
 html
 
@@ -1582,7 +1626,7 @@ html
 {% block title %}Meus Documentos - GED System{% endblock %}
 
 {% block breadcrumb %}
-<li class="breadcrumb-item"><a href="{{ url_for('document.index') }}">Início</a></li>
+<li class="breadcrumb-item"><a href="{{ url_for('document.index') }}">Inï¿½cio</a></li>
 <li class="breadcrumb-item active">Documentos</li>
 {% endblock %}
 
@@ -1649,7 +1693,7 @@ html
 <th>Categoria</th>
 <th>Tamanho</th>
 <th>Data Upload</th>
-<th>Ações</th>
+<th>Aï¿½ï¿½es</th>
 </tr>
 </thead>
 <tbody>
@@ -1699,7 +1743,7 @@ html
 </table>
 </div>
 
-<!-- Paginação -->
+<!-- Paginaï¿½ï¿½o -->
 <nav aria-label="Page navigation">
 <ul class="pagination justify-content-center">
 {% if documentos.has_prev %}
@@ -1723,7 +1767,7 @@ html
 
 {% if documentos.has_next %}
 <li class="page-item">
-<a class="page-link" href="{{ url_for('document.index', page=documentos.next_num) }}">Próximo</a>
+<a class="page-link" href="{{ url_for('document.index', page=documentos.next_num) }}">Prï¿½ximo</a>
 </li>
 {% endif %}
 </ul>
@@ -1757,7 +1801,7 @@ cb.checked = this.checked;
 {% endblock %}
 
 
-5.1.3 Página de Upload
+5.1.3 Pï¿½gina de Upload
 
 html
 
@@ -1777,7 +1821,7 @@ min-height: 200px;
 {% endblock %}
 
 {% block breadcrumb %}
-<li class="breadcrumb-item"><a href="{{ url_for('document.index') }}">Início</a></li>
+<li class="breadcrumb-item"><a href="{{ url_for('document.index') }}">Inï¿½cio</a></li>
 <li class="breadcrumb-item active">Upload</li>
 {% endblock %}
 
@@ -1801,7 +1845,7 @@ min-height: 200px;
 </div>
 
 <div class="mb-3">
-<label class="form-label">Descrição</label>
+<label class="form-label">Descriï¿½ï¿½o</label>
 <textarea name="descricao" class="form-control" rows="3"></textarea>
 
 </div>
@@ -1888,7 +1932,7 @@ this.on("error", function(file, errorMessage) { alert("Erro no upload: " + error
 {% endblock %}
 
 
-5.1.4 Página de Visualização de Documento
+5.1.4 Pï¿½gina de Visualizaï¿½ï¿½o de Documento
 
 html
 
@@ -1898,7 +1942,7 @@ html
 {% block title %}{{ documento.nome }} - GED System{% endblock %}
 
 {% block breadcrumb %}
-<li class="breadcrumb-item"><a href="{{ url_for('document.index') }}">Início</a></li>
+<li class="breadcrumb-item"><a href="{{ url_for('document.index') }}">Inï¿½cio</a></li>
 <li class="breadcrumb-item active">{{ documento.nome }}</li>
 {% endblock %}
 
@@ -1915,7 +1959,7 @@ html
 <i class="bi bi-share"></i> Compartilhar
 </button>
 <a href="{{ url_for('document.versions', id=documento.id) }}" class="btn btn-sm btn-secondary">
-<i class="bi bi-clock-history"></i> Versões
+<i class="bi bi-clock-history"></i> Versï¿½es
 </a>
 </div>
 </div>
@@ -1943,7 +1987,7 @@ alt="{{ documento.nome }}">
 {% else %}
 <div class="alert alert-info">
 <i class="bi bi-info-circle"></i>
-Visualização não disponível para este tipo de arquivo.
+Visualizaï¿½ï¿½o nï¿½o disponï¿½vel para este tipo de arquivo.
 <a href="{{ url_for('document.download', id=documento.id) }}" class="alert-link"> Clique aqui para baixar
 </a>
 </div>
@@ -1951,10 +1995,10 @@ Visualização não disponível para este tipo de arquivo.
 </div>
 </div>
 
-<!-- Comentários -->
+<!-- Comentï¿½rios -->
 <div class="card mt-3">
 <div class="card-header">
-<h6><i class="bi bi-chat-left-text"></i> Comentários</h6>
+<h6><i class="bi bi-chat-left-text"></i> Comentï¿½rios</h6>
 </div>
 <div class="card-body">
 <div id="commentsList">
@@ -1975,7 +2019,7 @@ Visualização não disponível para este tipo de arquivo.
 
 <form id="commentForm" class="mt-3">
 <div class="input-group">
-<input type="text" class="form-control" placeholder="Adicionar comentário..." id="commentText" required>
+<input type="text" class="form-control" placeholder="Adicionar comentï¿½rio..." id="commentText" required>
 
 <button class="btn btn-primary" type="submit">
 <i class="bi bi-send"></i> Enviar
@@ -1986,7 +2030,7 @@ Visualização não disponível para este tipo de arquivo.
 </div>
 </div>
 
-<!-- Painel Lateral - Informações -->
+<!-- Painel Lateral - Informaï¿½ï¿½es -->
 <div class="col-md-3">
 <!-- Detalhes -->
 <div class="card mb-3">
@@ -2001,7 +2045,7 @@ Visualização não disponível para este tipo de arquivo.
 <dt class="col-sm-5">Tamanho:</dt>
 <dd class="col-sm-7">{{ documento.tamanho_formatado }}</dd>
 
-<dt class="col-sm-5">Proprietário:</dt>
+<dt class="col-sm-5">Proprietï¿½rio:</dt>
 <dd class="col-sm-7">{{ documento.proprietario.nome }}</dd>
 
 <dt class="col-sm-5">Categoria:</dt>
@@ -2021,7 +2065,7 @@ Visualização não disponível para este tipo de arquivo.
 <dt class="col-sm-5">Modificado:</dt>
 <dd class="col-sm-7">{{ documento.data_modificacao.strftime('%d/%m/%Y') }}</dd>
 
-<dt class="col-sm-5">Versão:</dt>
+<dt class="col-sm-5">Versï¿½o:</dt>
 <dd class="col-sm-7">{{ documento.versao_atual }}</dd>
 </dl>
 </div>
@@ -2056,13 +2100,13 @@ Visualização não disponível para este tipo de arquivo.
 <small class="text-muted">({{ perm.tipo_permissao }})</small>
 </li>
 {% else %}
-<li class="text-muted">Não compartilhado</li>
+<li class="text-muted">Nï¿½o compartilhado</li>
 {% endfor %}
 </ul>
 </div>
 </div>
 
-<!-- Histórico de Atividades -->
+<!-- Histï¿½rico de Atividades -->
 <div class="card">
 <div class="card-header">
 
@@ -2094,9 +2138,9 @@ Visualização não disponível para este tipo de arquivo.
 <div class="modal-body">
 <form id="shareForm">
 <div class="mb-3">
-<label class="form-label">Usuário</label>
+<label class="form-label">Usuï¿½rio</label>
 <select name="usuario_id" class="form-select" required>
-<option value="">Selecione um usuário...</option>
+<option value="">Selecione um usuï¿½rio...</option>
 {% for user in usuarios %}
 <option value="{{ user.id }}">{{ user.nome }} ({{ user.email }})</option>
 {% endfor %}
@@ -2104,7 +2148,7 @@ Visualização não disponível para este tipo de arquivo.
 </div>
 
 <div class="mb-3">
-<label class="form-label">Permissão</label>
+<label class="form-label">Permissï¿½o</label>
 <select name="tipo_permissao" class="form-select" required>
 <option value="visualizar">Visualizar</option>
 <option value="editar">Editar</option>
@@ -2115,7 +2159,7 @@ Visualização não disponível para este tipo de arquivo.
 
 <div class="form-check mb-3">
 <input class="form-check-input" type="checkbox" id="notifyUser" checked>
-<label class="form-check-label" for="notifyUser"> Notificar usuário por e-mail
+<label class="form-check-label" for="notifyUser"> Notificar usuï¿½rio por e-mail
 </label>
 </div>
 </form>
@@ -2131,7 +2175,7 @@ Visualização não disponível para este tipo de arquivo.
 
 {% block extra_js %}
 <script>
-// Adicionar comentário
+// Adicionar comentï¿½rio
 document.getElementById('commentForm').addEventListener('submit', function(e) { e.preventDefault();
 const text = document.getElementById('commentText').value;
 
@@ -2180,7 +2224,7 @@ css
 
 /* static/css/custom.css */
 
-/* Variáveis de cores */
+/* Variï¿½veis de cores */
 :root {
 --primary-color: #0d6efd;
 --secondary-color: #6c757d;
@@ -2356,7 +2400,7 @@ background-color: #2d2d2d;
 }
 }
 
-/* Animações */
+/* Animaï¿½ï¿½es */
 @keyframes fadeIn { from {
 opacity: 0;
 transform: translateY(20px);
@@ -2414,9 +2458,9 @@ background-color: rgba(13, 202, 240, 0.1);
 
 
 
-6. CONSIDERAÇÕES DE IMPLEMENTAÇÃO
-6.1 Segurança
-6.1.1 Proteção CSRF
+6. CONSIDERAï¿½ï¿½ES DE IMPLEMENTAï¿½ï¿½O
+6.1 Seguranï¿½a
+6.1.1 Proteï¿½ï¿½o CSRF
 
 python
 
@@ -2424,7 +2468,7 @@ python
 from flask_wtf.csrf import CSRFProtect csrf = CSRFProtect()
 def init_csrf(app): csrf.init_app(app)
 
-# Exceções para rotas de API
+# Exceï¿½ï¿½es para rotas de API
 @csrf.exempt
 def exempt_views(): return ['api.*']
 
@@ -2441,11 +2485,11 @@ limiter = Limiter( key_func=get_remote_address, default_limits=["200 per day", "
 
 def init_limiter(app): limiter.init_app(app)
 
-# Limites específicos @app.route('/api/search') @limiter.limit("100 per hour") def search_api():
+# Limites especï¿½ficos @app.route('/api/search') @limiter.limit("100 per hour") def search_api():
 pass
 
 
-6.1.3 Validação de Arquivos
+6.1.3 Validaï¿½ï¿½o de Arquivos
 
 python
 
@@ -2462,7 +2506,7 @@ MAX_FILE_SIZE = 50 * 1024 * 1024 # 50MB
 
 def validate_file(self, file):
 """Valida arquivo antes do upload"""
-# Verificar extensão
+# Verificar extensï¿½o
 if not self._allowed_file(file.filename): return False
 
 # Verificar MIME type real
@@ -2489,7 +2533,7 @@ def _allowed_mime(self, mime): allowed_mimes = [
 ]
 return mime in allowed_mimes
 
-def generate_unique_filename(self, filename): """Gera nome único para arquivo""" import uuid
+def generate_unique_filename(self, filename): """Gera nome ï¿½nico para arquivo""" import uuid
 from datetime import datetime
 
 name, ext = os.path.splitext(secure_filename(filename)) timestamp = datetime.now().strftime('%Y%m%d%H%M%S') unique_id = str(uuid.uuid4())[:8]
@@ -2514,7 +2558,7 @@ def init_cache(app): cache.init_app(app)
 @cache.cached(timeout=60, key_prefix='all_categories') def get_all_categories():
 return Categoria.query.all()
 
-6.2.2 Compressão de Respostas
+6.2.2 Compressï¿½o de Respostas
 
 python
 
@@ -2573,7 +2617,7 @@ db.create_all()
 
 self.service = DocumentService()
 
-# Criar usuário de teste
+# Criar usuï¿½rio de teste
 self.user = User(nome='Test User', email='test@test.com') self.user.set_password('password123') db.session.add(self.user)
 db.session.commit()
 
@@ -2582,7 +2626,7 @@ def tearDown(self): db.session.remove() db.drop_all() self.app_context.pop()
 def test_upload_document(self): """Testa upload de documento""" # TODO: Implementar teste
 pass
 
-def test_validate_permissions(self): """Testa validação de permissões""" # TODO: Implementar teste
+def test_validate_permissions(self): """Testa validaï¿½ï¿½o de permissï¿½es""" # TODO: Implementar teste
 pass
 
 
@@ -2605,18 +2649,18 @@ keepalive = 2
 errorlog = "logs/gunicorn_error.log" accesslog = "logs/gunicorn_access.log" loglevel = "info"
 
 
-7. CONCLUSÃO
-Este documento apresenta o design completo do Sistema de Gestão Eletrônica de Documentos, incluindo:
-& Arquitetura em camadas com separação clara de responsabilidades
-& Padrões de design aplicados (MVC, Repository, Service Layer)
+7. CONCLUSï¿½O
+Este documento apresenta o design completo do Sistema de Gestï¿½o Eletrï¿½nica de Documentos, incluindo:
+& Arquitetura em camadas com separaï¿½ï¿½o clara de responsabilidades
+& Padrï¿½es de design aplicados (MVC, Repository, Service Layer)
 & Modelo de dados normalizado e otimizado
-& Interfaces de usuário responsivas e intuitivas
-& Considerações de segurança, performance e qualidade
-O sistema está pronto para implementação seguindo as especificações deste documento.
-Próximos Passos:
-1. Configuração do ambiente de desenvolvimento
-2. Implementação dos modelos e migrations
-3. Desenvolvimento dos serviços e repositories
-4. Criação dos controllers e templates
-5. Testes unitários e de integração
-6. Deploy em ambiente de homologação
+& Interfaces de usuï¿½rio responsivas e intuitivas
+& Consideraï¿½ï¿½es de seguranï¿½a, performance e qualidade
+O sistema estï¿½ pronto para implementaï¿½ï¿½o seguindo as especificaï¿½ï¿½es deste documento.
+Prï¿½ximos Passos:
+1. Configuraï¿½ï¿½o do ambiente de desenvolvimento
+2. Implementaï¿½ï¿½o dos modelos e migrations
+3. Desenvolvimento dos serviï¿½os e repositories
+4. Criaï¿½ï¿½o dos controllers e templates
+5. Testes unitï¿½rios e de integraï¿½ï¿½o
+6. Deploy em ambiente de homologaï¿½ï¿½o

@@ -1,5 +1,5 @@
 """
-End-to-End Integration Tests for Sistema GED
+End-to-End Integration Tests for Sistema SGDI
 Tests complete user flows through the system
 """
 import pytest

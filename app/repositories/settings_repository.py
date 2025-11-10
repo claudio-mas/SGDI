@@ -44,7 +44,13 @@ class SettingsRepository(BaseRepository[SystemSettings]):
             return setting.get_typed_value()
         return default
     
-    def set_value(self, chave: str, valor: Any, descricao: str = None, tipo: str = 'string') -> SystemSettings:
+    def set_value(
+        self,
+        chave: str,
+        valor: Any,
+        descricao: Optional[str] = None,
+        tipo: str = 'string'
+    ) -> SystemSettings:
         """
         Set or update a setting value.
         
@@ -64,7 +70,7 @@ class SettingsRepository(BaseRepository[SystemSettings]):
             setting.set_typed_value(valor)
             if descricao:
                 setting.descricao = descricao
-            self.update(setting)
+            self.session.commit()
         else:
             # Create new
             setting = SystemSettings(
@@ -73,7 +79,8 @@ class SettingsRepository(BaseRepository[SystemSettings]):
                 tipo=tipo
             )
             setting.set_typed_value(valor)
-            setting = self.create_from_model(setting)
+            self.session.add(setting)
+            self.session.commit()
         
         return setting
     

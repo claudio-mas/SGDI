@@ -1,6 +1,6 @@
-# Sistema GED - Deployment Files
+# Sistema SGDI - Deployment Files
 
-This directory contains all files and documentation needed to deploy Sistema GED in production environments.
+This directory contains all files and documentation needed to deploy Sistema SGDI in production environments.
 
 ## Contents
 

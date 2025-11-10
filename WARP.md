@@ -4,7 +4,7 @@ This file provides guidance to WARP (warp.dev) when working with code in this re
 
 ## Project Overview
 
-Sistema GED (Gestão Eletrônica de Documentos) is a Flask-based document management system with SQL Server backend. It provides document upload, versioning, permissions, workflow approvals, full-text search, and audit logging for corporate environments.
+Sistema SGDI (Gestão Eletrônica de Documentos) is a Flask-based document management system with SQL Server backend. It provides document upload, versioning, permissions, workflow approvals, full-text search, and audit logging for corporate environments.
 
 **Tech Stack:**
 - Backend: Flask 3.0+, SQLAlchemy, PyODBC

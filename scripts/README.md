@@ -1,4 +1,4 @@
-# Sistema GED - Backup and Maintenance Scripts
+# Sistema SGDI - Backup and Maintenance Scripts
 
 This directory contains automated scripts for backup and maintenance operations.
 
@@ -230,4 +230,4 @@ Current version: 1.0.0
 
 ## License
 
-Part of Sistema GED - Electronic Document Management System
+Part of Sistema SGDI - Electronic Document Management System

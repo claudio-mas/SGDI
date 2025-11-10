@@ -1,4 +1,4 @@
-# Sistema GED - Quick Start Deployment
+# Sistema SGDI - Quick Start Deployment
 
 This is a condensed guide for experienced administrators. For detailed instructions, see [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md).
 

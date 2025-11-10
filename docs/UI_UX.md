@@ -1,4 +1,4 @@
-# UI/UX - Sistema GED
+# UI/UX - Sistema SGDI
 
 ## Arquivos SCSS
 

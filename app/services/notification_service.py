@@ -447,7 +447,7 @@ class NotificationService:
             notification_queue.enqueue(
                 self._send_template_email,
                 user.email,
-                "Recuperação de Senha - Sistema GED",
+                "Recuperação de Senha - Sistema SGDI",
                 'emails/password_reset.html',
                 context
             )

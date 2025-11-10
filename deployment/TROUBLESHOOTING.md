@@ -1,6 +1,6 @@
-# Sistema GED - Troubleshooting Guide
+# Sistema SGDI - Troubleshooting Guide
 
-This guide provides solutions to common issues encountered during deployment and operation of Sistema GED.
+This guide provides solutions to common issues encountered during deployment and operation of Sistema SGDI.
 
 ## Table of Contents
 

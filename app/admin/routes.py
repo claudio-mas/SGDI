@@ -1,7 +1,10 @@
 """
 Administration routes
 """
-from flask import render_template, request, jsonify, send_file, Response, flash, redirect, url_for
+from flask import (
+    render_template, request, jsonify, send_file, Response,
+    flash, redirect, url_for, send_from_directory, current_app
+)
 from flask_login import login_required, current_user
 from datetime import datetime
 from functools import wraps
@@ -17,7 +20,7 @@ def admin_required(f):
     @login_required
     def decorated_function(*args, **kwargs):
         # Check if user has admin or auditor profile
-        if not current_user.perfil or current_user.perfil.nome not in ['Administrator', 'Auditor']:
+        if not current_user.perfil or current_user.perfil.nome not in ['Administrador', 'Auditor']:
             flash('Privilégios de administrador ou auditor são necessários.', 'danger')
             return redirect(url_for('documents.list_documents'))
         return f(*args, **kwargs)
@@ -304,6 +307,8 @@ def settings():
     from app.repositories.settings_repository import SettingsRepository
     from app.services.audit_service import AuditService
     import os
+    import sys
+    from importlib.metadata import version as get_version
     from werkzeug.utils import secure_filename
     
     settings_repo = SettingsRepository()
@@ -327,17 +332,31 @@ def settings():
             if form.logo.data:
                 from flask import current_app
                 logo_file = form.logo.data
-                filename = secure_filename(logo_file.filename)
                 
-                # Create logos directory if it doesn't exist
+                # Generate unique filename to avoid conflicts
+                timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+                original_filename = secure_filename(logo_file.filename)
+                filename = f'logo_{timestamp}_{original_filename}'
+                
+                # Create logos directory in uploads folder if it doesn't exist
                 logos_dir = os.path.join(current_app.config['UPLOAD_FOLDER'], 'logos')
                 os.makedirs(logos_dir, exist_ok=True)
                 
-                # Save file
+                # Delete old logo file if exists
+                old_logo = settings_repo.get_value('system_logo', '')
+                if old_logo:
+                    old_logo_path = os.path.join(current_app.config['UPLOAD_FOLDER'], old_logo)
+                    if os.path.exists(old_logo_path):
+                        try:
+                            os.remove(old_logo_path)
+                        except Exception as e:
+                            current_app.logger.warning(f'Erro ao remover logo antigo: {str(e)}')
+                
+                # Save new file
                 logo_path = os.path.join(logos_dir, filename)
                 logo_file.save(logo_path)
                 
-                # Store relative path
+                # Store relative path (relative to UPLOAD_FOLDER)
                 relative_path = f'logos/{filename}'
                 settings_repo.set_value('system_logo', relative_path, tipo='string')
             
@@ -368,7 +387,17 @@ def settings():
     # Get current logo
     current_logo = settings_repo.get_value('system_logo', '')
     
-    return render_template('admin/settings.html', form=form, current_logo=current_logo)
+    # Get system version info
+    python_version = sys.version.split()[0]
+    flask_version = get_version('flask')
+    
+    return render_template(
+        'admin/settings.html',
+        form=form,
+        current_logo=current_logo,
+        python_version=python_version,
+        flask_version=flask_version
+    )
 
 
 @admin_bp.route('/reports')
@@ -905,3 +934,12 @@ def audit_login_history():
         'total_attempts': len(logs_data),
         'login_history': logs_data
     })
+
+
+@admin_bp.route('/uploads/<path:filename>')
+def uploaded_file(filename):
+    """Serve uploaded files from the uploads folder"""
+    return send_from_directory(
+        current_app.config['UPLOAD_FOLDER'],
+        filename
+    )

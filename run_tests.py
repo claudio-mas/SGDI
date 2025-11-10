@@ -1,5 +1,5 @@
 """
-Test Runner Script for Sistema GED
+Test Runner Script for Sistema SGDI
 Runs all tests and generates coverage reports
 """
 import sys
@@ -9,7 +9,7 @@ import subprocess
 def run_all_tests():
     """Run all tests with coverage"""
     print("=" * 70)
-    print("Running Sistema GED Test Suite")
+    print("Running Sistema SGDI Test Suite")
     print("=" * 70)
     
     cmd = [

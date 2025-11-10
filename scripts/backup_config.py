@@ -1,5 +1,5 @@
 """
-Backup configuration for Sistema GED
+Backup configuration for Sistema SGDI
 Centralized configuration for backup operations
 """
 import os
@@ -66,16 +66,16 @@ class BackupConfig:
             'database_daily': {
                 'trigger': 'Daily at 2:00 AM',
                 'action': 'python C:\\path\\to\\sistema-ged\\scripts\\backup_database.py',
-                'description': 'Daily database backup for Sistema GED'
+                'description': 'Daily database backup for Sistema SGDI'
             },
             'files_weekly': {
                 'trigger': 'Weekly on Sunday at 3:00 AM',
                 'action': 'python C:\\path\\to\\sistema-ged\\scripts\\backup_files.py',
-                'description': 'Weekly file storage backup for Sistema GED'
+                'description': 'Weekly file storage backup for Sistema SGDI'
             },
             'full_weekly': {
                 'trigger': 'Weekly on Sunday at 2:00 AM',
                 'action': 'python C:\\path\\to\\sistema-ged\\scripts\\backup_all.py',
-                'description': 'Weekly complete backup for Sistema GED'
+                'description': 'Weekly complete backup for Sistema SGDI'
             }
         }

@@ -1,4 +1,4 @@
-# Requirements Document - Sistema GED
+# Requirements Document - Sistema SGDI
 
 ## Introduction
 

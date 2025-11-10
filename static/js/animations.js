@@ -1,6 +1,6 @@
 /**
  * ============================================
- * Sistema GED - Animations JavaScript
+ * Sistema SGDI - Animations JavaScript
  * Helpers for dynamic animations and loading states
  * ============================================
  */

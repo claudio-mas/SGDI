@@ -1,5 +1,5 @@
 """
-Seed data script for Sistema GED
+Seed data script for Sistema SGDI
 Creates default profiles, categories, and admin user
 
 Requirements:
@@ -18,23 +18,23 @@ def seed_profiles():
     Create default user profiles
     
     Requirement 1.5: Support five user profiles
-    - Administrator: Full system access
-    - Manager: Document management and workflow approval
-    - Standard User: Basic document operations
+    - Administrador: Full system access
+    - Gerente: Document management and workflow approval
+    - Usuário: Basic document operations
     - Auditor: Read-only access for compliance
-    - Visitor: View-only access to shared documents
+    - Visitante: View-only access to shared documents
     """
     profiles = [
         {
-            'nome': 'Administrator',
+            'nome': 'Administrador',
             'descricao': 'Full system access with all permissions including user management and system configuration'
         },
         {
-            'nome': 'Manager',
+            'nome': 'Gerente',
             'descricao': 'Can manage documents, approve workflows, and manage users within their department'
         },
         {
-            'nome': 'Standard User',
+            'nome': 'Usuário',
             'descricao': 'Can upload, view, edit, and share documents'
         },
         {
@@ -42,7 +42,7 @@ def seed_profiles():
             'descricao': 'Read-only access to documents and audit logs for compliance purposes'
         },
         {
-            'nome': 'Visitor',
+            'nome': 'Visitante',
             'descricao': 'View-only access to shared documents'
         }
     ]
@@ -199,9 +199,9 @@ def seed_admin_user():
         existing_admin = User.query.filter_by(email=admin_email).first()
         
         if not existing_admin:
-            admin_profile = Perfil.query.filter_by(nome='Administrator').first()
+            admin_profile = Perfil.query.filter_by(nome='Administrador').first()
             if not admin_profile:
-                print("  ✗ Error: Administrator profile not found. Run seed_profiles first.")
+                print("  ✗ Error: Administrador profile not found. Run seed_profiles first.")
                 return False
             
             admin_user = User(
@@ -241,7 +241,7 @@ def verify_seed_data():
     try:
         # Verify profiles
         profile_count = Perfil.query.count()
-        expected_profiles = ['Administrator', 'Manager', 'Standard User', 'Auditor', 'Visitor']
+        expected_profiles = ['Administrador', 'Gerente', 'Usuário', 'Auditor', 'Visitante']
         actual_profiles = [p.nome for p in Perfil.query.all()]
         
         print(f"  Profiles: {profile_count} found")
@@ -264,7 +264,9 @@ def verify_seed_data():
                 print(f"    ✗ {category_name} - MISSING")
         
         # Verify admin user
-        admin_count = User.query.join(Perfil).filter(Perfil.nome == 'Administrator').count()
+        admin_count = User.query.join(Perfil).filter(
+            Perfil.nome == 'Administrador'
+        ).count()
         print(f"  Admin users: {admin_count} found")
         
         # Check if all expected data exists
@@ -295,7 +297,7 @@ def main():
     4. Verification of seeded data
     """
     print("=" * 60)
-    print("Sistema GED - Database Seed Script")
+    print("Sistema SGDI - Database Seed Script")
     print("=" * 60)
     
     app = create_app(os.getenv('FLASK_ENV', 'development'))

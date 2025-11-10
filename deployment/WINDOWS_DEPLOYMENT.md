@@ -1,6 +1,6 @@
-# Sistema GED - Windows Server Deployment Guide
+# Sistema SGDI - Windows Server Deployment Guide
 
-This guide provides instructions for deploying Sistema GED on Windows Server.
+This guide provides instructions for deploying Sistema SGDI on Windows Server.
 
 ## Prerequisites
 
@@ -199,7 +199,7 @@ C:\nssm\nssm.exe install SistemaGED "C:\inetpub\sistema_ged\venv\Scripts\python.
 # Configure service
 C:\nssm\nssm.exe set SistemaGED AppDirectory "C:\inetpub\sistema_ged"
 C:\nssm\nssm.exe set SistemaGED AppEnvironmentExtra "FLASK_ENV=production"
-C:\nssm\nssm.exe set SistemaGED DisplayName "Sistema GED Application"
+C:\nssm\nssm.exe set SistemaGED DisplayName "Sistema SGDI Application"
 C:\nssm\nssm.exe set SistemaGED Description "Electronic Document Management System"
 C:\nssm\nssm.exe set SistemaGED Start SERVICE_AUTO_START
 
@@ -231,7 +231,7 @@ Or create `web.config` in `C:\inetpub\wwwroot`:
     <system.webServer>
         <rewrite>
             <rules>
-                <rule name="Sistema GED Reverse Proxy" stopProcessing="true">
+                <rule name="Sistema SGDI Reverse Proxy" stopProcessing="true">
                     <match url="(.*)" />
                     <action type="Rewrite" url="http://localhost:8000/{R:1}" />
                     <serverVariables>
@@ -359,10 +359,10 @@ Register-ScheduledTask -TaskName "SistemaGED-Cleanup" -Action $action -Trigger $
 
 ```powershell
 # Allow HTTP
-New-NetFirewallRule -DisplayName "Sistema GED HTTP" -Direction Inbound -Protocol TCP -LocalPort 80 -Action Allow
+New-NetFirewallRule -DisplayName "Sistema SGDI HTTP" -Direction Inbound -Protocol TCP -LocalPort 80 -Action Allow
 
 # Allow HTTPS
-New-NetFirewallRule -DisplayName "Sistema GED HTTPS" -Direction Inbound -Protocol TCP -LocalPort 443 -Action Allow
+New-NetFirewallRule -DisplayName "Sistema SGDI HTTPS" -Direction Inbound -Protocol TCP -LocalPort 443 -Action Allow
 ```
 
 ## Troubleshooting

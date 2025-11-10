@@ -1,5 +1,5 @@
 """
-Domain models for Sistema GED
+Domain models for Sistema SGDI
 """
 from app.models.user import User, Perfil, PasswordReset
 from app.models.document import Documento, Categoria, Pasta, Tag, DocumentoTag

@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Sistema GED search functionality provides comprehensive document search capabilities including:
+The Sistema SGDI search functionality provides comprehensive document search capabilities including:
 - Simple text search
 - Advanced search with multiple filters
 - Full-text search in PDF content

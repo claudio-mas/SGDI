@@ -39,7 +39,7 @@ def login():
         )
         
         if success:
-            flash(message, 'success')
+            # flash(message, 'success')
             
             # Redirect to next page or dashboard
             next_page = request.args.get('next')
@@ -53,7 +53,6 @@ def login():
 
 
 @auth_bp.route('/logout')
-@login_required
 def logout():
     """
     Logout route

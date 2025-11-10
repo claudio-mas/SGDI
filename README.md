@@ -1,4 +1,4 @@
-# Sistema GED - Gestão Eletrônica de Documentos
+# Sistema SGDI - Gestão Eletrônica de Documentos
 
 Sistema de Gestão Eletrônica de Documentos desenvolvido com Flask, SQL Server e Bootstrap. Uma solução corporativa completa para digitalização, armazenamento centralizado, organização hierárquica e controle de acesso a documentos.
 

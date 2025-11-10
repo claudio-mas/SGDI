@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Configurações do Sistema - Sistema GED{% endblock %}
+{% block title %}Configurações do Sistema - Sistema SGDI{% endblock %}
 
 {% block content %}
 <div class="container mt-4">
@@ -116,7 +116,7 @@
                             
                             {% if current_logo %}
                             <div class="mb-2">
-                                <img src="{{ url_for('static', filename='uploads/' + current_logo) }}" 
+                                <img src="{{ url_for('admin.uploaded_file', filename=current_logo) }}" 
                                      alt="Logo Atual" 
                                      class="img-thumbnail" 
                                      style="max-height: 100px;">
@@ -163,10 +163,10 @@
                         <dd class="col-sm-8">1.0.0</dd>
                         
                         <dt class="col-sm-4">Python:</dt>
-                        <dd class="col-sm-8">{{ python_version() }}</dd>
+                        <dd class="col-sm-8">{{ python_version }}</dd>
                         
                         <dt class="col-sm-4">Flask:</dt>
-                        <dd class="col-sm-8">{{ flask_version() }}</dd>
+                        <dd class="col-sm-8">{{ flask_version }}</dd>
                         
                         <dt class="col-sm-4">Banco de Dados:</dt>
                         <dd class="col-sm-8">SQL Server</dd>
@@ -237,15 +237,3 @@ function cleanOldLogs() {
 }
 </script>
 {% endblock %}
-
-{% macro python_version() %}
-    {%- set version = [] -%}
-    {%- if version.append(sys.version.split()[0]) -%}{%- endif -%}
-    {{ version[0] if version else 'N/A' }}
-{% endmacro %}
-
-{% macro flask_version() %}
-    {%- set version = [] -%}
-    {%- if version.append(flask.__version__) -%}{%- endif -%}
-    {{ version[0] if version else 'N/A' }}
-{% endmacro %}

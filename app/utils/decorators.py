@@ -150,7 +150,7 @@ def document_permission_required(permission_type, document_id_param='document_id
                 has_permission = True
             
             # 2. Administrator has all permissions
-            elif current_user.perfil.nome == 'Administrator':
+            elif current_user.perfil.nome == 'Administrador':
                 has_permission = True
             
             # 3. Check explicit document permissions
@@ -188,7 +188,7 @@ def admin_required(f):
             return redirect(url_for('auth.login', next=request.url))
         
         # Check if user is administrator
-        if current_user.perfil.nome != 'Administrator':
+        if current_user.perfil.nome != 'Administrador':
             flash('Acesso restrito a administradores.', 'danger')
             abort(403)
         
@@ -211,7 +211,7 @@ def manager_or_admin_required(f):
             return redirect(url_for('auth.login', next=request.url))
         
         # Check if user is manager or administrator
-        if current_user.perfil.nome not in ['Administrator', 'Manager']:
+        if current_user.perfil.nome not in ['Administrador', 'Gerente']:
             flash('Acesso restrito a gerentes e administradores.', 'danger')
             abort(403)
         

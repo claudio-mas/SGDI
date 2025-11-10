@@ -1,5 +1,5 @@
 """
-Database backup script for Sistema GED
+Database backup script for Sistema SGDI
 Performs automated SQL Server database backups
 """
 import os
@@ -117,7 +117,7 @@ class DatabaseBackup:
 def main():
     """Main backup execution"""
     print("=" * 60)
-    print("Sistema GED - Database Backup")
+    print("Sistema SGDI - Database Backup")
     print("=" * 60)
     print(f"Started at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
     

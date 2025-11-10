@@ -120,7 +120,7 @@ class AuthService:
         except Exception as e:
             print(f"Warning: Failed to log login audit entry: {e}")
         
-        return True, "Login successful", user
+        return True, "Login realizado com sucesso.", user
     
     def logout(self, user_id: Optional[int] = None) -> Tuple[bool, str]:
         """
@@ -146,8 +146,10 @@ class AuthService:
         # Clear Flask-Login session
         logout_user()
         
-        # Clear custom session data
-        session.clear()
+        # Clear custom session data (but preserve flash messages)
+        keys_to_remove = ['user_id', 'user_email', 'login_time', 'ip_address']
+        for key in keys_to_remove:
+            session.pop(key, None)
         
         return True, "Logout successful"
     

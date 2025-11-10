@@ -1,4 +1,4 @@
-# Implementation Plan - Sistema GED
+# Implementation Plan - Sistema SGDI
 
 ## Task List
 

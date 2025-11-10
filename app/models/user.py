@@ -77,15 +77,15 @@ class User(UserMixin, db.Model):
             return False
         
         # Administrator has all permissions
-        if self.perfil.nome == 'Administrator':
+        if self.perfil.nome == 'Administrador':
             return True
         
         # Define permission mappings for each profile
         profile_permissions = {
-            'Manager': ['view', 'edit', 'delete', 'share', 'approve', 'manage_users'],
-            'Standard User': ['view', 'edit', 'share', 'upload'],
+            'Gerente': ['view', 'edit', 'delete', 'share', 'approve', 'manage_users'],
+            'Usuário': ['view', 'edit', 'share', 'upload'],
             'Auditor': ['view', 'audit'],
-            'Visitor': ['view']
+            'Visitante': ['view']
         }
         
         return permission_name in profile_permissions.get(self.perfil.nome, [])

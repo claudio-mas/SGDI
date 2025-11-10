@@ -1,7 +1,7 @@
 # Task 7 Implementation Summary: Search Functionality
 
 ## Overview
-Successfully implemented comprehensive search functionality for the Sistema GED, including simple search, advanced search with filters, full-text search in PDF content, and autocomplete suggestions.
+Successfully implemented comprehensive search functionality for the Sistema SGDI, including simple search, advanced search with filters, full-text search in PDF content, and autocomplete suggestions.
 
 ## Completed Subtasks
 

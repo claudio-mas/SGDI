@@ -1,10 +1,10 @@
 # Maintenance Scripts Guide
 
-This guide explains the maintenance and cleanup scripts for Sistema GED.
+This guide explains the maintenance and cleanup scripts for Sistema SGDI.
 
 ## Overview
 
-Sistema GED includes automated maintenance scripts to keep the system clean and performant:
+Sistema SGDI includes automated maintenance scripts to keep the system clean and performant:
 
 1. **Trash Cleanup** - Permanently delete documents in trash for 30+ days
 2. **Token Cleanup** - Remove expired password reset tokens

@@ -89,7 +89,7 @@ def edit_category(id):
         flash('Categoria não encontrada', 'danger')
         return redirect(url_for('categories.list_categories'))
     
-    form = CategoryForm(categoria_id=id, obj=categoria)
+    form = CategoryForm(categoria_id=id)
     
     if form.validate_on_submit():
         try:
@@ -107,6 +107,15 @@ def edit_category(id):
             return redirect(url_for('categories.list_categories'))
         except Exception as e:
             flash(f'Erro ao atualizar categoria: {str(e)}', 'danger')
+    
+    # Populate form with current category data on GET
+    if not form.is_submitted():
+        form.nome.data = categoria.nome
+        form.descricao.data = categoria.descricao
+        form.categoria_pai_id.data = categoria.categoria_pai_id
+        form.icone.data = categoria.icone
+        form.cor.data = categoria.cor or '#007bff'
+        form.ordem.data = categoria.ordem
     
     return render_template('categories/form.html', form=form, title='Editar Categoria', categoria=categoria)
 

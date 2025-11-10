@@ -1,4 +1,4 @@
-# API Documentation - Sistema GED
+# API Documentation - Sistema SGDI
 
 ## Table of Contents
 
@@ -15,7 +15,7 @@
 
 ## Overview
 
-Sistema GED provides a web-based API for electronic document management. All endpoints return HTML pages for browser consumption, with some API endpoints returning JSON for AJAX requests.
+Sistema SGDI provides a web-based API for electronic document management. All endpoints return HTML pages for browser consumption, with some API endpoints returning JSON for AJAX requests.
 
 ### Base URL
 
@@ -45,7 +45,7 @@ Production: https://your-domain.com
 
 ### Authentication Method
 
-Sistema GED uses **session-based authentication** with Flask-Login.
+Sistema SGDI uses **session-based authentication** with Flask-Login.
 
 ### Login Flow
 
@@ -2007,7 +2007,7 @@ data_fim: date (optional)
 
 **HTML Error Pages**:
 
-Sistema GED provides custom error pages for common errors:
+Sistema SGDI provides custom error pages for common errors:
 
 - **403 Forbidden**: Access denied page
 - **404 Not Found**: Page not found

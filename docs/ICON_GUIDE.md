@@ -1,4 +1,4 @@
-# Guia de Ícones - Sistema GED
+# Guia de Ícones - Sistema SGDI
 
 ## Padronização: Bootstrap Icons
 

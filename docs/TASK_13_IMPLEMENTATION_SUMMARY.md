@@ -1,7 +1,7 @@
 # Task 13 Implementation Summary: Create Search Interface
 
 ## Overview
-Implemented a comprehensive search interface for the Sistema GED with multiple search modes, filters, and autocomplete functionality.
+Implemented a comprehensive search interface for the Sistema SGDI with multiple search modes, filters, and autocomplete functionality.
 
 ## Completed Subtasks
 
@@ -90,7 +90,7 @@ Implemented live search suggestions in the navigation bar:
 
 #### Base Template Updates (`app/templates/base.html`)
 - **Navigation Bar**: Added fixed-top navbar with:
-  - Sistema GED branding
+  - Sistema SGDI branding
   - Centered search input with icon
   - Navigation links (Documents, Upload, Search)
   - User dropdown menu (Profile, Change Password, Logout)

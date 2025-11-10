@@ -1,5 +1,5 @@
 """
-File storage backup script for Sistema GED
+File storage backup script for Sistema SGDI
 Performs automated backup of uploaded documents
 """
 import os
@@ -187,7 +187,7 @@ class FileStorageBackup:
 def main():
     """Main backup execution"""
     print("=" * 60)
-    print("Sistema GED - File Storage Backup")
+    print("Sistema SGDI - File Storage Backup")
     print("=" * 60)
     print(f"Started at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
     

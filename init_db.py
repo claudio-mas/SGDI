@@ -1,5 +1,5 @@
 """
-Database initialization script for Sistema GED
+Database initialization script for Sistema SGDI
 Creates all tables, indexes, constraints, and optionally seeds initial data
 
 This script:
@@ -176,7 +176,7 @@ def validate_data():
             print(f"   ✓ Categories: {category_count}")
         
         # Check admin user
-        admin_profile = Perfil.query.filter_by(nome='Administrator').first()
+        admin_profile = Perfil.query.filter_by(nome='Administrador').first()
         if admin_profile:
             admin_count = User.query.filter_by(perfil_id=admin_profile.id).count()
             if admin_count == 0:
@@ -212,7 +212,7 @@ def init_database(seed=True):
         bool: True if initialization successful, False otherwise
     """
     print("=" * 60)
-    print("Sistema GED - Database Initialization")
+    print("Sistema SGDI - Database Initialization")
     print("=" * 60)
     
     app = create_app(os.getenv('FLASK_ENV', 'development'))

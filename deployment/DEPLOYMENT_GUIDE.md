@@ -1,6 +1,6 @@
-# Sistema GED - Deployment Guide
+# Sistema SGDI - Deployment Guide
 
-This guide provides step-by-step instructions for deploying Sistema GED in a production environment.
+This guide provides step-by-step instructions for deploying Sistema SGDI in a production environment.
 
 ## Table of Contents
 

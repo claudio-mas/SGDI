@@ -1,5 +1,5 @@
 """
-Security Testing for Sistema GED
+Security Testing for Sistema SGDI
 Tests authentication, authorization, CSRF, rate limiting, SQL injection, and XSS protection
 """
 import pytest

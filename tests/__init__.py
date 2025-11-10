@@ -1,3 +1,3 @@
 """
-Test package for Sistema GED
+Test package for Sistema SGDI
 """

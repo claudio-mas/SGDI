@@ -1,8 +1,8 @@
-# Design Document - Sistema GED
+# Design Document - Sistema SGDI
 
 ## Overview
 
-Sistema GED is a web-based Electronic Document Management System built with Flask (Python), SQL Server, and Bootstrap. The system follows a layered architecture pattern with clear separation of concerns, implementing MVC, Repository, and Service Layer patterns.
+Sistema SGDI is a web-based Electronic Document Management System built with Flask (Python), SQL Server, and Bootstrap. The system follows a layered architecture pattern with clear separation of concerns, implementing MVC, Repository, and Service Layer patterns.
 
 ### Key Design Principles
 

@@ -1,5 +1,5 @@
 """
-Performance Testing for Sistema GED
+Performance Testing for Sistema SGDI
 Tests load handling, file upload performance, search performance, and page load times
 """
 import pytest

@@ -90,6 +90,22 @@ def create_app(config_name='default'):
     # Register template filters
     from app.utils.template_filters import register_filters
     register_filters(app)
+    
+    # Register context processors
+    @app.context_processor
+    def inject_system_settings():
+        """Inject system settings into all templates"""
+        try:
+            from app.repositories.settings_repository import (
+                SettingsRepository
+            )
+            settings_repo = SettingsRepository()
+            system_logo = settings_repo.get_value('system_logo', '')
+            return dict(system_logo=system_logo)
+        except Exception:
+            # If database not ready or error, return empty
+            return dict(system_logo='')
+    
     # Also expose some helper functions/globals to Jinja environment for templates
     # - make get_file_icon available as a global (templates may call it as a function)
     # - expose builtin min/max to avoid UndefinedError in templates that use them
@@ -110,11 +126,8 @@ def create_app(config_name='default'):
         from flask import url_for as _flask_url_for
 
         def _url_for(endpoint, **values):
-            # Map common alias parameter names to expected ones (non-destructive)
-            alias_map = {'document_id': 'id', 'user_id': 'id'}
-            for old, new in alias_map.items():
-                if old in values and new not in values:
-                    values[new] = values.pop(old)
+            # No automatic parameter mapping
+            # Use exact parameter names for endpoints
             return _flask_url_for(endpoint, **values)
 
         app.jinja_env.globals.update(url_for=_url_for)

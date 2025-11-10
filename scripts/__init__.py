@@ -1,5 +1,5 @@
 """
-Sistema GED - Maintenance and Backup Scripts
+Sistema SGDI - Maintenance and Backup Scripts
 
 This package contains automated scripts for:
 - Database backups

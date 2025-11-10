@@ -1,4 +1,4 @@
-# Sistema GED Test Suite
+# Sistema SGDI Test Suite
 
 ## Quick Start
 

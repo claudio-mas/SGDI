@@ -119,7 +119,7 @@ class TokenCleanup:
 def main():
     """Main cleanup execution"""
     print("=" * 60)
-    print("Sistema GED - Password Reset Token Cleanup")
+    print("Sistema SGDI - Password Reset Token Cleanup")
     print("=" * 60)
     print(f"Started at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
     

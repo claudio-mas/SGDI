@@ -1,5 +1,5 @@
 """
-Unified cleanup script for Sistema GED
+Unified cleanup script for Sistema SGDI
 Performs all maintenance cleanup tasks
 """
 import os
@@ -21,7 +21,7 @@ load_dotenv()
 def main():
     """Execute complete cleanup process"""
     print("=" * 60)
-    print("Sistema GED - Complete System Cleanup")
+    print("Sistema SGDI - Complete System Cleanup")
     print("=" * 60)
     print(f"Started at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
     

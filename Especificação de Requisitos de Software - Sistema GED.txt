@@ -1,40 +1,40 @@
-Especificação de Requisitos de Software (SRS)
-Sistema de Gestão Eletrônica de Documentos (GED)
-Versão: 1.0
+Especificaï¿½ï¿½o de Requisitos de Software (SRS)
+Sistema de Gestï¿½o Eletrï¿½nica de Documentos (GED)
+Versï¿½o: 1.0
 Data: 07 de Novembro de 2025
 Status: Em Desenvolvimento
 
 
-1. INTRODUÇÃO
-1.1 Propósito
-Este documento especifica os requisitos funcionais e não funcionais para o desenvolvimento de um Sistema de Gestão Eletrônica de Documentos (GED) baseado em web. O sistema será desenvolvido
+1. INTRODUï¿½ï¿½O
+1.1 Propï¿½sito
+Este documento especifica os requisitos funcionais e nï¿½o funcionais para o desenvolvimento de um Sistema de Gestï¿½o Eletrï¿½nica de Documentos (GED) baseado em web. O sistema serï¿½ desenvolvido
 utilizando Flask como framework backend, SQL Server como banco de dados e Bootstrap para interface
 frontend.
 
 1.2 Escopo do Produto
-O Sistema GED é uma aplicação web corporativa que permite:
+O Sistema SGDI ï¿½ uma aplicaï¿½ï¿½o web corporativa que permite:
 
-& Digitalização e armazenamento centralizado de documentos
+& Digitalizaï¿½ï¿½o e armazenamento centralizado de documentos
 
-& Organização hierárquica através de categorias e tags
-& Controle de acesso baseado em perfis de usuário
-& Pesquisa avançada por metadados e conteúdo
+& Organizaï¿½ï¿½o hierï¿½rquica atravï¿½s de categorias e tags
+& Controle de acesso baseado em perfis de usuï¿½rio
+& Pesquisa avanï¿½ada por metadados e conteï¿½do
 
-& Versionamento e histórico de alterações
-& Workflow de aprovação de documentos
+& Versionamento e histï¿½rico de alteraï¿½ï¿½es
+& Workflow de aprovaï¿½ï¿½o de documentos
 
-& Auditoria completa de operações
+& Auditoria completa de operaï¿½ï¿½es
 
 Objetivos principais:
 
-& Eliminar dependência de arquivos físicos
-& Aumentar produtividade na localização de documentos
-& Garantir segurança e conformidade regulatória
+& Eliminar dependï¿½ncia de arquivos fï¿½sicos
+& Aumentar produtividade na localizaï¿½ï¿½o de documentos
+& Garantir seguranï¿½a e conformidade regulatï¿½ria
 
-& Facilitar colaboração entre equipes
+& Facilitar colaboraï¿½ï¿½o entre equipes
 
-1.3 Definições, Acrônimos e Abreviações
-& GED: Gestão Eletrônica de Documentos
+1.3 Definiï¿½ï¿½es, Acrï¿½nimos e Abreviaï¿½ï¿½es
+& GED: Gestï¿½o Eletrï¿½nica de Documentos
 
 & CRUD: Create, Read, Update, Delete
 & OCR: Optical Character Recognition
@@ -43,370 +43,398 @@ Objetivos principais:
 & API: Application Programming Interface
 
 & SSL: Secure Sockets Layer
-& LGPD: Lei Geral de Proteção de Dados
+& LGPD: Lei Geral de Proteï¿½ï¿½o de Dados
 & RBAC: Role-Based Access Control
 
-1.4 Referências
+1.4 Referï¿½ncias
 & IEEE Std 830-1998: IEEE Recommended Practice for Software Requirements Specifications
-& IEEE Std 29148-2018: Systems and software engineering — Life cycle processes — Requirements engineering
-& LGPD - Lei nº 13.709/2018
+& IEEE Std 29148-2018: Systems and software engineering ï¿½ Life cycle processes ï¿½ Requirements engineering
+& LGPD - Lei nï¿½ 13.709/2018
 & Flask Documentation v3.0
 
 & Microsoft SQL Server 2019 Documentation
 & Bootstrap 5.3 Documentation
 
-1.5 Visão Geral do Documento
-Este documento está organizado em três seções principais:
+1.5 Visï¿½o Geral do Documento
+Este documento estï¿½ organizado em trï¿½s seï¿½ï¿½es principais:
 
-& Seção 1: Introdução e contexto do projeto
+& Seï¿½ï¿½o 1: Introduï¿½ï¿½o e contexto do projeto
 
-& Seção 2: Descrição geral do sistema e suas características
-& Seção 3: Requisitos específicos detalhados (funcionais e não funcionais)
+& Seï¿½ï¿½o 2: Descriï¿½ï¿½o geral do sistema e suas caracterï¿½sticas
+& Seï¿½ï¿½o 3: Requisitos especï¿½ficos detalhados (funcionais e nï¿½o funcionais)
 
 
-2. DESCRIÇÃO GERAL
+2. DESCRIï¿½ï¿½O GERAL
 2.1 Perspectiva do Produto
-O Sistema GED é um produto independente que será integrado à infraestrutura corporativa existente. Ele substituirá processos manuais de arquivamento e consulta de documentos físicos.
+O Sistema SGDI ï¿½ um produto independente que serï¿½ integrado ï¿½ infraestrutura corporativa existente. Ele substituirï¿½ processos manuais de arquivamento e consulta de documentos fï¿½sicos.
 Interfaces do Sistema:
 
-& Interface de Usuário: Aplicação web responsiva acessível via navegadores modernos
+& Interface de Usuï¿½rio: Aplicaï¿½ï¿½o web responsiva acessï¿½vel via navegadores modernos
 & Interface de Banco de Dados: SQL Server 2019 ou superior
 & Interface de Armazenamento: Sistema de arquivos local ou cloud storage
 
-& Interface de E-mail: SMTP para notificações
-& Interface de Autenticação: Suporte a LDAP/Active Directory (opcional)
+& Interface de E-mail: SMTP para notificaï¿½ï¿½es
+& Interface de Autenticaï¿½ï¿½o: Suporte a LDAP/Active Directory (opcional)
 
-2.2 Funções do Produto
-1. Gerenciamento de Documentos: Upload, download, visualização, edição de metadados
-2. Organização: Estrutura de pastas, categorias e tags
+2.2 Funï¿½ï¿½es do Produto
+1. Gerenciamento de Documentos: Upload, download, visualizaï¿½ï¿½o, ediï¿½ï¿½o de metadados
+2. Organizaï¿½ï¿½o: Estrutura de pastas, categorias e tags
 
-3. Controle de Acesso: Autenticação, autorização por perfis e permissões granulares
-4. Pesquisa: Busca por metadados, texto completo e filtros avançados
-5. Versionamento: Controle de versões com histórico de alterações
+3. Controle de Acesso: Autenticaï¿½ï¿½o, autorizaï¿½ï¿½o por perfis e permissï¿½es granulares
+4. Pesquisa: Busca por metadados, texto completo e filtros avanï¿½ados
+5. Versionamento: Controle de versï¿½es com histï¿½rico de alteraï¿½ï¿½es
 
-6. Workflow: Processos de aprovação e tramitação de documentos
-7. Auditoria: Log completo de todas as operações
+6. Workflow: Processos de aprovaï¿½ï¿½o e tramitaï¿½ï¿½o de documentos
+7. Auditoria: Log completo de todas as operaï¿½ï¿½es
 
-8. Relatórios: Dashboards e relatórios de uso do sistema
+8. Relatï¿½rios: Dashboards e relatï¿½rios de uso do sistema
 
-2.3 Características dos Usuários
+2.3 Caracterï¿½sticas dos Usuï¿½rios
 
-PerfilDescriçãoNível TécnicoResponsabilidadesAdministradorGerencia sistema e usuáriosAltoConfiguração, backup, manutençãoGestorSupervisiona documentos do setorMédioAprovação, organização, relatóriosUsuário PadrãoUtiliza sistema diariamenteBásicoUpload, consulta, ediçãoAuditorMonitora conformidadeMédioAnálise de logs, relatóriosVisitanteAcesso limitado para consultaBásicoVisualização de documentos públicosCC
-2.4 Restrições
-1. Tecnológicas:
+Perfil
+Descriï¿½ï¿½o
+Nï¿½vel Tï¿½cnico
+Responsabilidades
+Administrador
+Gerencia sistema e usuï¿½rios
+Alto
+Configuraï¿½ï¿½o, backup, manutenï¿½ï¿½o
+Gestor
+Supervisiona documentos do setor
+Mï¿½dio
+Aprovaï¿½ï¿½o, organizaï¿½ï¿½o, relatï¿½rios
+Usuï¿½rio Padrï¿½o
+Utiliza sistema diariamente
+Bï¿½sico
+Upload, consulta, ediï¿½ï¿½o
+Auditor
+Monitora conformidade
+Mï¿½dio
+Anï¿½lise de logs, relatï¿½rios
+Visitante
+Acesso limitado para consulta
+Bï¿½sico
+Visualizaï¿½ï¿½o de documentos pï¿½blicos
+C
+
+
+C
+
+2.4 Restriï¿½ï¿½es
+1. Tecnolï¿½gicas:
 & Framework: Flask (Python 3.9+)
 
 & Banco de Dados: SQL Server 2019+
 & Frontend: Bootstrap 5.3+
 & Navegadores: Chrome 90+, Firefox 88+, Edge 90+, Safari 14+
 
-2. Regulatórias:
+2. Regulatï¿½rias:
 & Conformidade com LGPD
 
-& Retenção de documentos conforme legislação vigente
-& Criptografia de dados sensíveis
+& Retenï¿½ï¿½o de documentos conforme legislaï¿½ï¿½o vigente
+& Criptografia de dados sensï¿½veis
 
 3. Operacionais:
-& Disponibilidade mínima: 99%
+& Disponibilidade mï¿½nima: 99%
 
-& Backup diário automático
-& Tempo de resposta < 3 segundos para operações comuns
+& Backup diï¿½rio automï¿½tico
+& Tempo de resposta < 3 segundos para operaï¿½ï¿½es comuns
 
-2.5 Suposições e Dependências
-Suposições:
+2.5 Suposiï¿½ï¿½es e Dependï¿½ncias
+Suposiï¿½ï¿½es:
 
-& Infraestrutura de rede estável e confiável
+& Infraestrutura de rede estï¿½vel e confiï¿½vel
 
-& Usuários possuem dispositivos compatíveis
-& Documentos serão predominantemente em formato PDF
+& Usuï¿½rios possuem dispositivos compatï¿½veis
+& Documentos serï¿½o predominantemente em formato PDF
 
-Dependências:
+Dependï¿½ncias:
 
-& Servidor SQL Server configurado e disponível
+& Servidor SQL Server configurado e disponï¿½vel
 & Sistema de arquivos com capacidade adequada
 
 & Servidor SMTP para envio de e-mails
-& Certificado SSL válido para HTTPS
+& Certificado SSL vï¿½lido para HTTPS
 
 
-3. REQUISITOS ESPECÍFICOS
+3. REQUISITOS ESPECï¿½FICOS
 3.1 Requisitos Funcionais
-3.1.1 Autenticação e Autorização RF001 - Login de Usuário
-& Descrição: O sistema deve permitir que usuários façam login com credenciais
+3.1.1 Autenticaï¿½ï¿½o e Autorizaï¿½ï¿½o RF001 - Login de Usuï¿½rio
+& Descriï¿½ï¿½o: O sistema deve permitir que usuï¿½rios faï¿½am login com credenciais
 & Entrada: E-mail/username e senha
 
-& Processamento: Validação no banco de dados, criação de sessão
-& Saída: Redirecionamento para dashboard ou mensagem de erro
+& Processamento: Validaï¿½ï¿½o no banco de dados, criaï¿½ï¿½o de sessï¿½o
+& Saï¿½da: Redirecionamento para dashboard ou mensagem de erro
 
 & Prioridade: Alta
 
-RF002 - Recuperação de Senha
+RF002 - Recuperaï¿½ï¿½o de Senha
 
-& Descrição: Usuários devem poder redefinir senha via e-mail
+& Descriï¿½ï¿½o: Usuï¿½rios devem poder redefinir senha via e-mail
 
 & Entrada: E-mail cadastrado
-& Processamento: Geração de token temporário, envio por e-mail
+& Processamento: Geraï¿½ï¿½o de token temporï¿½rio, envio por e-mail
 
-& Saída: Link de redefinição de senha
+& Saï¿½da: Link de redefiniï¿½ï¿½o de senha
 & Prioridade: Alta
 
 RF003 - Controle de Perfis
 
-& Descrição: Sistema deve suportar múltiplos perfis de acesso
-& Perfis: Administrador, Gestor, Usuário, Auditor, Visitante
+& Descriï¿½ï¿½o: Sistema deve suportar mï¿½ltiplos perfis de acesso
+& Perfis: Administrador, Gestor, Usuï¿½rio, Auditor, Visitante
 
 & Prioridade: Alta
 
-RF004 - Gerenciamento de Permissões
+RF004 - Gerenciamento de Permissï¿½es
 
-& Descrição: Administradores podem definir permissões por documento/pasta
+& Descriï¿½ï¿½o: Administradores podem definir permissï¿½es por documento/pasta
 
-& Permissões: Visualizar, Editar, Excluir, Aprovar, Compartilhar
+& Permissï¿½es: Visualizar, Editar, Excluir, Aprovar, Compartilhar
 & Prioridade: Alta
 
 3.1.2 Gerenciamento de Documentos RF005 - Upload de Documentos
-& Descrição: Usuários podem fazer upload de arquivos
+& Descriï¿½ï¿½o: Usuï¿½rios podem fazer upload de arquivos
 & Formatos suportados: PDF, DOC, DOCX, XLS, XLSX, JPG, PNG, TIF
 
-& Tamanho máximo: 50MB por arquivo
-& Upload múltiplo: Até 10 arquivos simultaneamente
+& Tamanho mï¿½ximo: 50MB por arquivo
+& Upload mï¿½ltiplo: Atï¿½ 10 arquivos simultaneamente
 
 & Prioridade: Alta
 
 RF006 - Download de Documentos
 
-& Descrição: Usuários autorizados podem baixar documentos
+& Descriï¿½ï¿½o: Usuï¿½rios autorizados podem baixar documentos
 
-& Opções: Download individual ou em lote (ZIP)
+& Opï¿½ï¿½es: Download individual ou em lote (ZIP)
 & Prioridade: Alta
 
-RF007 - Visualização de Documentos
+RF007 - Visualizaï¿½ï¿½o de Documentos
 
-& Descrição: Sistema deve exibir preview de documentos no navegador
-& Formatos: PDF (nativo), imagens (nativo), Office (conversão para PDF)
-
-& Prioridade: Alta
-
-RF008 - Edição de Metadados
-
-& Descrição: Usuários podem editar informações do documento
-& Metadados: Título, descrição, categoria, tags, data, autor
+& Descriï¿½ï¿½o: Sistema deve exibir preview de documentos no navegador
+& Formatos: PDF (nativo), imagens (nativo), Office (conversï¿½o para PDF)
 
 & Prioridade: Alta
 
-RF009 - Exclusão de Documentos
+RF008 - Ediï¿½ï¿½o de Metadados
 
-& Descrição: Exclusão lógica com possibilidade de recuperação (30 dias)
+& Descriï¿½ï¿½o: Usuï¿½rios podem editar informaï¿½ï¿½es do documento
+& Metadados: Tï¿½tulo, descriï¿½ï¿½o, categoria, tags, data, autor
 
-& Permissão: Apenas proprietário ou administrador
-& Prioridade: Média
+& Prioridade: Alta
+
+RF009 - Exclusï¿½o de Documentos
+
+& Descriï¿½ï¿½o: Exclusï¿½o lï¿½gica com possibilidade de recuperaï¿½ï¿½o (30 dias)
+
+& Permissï¿½o: Apenas proprietï¿½rio ou administrador
+& Prioridade: Mï¿½dia
 
 RF010 - Versionamento
 
-& Descrição: Sistema mantém histórico de versões de documentos
-& Funcionalidades: Upload de nova versão, comparação, restauração
+& Descriï¿½ï¿½o: Sistema mantï¿½m histï¿½rico de versï¿½es de documentos
+& Funcionalidades: Upload de nova versï¿½o, comparaï¿½ï¿½o, restauraï¿½ï¿½o
 
-& Limite: Últimas 10 versões por documento
-& Prioridade: Média
+& Limite: ï¿½ltimas 10 versï¿½es por documento
+& Prioridade: Mï¿½dia
 
-3.1.3 Organização e Classificação RF011 - Estrutura de Pastas
-& Descrição: Sistema permite criar hierarquia de pastas
-& Níveis: Até 5 níveis de profundidade
+3.1.3 Organizaï¿½ï¿½o e Classificaï¿½ï¿½o RF011 - Estrutura de Pastas
+& Descriï¿½ï¿½o: Sistema permite criar hierarquia de pastas
+& Nï¿½veis: Atï¿½ 5 nï¿½veis de profundidade
 
-& Operações: Criar, renomear, mover, excluir
+& Operaï¿½ï¿½es: Criar, renomear, mover, excluir
 & Prioridade: Alta
 
-RF012 - Categorização
+RF012 - Categorizaï¿½ï¿½o
 
-& Descrição: Documentos podem ser classificados em categorias predefinidas
-& Categorias sugeridas: Contratos, Notas Fiscais, RH, Jurídico, Técnico
+& Descriï¿½ï¿½o: Documentos podem ser classificados em categorias predefinidas
+& Categorias sugeridas: Contratos, Notas Fiscais, RH, Jurï¿½dico, Tï¿½cnico
 
 & Hierarquia: Categorias podem ter subcategorias
 & Prioridade: Alta
 
 RF013 - Sistema de Tags
 
-& Descrição: Usuários podem adicionar tags (palavras-chave) aos documentos
-& Características: Múltiplas tags por documento, autocompletar
+& Descriï¿½ï¿½o: Usuï¿½rios podem adicionar tags (palavras-chave) aos documentos
+& Caracterï¿½sticas: Mï¿½ltiplas tags por documento, autocompletar
 
-& Prioridade: Média
+& Prioridade: Mï¿½dia
 
 RF014 - Favoritos
 
-& Descrição: Usuários podem marcar documentos como favoritos
-& Acesso: Lista rápida na interface principal
+& Descriï¿½ï¿½o: Usuï¿½rios podem marcar documentos como favoritos
+& Acesso: Lista rï¿½pida na interface principal
 & Prioridade: Baixa
 
 3.1.4 Pesquisa e Filtros
 
 RF015 - Pesquisa Simples
 
-& Descrição: Busca por nome do arquivo e metadados
+& Descriï¿½ï¿½o: Busca por nome do arquivo e metadados
 
-& Campos pesquisados: Título, descrição, tags, categoria
+& Campos pesquisados: Tï¿½tulo, descriï¿½ï¿½o, tags, categoria
 & Prioridade: Alta
 
-RF016 - Pesquisa Avançada
+RF016 - Pesquisa Avanï¿½ada
 
-& Descrição: Busca com múltiplos filtros combinados
+& Descriï¿½ï¿½o: Busca com mï¿½ltiplos filtros combinados
 & Filtros: Data, autor, tipo, tamanho, status, categoria
 
-& Operadores: E, OU, NÃO
+& Operadores: E, OU, Nï¿½O
 & Prioridade: Alta
 
 RF017 - Pesquisa Full-Text
 
-& Descrição: Busca por conteúdo dentro de documentos PDF
-& Tecnologia: Indexação de texto com SQL Server Full-Text Search
+& Descriï¿½ï¿½o: Busca por conteï¿½do dentro de documentos PDF
+& Tecnologia: Indexaï¿½ï¿½o de texto com SQL Server Full-Text Search
 
-& Prioridade: Média
+& Prioridade: Mï¿½dia
 
-RF018 - Filtros Rápidos
+RF018 - Filtros Rï¿½pidos
 
-& Descrição: Filtros predefinidos para acesso rápido
-& Exemplos: Meus documentos, Recentes, Pendentes de aprovação
-& Prioridade: Média
+& Descriï¿½ï¿½o: Filtros predefinidos para acesso rï¿½pido
+& Exemplos: Meus documentos, Recentes, Pendentes de aprovaï¿½ï¿½o
+& Prioridade: Mï¿½dia
 
-3.1.5 Workflow e Aprovações RF019 - Criação de Workflows
-& Descrição: Administradores podem criar processos de aprovação
+3.1.5 Workflow e Aprovaï¿½ï¿½es RF019 - Criaï¿½ï¿½o de Workflows
+& Descriï¿½ï¿½o: Administradores podem criar processos de aprovaï¿½ï¿½o
 
-& Etapas: Envio ? Revisão ? Aprovação ? Publicação
-& Configuração: Definir aprovadores por etapa
-& Prioridade: Média
+& Etapas: Envio ? Revisï¿½o ? Aprovaï¿½ï¿½o ? Publicaï¿½ï¿½o
+& Configuraï¿½ï¿½o: Definir aprovadores por etapa
+& Prioridade: Mï¿½dia
 
-RF020 - Solicitação de Aprovação
+RF020 - Solicitaï¿½ï¿½o de Aprovaï¿½ï¿½o
 
-& Descrição: Usuários podem submeter documentos para aprovação
+& Descriï¿½ï¿½o: Usuï¿½rios podem submeter documentos para aprovaï¿½ï¿½o
 
-& Notificação: E-mail automático para aprovadores
-& Prioridade: Média
+& Notificaï¿½ï¿½o: E-mail automï¿½tico para aprovadores
+& Prioridade: Mï¿½dia
 
 RF021 - Aprovar/Rejeitar Documentos
 
-& Descrição: Aprovadores podem aceitar ou rejeitar documentos
-& Obrigatoriedade: Comentário obrigatório em caso de rejeição
+& Descriï¿½ï¿½o: Aprovadores podem aceitar ou rejeitar documentos
+& Obrigatoriedade: Comentï¿½rio obrigatï¿½rio em caso de rejeiï¿½ï¿½o
 
-& Prioridade: Média
+& Prioridade: Mï¿½dia
 
-RF022 - Histórico de Aprovações
+RF022 - Histï¿½rico de Aprovaï¿½ï¿½es
 
-& Descrição: Sistema registra todas as etapas do workflow
+& Descriï¿½ï¿½o: Sistema registra todas as etapas do workflow
 
-& Informações: Data, hora, aprovador, decisão, comentários
-& Prioridade: Média
+& Informaï¿½ï¿½es: Data, hora, aprovador, decisï¿½o, comentï¿½rios
+& Prioridade: Mï¿½dia
 
-3.1.6 Compartilhamento e Colaboração RF023 - Compartilhamento Interno
-& Descrição: Usuários podem compartilhar documentos com outros usuários
+3.1.6 Compartilhamento e Colaboraï¿½ï¿½o RF023 - Compartilhamento Interno
+& Descriï¿½ï¿½o: Usuï¿½rios podem compartilhar documentos com outros usuï¿½rios
 
-& Opções: Definir permissões (visualizar/editar), prazo de acesso
-& Prioridade: Média
+& Opï¿½ï¿½es: Definir permissï¿½es (visualizar/editar), prazo de acesso
+& Prioridade: Mï¿½dia
 
 RF024 - Link de Compartilhamento Externo
 
-& Descrição: Geração de link público com senha e data de expiração
-& Segurança: Token único, acesso rastreado
+& Descriï¿½ï¿½o: Geraï¿½ï¿½o de link pï¿½blico com senha e data de expiraï¿½ï¿½o
+& Seguranï¿½a: Token ï¿½nico, acesso rastreado
 
 & Prioridade: Baixa
 
-RF025 - Comentários
+RF025 - Comentï¿½rios
 
-& Descrição: Usuários podem adicionar comentários em documentos
+& Descriï¿½ï¿½o: Usuï¿½rios podem adicionar comentï¿½rios em documentos
 
-& Funcionalidades: Responder comentários, mencionar usuários
+& Funcionalidades: Responder comentï¿½rios, mencionar usuï¿½rios
 & Prioridade: Baixa
 
-3.1.7 Auditoria e Relatórios RF026 - Log de Auditoria
-& Descrição: Sistema registra todas as operações realizadas
-& Eventos rastreados: Login, upload, download, edição, exclusão, acesso
+3.1.7 Auditoria e Relatï¿½rios RF026 - Log de Auditoria
+& Descriï¿½ï¿½o: Sistema registra todas as operaï¿½ï¿½es realizadas
+& Eventos rastreados: Login, upload, download, ediï¿½ï¿½o, exclusï¿½o, acesso
 
-& Informações: Usuário, data/hora, IP, ação, documento
+& Informaï¿½ï¿½es: Usuï¿½rio, data/hora, IP, aï¿½ï¿½o, documento
 & Prioridade: Alta
 
-RF027 - Relatório de Uso
+RF027 - Relatï¿½rio de Uso
 
-& Descrição: Dashboard com estatísticas do sistema
-& Métricas: Total de documentos, espaço usado, uploads por período
+& Descriï¿½ï¿½o: Dashboard com estatï¿½sticas do sistema
+& Mï¿½tricas: Total de documentos, espaï¿½o usado, uploads por perï¿½odo
 
-& Visualização: Gráficos e tabelas
-& Prioridade: Média
+& Visualizaï¿½ï¿½o: Grï¿½ficos e tabelas
+& Prioridade: Mï¿½dia
 
-RF028 - Relatório de Acessos
+RF028 - Relatï¿½rio de Acessos
 
-& Descrição: Listagem de acessos por documento ou usuário
-& Filtros: Data, usuário, documento, tipo de operação
+& Descriï¿½ï¿½o: Listagem de acessos por documento ou usuï¿½rio
+& Filtros: Data, usuï¿½rio, documento, tipo de operaï¿½ï¿½o
 
-& Exportação: PDF, Excel
-& Prioridade: Média
+& Exportaï¿½ï¿½o: PDF, Excel
+& Prioridade: Mï¿½dia
 
-RF029 - Relatório de Documentos Expirados
+RF029 - Relatï¿½rio de Documentos Expirados
 
-& Descrição: Lista documentos que ultrapassaram prazo de validade
-& Configuração: Prazo definido por categoria
+& Descriï¿½ï¿½o: Lista documentos que ultrapassaram prazo de validade
+& Configuraï¿½ï¿½o: Prazo definido por categoria
 
 & Prioridade: Baixa
 
-3.1.8 Administração do Sistema RF030 - Gerenciamento de Usuários
-& Descrição: Administradores podem criar, editar e desativar usuários
-& Operações: CRUD completo, alteração de perfil, reset de senha
+3.1.8 Administraï¿½ï¿½o do Sistema RF030 - Gerenciamento de Usuï¿½rios
+& Descriï¿½ï¿½o: Administradores podem criar, editar e desativar usuï¿½rios
+& Operaï¿½ï¿½es: CRUD completo, alteraï¿½ï¿½o de perfil, reset de senha
 
 & Prioridade: Alta
 
-RF031 - Configurações do Sistema
+RF031 - Configuraï¿½ï¿½es do Sistema
 
-& Descrição: Painel de configurações gerais
+& Descriï¿½ï¿½o: Painel de configuraï¿½ï¿½es gerais
 
-& Parâmetros: Logo, nome do sistema, tamanho máximo de arquivo, formatos permitidos
-& Prioridade: Média
+& Parï¿½metros: Logo, nome do sistema, tamanho mï¿½ximo de arquivo, formatos permitidos
+& Prioridade: Mï¿½dia
 
-RF032 - Backup e Restauração
+RF032 - Backup e Restauraï¿½ï¿½o
 
-& Descrição: Interface para gerenciar backups
-& Funcionalidades: Backup manual, agendamento, restauração
+& Descriï¿½ï¿½o: Interface para gerenciar backups
+& Funcionalidades: Backup manual, agendamento, restauraï¿½ï¿½o
 
 & Prioridade: Alta
 
-RF033 - Gestão de Armazenamento
+RF033 - Gestï¿½o de Armazenamento
 
-& Descrição: Monitoramento de espaço em disco
+& Descriï¿½ï¿½o: Monitoramento de espaï¿½o em disco
 
-& Alertas: Notificação quando atingir 80% da capacidade
-& Prioridade: Média
+& Alertas: Notificaï¿½ï¿½o quando atingir 80% da capacidade
+& Prioridade: Mï¿½dia
 
 3.2 Requisitos de Interface Externa
-3.2.1 Interface de Usuário RIU001 - Design Responsivo
+3.2.1 Interface de Usuï¿½rio RIU001 - Design Responsivo
 & A interface deve se adaptar a diferentes tamanhos de tela (desktop, tablet, mobile)
 
-& Utilização de Bootstrap Grid System
+& Utilizaï¿½ï¿½o de Bootstrap Grid System
 
-RIU002 - Navegação Intuitiva
+RIU002 - Navegaï¿½ï¿½o Intuitiva
 
-& Menu lateral retrátil com ícones e labels
+& Menu lateral retrï¿½til com ï¿½cones e labels
 
-& Breadcrumb para navegação hierárquica
-& Barra de pesquisa sempre visível
+& Breadcrumb para navegaï¿½ï¿½o hierï¿½rquica
+& Barra de pesquisa sempre visï¿½vel
 
 RIU003 - Acessibilidade
 
-& Conformidade com WCAG 2.1 nível AA
+& Conformidade com WCAG 2.1 nï¿½vel AA
 & Suporte a leitores de tela
 
-& Navegação por teclado
+& Navegaï¿½ï¿½o por teclado
 
 RIU004 - Feedback Visual
 
 & Mensagens de sucesso/erro utilizando toasts ou alerts
-& Loading indicators para operações demoradas
+& Loading indicators para operaï¿½ï¿½es demoradas
 
-& Confirmação para ações destrutivas (exclusão)
+& Confirmaï¿½ï¿½o para aï¿½ï¿½es destrutivas (exclusï¿½o)
 
 3.2.2 Interface de Hardware
 
-& Não há requisitos específicos de hardware além de dispositivos compatíveis com navegadores web modernos
+& Nï¿½o hï¿½ requisitos especï¿½ficos de hardware alï¿½m de dispositivos compatï¿½veis com navegadores web modernos
 3.2.3 Interface de Software RIS001 - Banco de Dados
-& Conexão via SQL Server Native Client ou PyODBC
+& Conexï¿½o via SQL Server Native Client ou PyODBC
 
-& Connection pooling para otimização
-& Suporte a transações ACID
+& Connection pooling para otimizaï¿½ï¿½o
+& Suporte a transaï¿½ï¿½es ACID
 
 RIS002 - Sistema de Arquivos
 
@@ -415,133 +443,133 @@ RIS002 - Sistema de Arquivos
 
 RIS003 - Servidor de E-mail
 
-& Conexão SMTP para envio de notificações
+& Conexï¿½o SMTP para envio de notificaï¿½ï¿½es
 & Suporte a TLS/SSL
 
-3.2.4 Interface de Comunicação RIC001 - Protocolo HTTP/HTTPS
-& Comunicação via protocolo HTTPS obrigatório em produção
+3.2.4 Interface de Comunicaï¿½ï¿½o RIC001 - Protocolo HTTP/HTTPS
+& Comunicaï¿½ï¿½o via protocolo HTTPS obrigatï¿½rio em produï¿½ï¿½o
 
-& APIs RESTful para operações CRUD
+& APIs RESTful para operaï¿½ï¿½es CRUD
 
 RIC002 - WebSockets (Futuro)
 
-& Notificações em tempo real (planejado para v2.0)
+& Notificaï¿½ï¿½es em tempo real (planejado para v2.0)
 
 3.3 Requisitos de Performance
 RP001 - Tempo de Resposta
 
-& Páginas devem carregar em até 2 segundos
+& Pï¿½ginas devem carregar em atï¿½ 2 segundos
 
-& Operações de busca em até 3 segundos
-& Upload de arquivos: progresso visível, sem timeout antes de 5 minutos
+& Operaï¿½ï¿½es de busca em atï¿½ 3 segundos
+& Upload de arquivos: progresso visï¿½vel, sem timeout antes de 5 minutos
 
 RP002 - Capacidade
 
-& Suportar até 1000 usuários simultâneos
-& Armazenar até 500.000 documentos
+& Suportar atï¿½ 1000 usuï¿½rios simultï¿½neos
+& Armazenar atï¿½ 500.000 documentos
 
-& Capacidade de armazenamento: mínimo 2TB
+& Capacidade de armazenamento: mï¿½nimo 2TB
 
 RP003 - Throughput
 
-& Processar até 100 uploads simultâneos
+& Processar atï¿½ 100 uploads simultï¿½neos
 
-& Realizar até 1000 buscas por minuto
+& Realizar atï¿½ 1000 buscas por minuto
 
 RP004 - Disponibilidade
 
-& Uptime de 99% (tempo de inatividade máximo: 7,2 horas/mês)
-& Manutenções programadas fora do horário comercial
+& Uptime de 99% (tempo de inatividade mï¿½ximo: 7,2 horas/mï¿½s)
+& Manutenï¿½ï¿½es programadas fora do horï¿½rio comercial
 
-3.4 Requisitos de Segurança
-RS001 - Autenticação
+3.4 Requisitos de Seguranï¿½a
+RS001 - Autenticaï¿½ï¿½o
 
-& Senhas devem ter mínimo 8 caracteres (letras, números, símbolos)
+& Senhas devem ter mï¿½nimo 8 caracteres (letras, nï¿½meros, sï¿½mbolos)
 
 & Hash de senhas com algoritmo bcrypt (cost factor 12)
-& Bloqueio de conta após 5 tentativas incorretas (15 minutos)
+& Bloqueio de conta apï¿½s 5 tentativas incorretas (15 minutos)
 
-RS002 - Autorização
+RS002 - Autorizaï¿½ï¿½o
 
 & Controle de acesso baseado em perfis (RBAC)
-& Validação de permissões em todas as operações
+& Validaï¿½ï¿½o de permissï¿½es em todas as operaï¿½ï¿½es
 
 RS003 - Criptografia
 
-& Dados em trânsito: TLS 1.2 ou superior
+& Dados em trï¿½nsito: TLS 1.2 ou superior
 
-& Dados em repouso: criptografia opcional para documentos sensíveis (AES-256)
+& Dados em repouso: criptografia opcional para documentos sensï¿½veis (AES-256)
 
-RS004 - Proteção contra Ataques
+RS004 - Proteï¿½ï¿½o contra Ataques
 
-& Proteção contra SQL Injection (prepared statements)
+& Proteï¿½ï¿½o contra SQL Injection (prepared statements)
 
-& Proteção contra XSS (sanitização de entrada)
-& Proteção contra CSRF (tokens)
+& Proteï¿½ï¿½o contra XSS (sanitizaï¿½ï¿½o de entrada)
+& Proteï¿½ï¿½o contra CSRF (tokens)
 
-& Rate limiting para APIs (100 requisições/minuto por IP)
+& Rate limiting para APIs (100 requisiï¿½ï¿½es/minuto por IP)
 
 RS005 - Backup
 
-& Backup automático diário do banco de dados
+& Backup automï¿½tico diï¿½rio do banco de dados
 & Backup semanal completo de arquivos
-& Retenção de backups por 90 dias
+& Retenï¿½ï¿½o de backups por 90 dias
 
 RS006 - Privacidade (LGPD)
 
-& Anonimização de dados em logs após 1 ano
+& Anonimizaï¿½ï¿½o de dados em logs apï¿½s 1 ano
 
-& Funcionalidade de exportação de dados do usuário
-& Exclusão definitiva de dados mediante solicitação
+& Funcionalidade de exportaï¿½ï¿½o de dados do usuï¿½rio
+& Exclusï¿½o definitiva de dados mediante solicitaï¿½ï¿½o
 
 3.5 Requisitos de Qualidade
 RQ001 - Confiabilidade
 
-& Taxa de falha: < 0,1% das transações
+& Taxa de falha: < 0,1% das transaï¿½ï¿½es
 & MTBF (Mean Time Between Failures): > 720 horas
 
 & MTTR (Mean Time To Repair): < 2 horas
 
 RQ002 - Manutenibilidade
 
-& Código deve seguir PEP 8 (Python Style Guide)
+& Cï¿½digo deve seguir PEP 8 (Python Style Guide)
 
-& Cobertura de testes: mínimo 70%
-& Documentação inline para funções complexas
+& Cobertura de testes: mï¿½nimo 70%
+& Documentaï¿½ï¿½o inline para funï¿½ï¿½es complexas
 
 RQ003 - Portabilidade
 
 & Sistema deve funcionar em Linux e Windows Server
-& Independência de fornecedor (exceto SQL Server)
+& Independï¿½ncia de fornecedor (exceto SQL Server)
 
 RQ004 - Usabilidade
 
-& Curva de aprendizado: usuário básico operacional em 30 minutos
+& Curva de aprendizado: usuï¿½rio bï¿½sico operacional em 30 minutos
 
-& Taxa de conclusão de tarefas: > 95%
-& Tempo médio para localizar documento: < 1 minuto
+& Taxa de conclusï¿½o de tarefas: > 95%
+& Tempo mï¿½dio para localizar documento: < 1 minuto
 
 3.6 Requisitos de Banco de Dados
 RBD001 - Estrutura
 
-& Normalização até 3FN (Terceira Forma Normal)
-& Índices em campos de busca frequente
+& Normalizaï¿½ï¿½o atï¿½ 3FN (Terceira Forma Normal)
+& ï¿½ndices em campos de busca frequente
 
-& Triggers para auditoria automática
+& Triggers para auditoria automï¿½tica
 
 RBD002 - Integridade
 
 & Chaves estrangeiras para garantir integridade referencial
 
-& Constraints para validação de dados
-& Transações para operações críticas
+& Constraints para validaï¿½ï¿½o de dados
+& Transaï¿½ï¿½es para operaï¿½ï¿½es crï¿½ticas
 
 RBD003 - Performance
 
-& Views materializadas para relatórios complexos
+& Views materializadas para relatï¿½rios complexos
 
 & Particionamento de tabelas com alto volume (logs)
-& Stored procedures para operações complexas
+& Stored procedures para operaï¿½ï¿½es complexas
 
 RBD004 - Principais Entidades
 
@@ -567,24 +595,24 @@ RO001 - Requisitos Legais
 
 & Assinatura digital (ICP-Brasil) - opcional para v2.0
 
-RO002 - Requisitos de Implantação
+RO002 - Requisitos de Implantaï¿½ï¿½o
 
-& Instalação via script automatizado
-& Migração de dados de sistemas legados
+& Instalaï¿½ï¿½o via script automatizado
+& Migraï¿½ï¿½o de dados de sistemas legados
 
-& Treinamento de usuários (material e sessões)
+& Treinamento de usuï¿½rios (material e sessï¿½es)
 
-RO003 - Requisitos de Documentação
+RO003 - Requisitos de Documentaï¿½ï¿½o
 
-& Manual do usuário
+& Manual do usuï¿½rio
 
 & Manual do administrador
-& Documentação técnica (API, arquitetura)
+& Documentaï¿½ï¿½o tï¿½cnica (API, arquitetura)
 
-& Guia de instalação
+& Guia de instalaï¿½ï¿½o
 
 
-4. APÊNDICES
+4. APï¿½NDICES
 4.1 Modelo de Dados (Simplificado)
 
 
@@ -656,23 +684,23 @@ LogAuditoria
 
 4.2 Casos de Uso Principais
 1. UC001 - Upload de Documento
-& Ator: Usuário
+& Ator: Usuï¿½rio
 
-& Pré-condição: Usuário autenticado
-& Fluxo: Login ? Selecionar arquivo ? Preencher metadados ? Upload ? Confirmação
+& Prï¿½-condiï¿½ï¿½o: Usuï¿½rio autenticado
+& Fluxo: Login ? Selecionar arquivo ? Preencher metadados ? Upload ? Confirmaï¿½ï¿½o
 
 2. UC002 - Buscar Documento
-& Ator: Usuário
-& Pré-condição: Usuário autenticado
+& Ator: Usuï¿½rio
+& Prï¿½-condiï¿½ï¿½o: Usuï¿½rio autenticado
 
 & Fluxo: Login ? Inserir termo ? Aplicar filtros ? Visualizar resultados ? Abrir documento
 
 3. UC003 - Aprovar Documento
 & Ator: Gestor
 
-& Pré-condição: Documento em workflow de aprovação
-& Fluxo: Login ? Acessar pendências ? Revisar documento ? Aprovar/Rejeitar ? Comentário
-? Confirmação
+& Prï¿½-condiï¿½ï¿½o: Documento em workflow de aprovaï¿½ï¿½o
+& Fluxo: Login ? Acessar pendï¿½ncias ? Revisar documento ? Aprovar/Rejeitar ? Comentï¿½rio
+? Confirmaï¿½ï¿½o
 
 4.3 Tecnologias e Bibliotecas
 Backend (Flask):
@@ -681,13 +709,13 @@ Backend (Flask):
 
 & Flask-SQLAlchemy (ORM)
 
-& Flask-Login (autenticação)
-& Flask-WTF (formulários)
+& Flask-Login (autenticaï¿½ï¿½o)
+& Flask-WTF (formulï¿½rios)
 
 & PyODBC ou pyodbc (SQL Server)
-& Werkzeug (segurança)
+& Werkzeug (seguranï¿½a)
 
-& PyPDF2 (manipulação PDF)
+& PyPDF2 (manipulaï¿½ï¿½o PDF)
 
 Frontend:
 
@@ -696,9 +724,9 @@ Frontend:
 & jQuery 3.7+
 & DataTables (tabelas interativas)
 
-& Select2 (campos de seleção)
+& Select2 (campos de seleï¿½ï¿½o)
 & Dropzone.js (upload de arquivos)
-& Chart.js (gráficos)
+& Chart.js (grï¿½ficos)
 
 Banco de Dados:
 
@@ -712,21 +740,53 @@ Infraestrutura:
 & Nginx (reverse proxy)
 & Supervisor (process manager)
 
-4.4 Glossário
-& Metadados: Dados que descrevem outros dados (ex: título, autor, data)
+4.4 Glossï¿½rio
+& Metadados: Dados que descrevem outros dados (ex: tï¿½tulo, autor, data)
 & Workflow: Fluxo de trabalho automatizado
 
-& CRUD: Operações básicas - Create, Read, Update, Delete
-& Token: Código único temporário para autenticação
-& Hash: Função criptográfica unidirecional
+& CRUD: Operaï¿½ï¿½es bï¿½sicas - Create, Read, Update, Delete
+& Token: Cï¿½digo ï¿½nico temporï¿½rio para autenticaï¿½ï¿½o
+& Hash: Funï¿½ï¿½o criptogrï¿½fica unidirecional
 
 & MIME Type: Identificador de tipo de arquivo
 
 
-5. APROVAÇÃO
+5. APROVAï¿½ï¿½O
 
-NomeCargoAssinaturaDataGerente de ProjetoAnalista de SistemasRepresentante do ClienteCC
+Nome
+Cargo
+Assinatura
+Data
 
-Histórico de Revisões:
+Gerente de Projeto
 
-VersãoDataAutorDescrição1.007/11/2025Equipe de DesenvolvimentoVersão inicialCC
+
+
+Analista de Sistemas
+
+
+
+Representante do Cliente
+
+
+C
+
+
+C
+
+
+Histï¿½rico de Revisï¿½es:
+
+Versï¿½o
+Data
+Autor
+Descriï¿½ï¿½o
+1.0
+07/11/2025
+Equipe de Desenvolvimento
+Versï¿½o inicial
+C
+
+
+C
+

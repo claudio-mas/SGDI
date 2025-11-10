@@ -4,6 +4,7 @@ Report service for generating system reports
 from typing import Dict, Any, List, Optional
 from datetime import datetime, timedelta
 from sqlalchemy import func, and_
+from sqlalchemy.types import Date
 from io import BytesIO
 import csv
 from app import db
@@ -83,14 +84,14 @@ class ReportService:
             func.count(LogAuditoria.id).desc()
         ).limit(10).all()
         
-        # Daily activity
+        # Daily activity - Use CAST for SQL Server compatibility
         daily_activity = db.session.query(
-            func.date(LogAuditoria.data_hora).label('date'),
+            func.cast(LogAuditoria.data_hora, Date).label('date'),
             func.count(LogAuditoria.id).label('count')
         ).filter(
             LogAuditoria.data_hora.between(data_inicio, data_fim)
         ).group_by(
-            func.date(LogAuditoria.data_hora)
+            func.cast(LogAuditoria.data_hora, Date)
         ).order_by('date').all()
         
         return {

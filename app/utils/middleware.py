@@ -93,7 +93,7 @@ def check_document_permission(documento, user, permission_type):
         return True
     
     # Administrator has all permissions
-    if user.perfil.nome == 'Administrator':
+    if user.perfil.nome == 'Administrador':
         return True
     
     # Check explicit document permissions
@@ -128,22 +128,22 @@ def check_role_permission(user, permission_name):
         return False
     
     # Administrator has all permissions
-    if user.perfil.nome == 'Administrator':
+    if user.perfil.nome == 'Administrador':
         return True
     
     # Define permission mappings for each profile
     profile_permissions = {
-        'Manager': [
+        'Gerente': [
             'view', 'edit', 'delete', 'share', 'upload',
             'approve', 'manage_workflows', 'view_reports'
         ],
-        'Standard User': [
+        'Usuário': [
             'view', 'edit', 'share', 'upload', 'create_folders'
         ],
         'Auditor': [
             'view', 'audit', 'view_reports', 'view_logs'
         ],
-        'Visitor': [
+        'Visitante': [
             'view'
         ]
     }
@@ -175,7 +175,7 @@ def validate_resource_access(resource_type, resource_id, user, action):
         return False, 'Conta de usuário desativada'
     
     # Administrator has access to everything
-    if user.perfil.nome == 'Administrator':
+    if user.perfil.nome == 'Administrador':
         return True, None
     
     # Resource-specific validation
@@ -205,21 +205,21 @@ def validate_resource_access(resource_type, resource_id, user, action):
     
     elif resource_type == 'workflow':
         # Managers and above can manage workflows
-        if user.perfil.nome in ['Administrator', 'Manager']:
+        if user.perfil.nome in ['Administrador', 'Gerente']:
             return True, None
         else:
             return False, 'Apenas gerentes podem gerenciar workflows'
     
     elif resource_type == 'user':
         # Only administrators can manage users
-        if user.perfil.nome == 'Administrator':
+        if user.perfil.nome == 'Administrador':
             return True, None
         else:
             return False, 'Apenas administradores podem gerenciar usuários'
     
     elif resource_type == 'category':
         # Managers and above can manage categories
-        if user.perfil.nome in ['Administrator', 'Manager']:
+        if user.perfil.nome in ['Administrador', 'Gerente']:
             return True, None
         else:
             return False, 'Apenas gerentes podem gerenciar categorias'

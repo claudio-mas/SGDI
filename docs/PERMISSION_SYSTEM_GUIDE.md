@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Sistema GED permission system provides fine-grained access control for documents. This guide explains how to use the PermissionService in your code.
+The Sistema SGDI permission system provides fine-grained access control for documents. This guide explains how to use the PermissionService in your code.
 
 ## Permission Types
 

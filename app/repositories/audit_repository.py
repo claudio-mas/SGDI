@@ -4,6 +4,7 @@ Audit repository for log queries
 from typing import Optional, List, Dict, Any
 from datetime import datetime, timedelta
 from sqlalchemy import func, and_
+from sqlalchemy.types import Date
 from app.repositories.base_repository import BaseRepository
 from app.models.audit import LogAuditoria
 
@@ -308,19 +309,25 @@ class AuditRepository(BaseRepository[LogAuditoria]):
         """
         cutoff_date = datetime.utcnow() - timedelta(days=days)
         
+        # Use CAST for SQL Server compatibility
         query = self.session.query(
-            func.date(LogAuditoria.data_hora).label('date'),
+            func.cast(LogAuditoria.data_hora, Date).label('date'),
             func.count(LogAuditoria.id).label('count')
         ).filter(LogAuditoria.data_hora >= cutoff_date)
         
         if acao:
             query = query.filter(LogAuditoria.acao == acao)
         
-        results = query.group_by(func.date(LogAuditoria.data_hora)).order_by(
-            func.date(LogAuditoria.data_hora)
+        results = query.group_by(
+            func.cast(LogAuditoria.data_hora, Date)
+        ).order_by(
+            func.cast(LogAuditoria.data_hora, Date)
         ).all()
         
-        return [{'date': r[0].isoformat() if r[0] else None, 'count': r[1]} for r in results]
+        return [
+            {'date': r[0].isoformat() if r[0] else None, 'count': r[1]}
+            for r in results
+        ]
     
     def cleanup_old_logs(self, days: int = 365) -> int:
         """

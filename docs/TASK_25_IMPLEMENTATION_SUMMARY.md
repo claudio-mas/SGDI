@@ -2,7 +2,7 @@
 
 ## Overview
 
-Task 25 implements a comprehensive testing suite for Sistema GED, covering end-to-end integration tests, security vulnerability tests, and performance tests. This ensures the system meets all functional and non-functional requirements.
+Task 25 implements a comprehensive testing suite for Sistema SGDI, covering end-to-end integration tests, security vulnerability tests, and performance tests. This ensures the system meets all functional and non-functional requirements.
 
 ## Implementation Details
 
@@ -432,7 +432,7 @@ Comprehensive testing documentation is available in:
 
 ## Conclusion
 
-Task 25 successfully implements a comprehensive testing suite for Sistema GED that:
+Task 25 successfully implements a comprehensive testing suite for Sistema SGDI that:
 
 - ✓ Tests all end-to-end user workflows
 - ✓ Verifies security against common vulnerabilities
@@ -441,4 +441,4 @@ Task 25 successfully implements a comprehensive testing suite for Sistema GED th
 - ✓ Provides automated quality assurance
 - ✓ Includes detailed documentation
 
-The test suite ensures Sistema GED is production-ready, secure, and performant.
+The test suite ensures Sistema SGDI is production-ready, secure, and performant.

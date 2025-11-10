@@ -4,6 +4,7 @@ Admin service for system administration operations
 from typing import Dict, Any, List, Optional
 from datetime import datetime, timedelta
 from sqlalchemy import func
+from sqlalchemy.types import Date
 from app import db
 from app.models import User, Documento, LogAuditoria, Perfil
 from app.repositories.user_repository import UserRepository, PerfilRepository
@@ -74,13 +75,17 @@ class AdminService:
         """
         cutoff_date = datetime.utcnow() - timedelta(days=days)
         
+        # Use CAST for SQL Server compatibility
+        # (instead of func.date which is SQLite-specific)
+        date_column = func.cast(Documento.data_upload, Date).label('date')
+        
         results = db.session.query(
-            func.date(Documento.data_upload).label('date'),
+            date_column,
             func.count(Documento.id).label('count')
         ).filter(
             Documento.data_upload >= cutoff_date
         ).group_by(
-            func.date(Documento.data_upload)
+            func.cast(Documento.data_upload, Date)
         ).order_by('date').all()
         
         return [
