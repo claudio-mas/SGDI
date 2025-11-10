@@ -92,29 +92,29 @@
     <div class="document-header">
         <div class="d-flex align-items-center">
             <div class="document-icon-large me-4">
-                <i class="fas {{ documento.extensao|get_file_icon }}"></i>
+                <i class="bi {{ documento.extensao|get_file_icon }}"></i>
             </div>
             <div class="flex-grow-1">
                 <h1 class="mb-2">{{ documento.nome }}</h1>
                 <p class="mb-0 opacity-75">
-                    <i class="fas fa-user me-2"></i>{{ documento.usuario.nome }}
+                    <i class="bi bi-person me-2"></i>{{ documento.usuario.nome }}
                     <span class="mx-2">•</span>
-                    <i class="fas fa-calendar me-2"></i>{{ documento.data_upload.strftime('%d/%m/%Y %H:%M') }}
+                    <i class="bi bi-calendar me-2"></i>{{ documento.data_upload.strftime('%d/%m/%Y %H:%M') }}
                     <span class="mx-2">•</span>
-                    <i class="fas fa-hdd me-2"></i>{{ documento.tamanho_formatado }}
+                    <i class="bi bi-hdd me-2"></i>{{ documento.tamanho_formatado }}
                 </p>
             </div>
             <div>
                 <a href="{{ url_for('documents.download_document', id=documento.id) }}" class="btn btn-light btn-lg me-2">
-                    <i class="fas fa-download me-2"></i>Download
+                    <i class="bi bi-download me-2"></i>Download
                 </a>
                 {% if can_edit %}
                 <a href="{{ url_for('documents.edit_document', id=documento.id) }}" class="btn btn-light btn-lg me-2">
-                    <i class="fas fa-edit me-2"></i>Editar
+                    <i class="bi bi-pencil me-2"></i>Editar
                 </a>
                 {% endif %}
                 <a href="{{ url_for('documents.list_documents') }}" class="btn btn-outline-light btn-lg">
-                    <i class="fas fa-arrow-left me-2"></i>Voltar
+                    <i class="bi bi-arrow-left me-2"></i>Voltar
                 </a>
             </div>
         </div>
@@ -137,7 +137,7 @@
             <!-- Preview -->
             <div class="card mb-4">
                 <div class="card-header">
-                    <h5 class="mb-0"><i class="fas fa-eye me-2"></i>Visualização</h5>
+                    <h5 class="mb-0"><i class="bi bi-eye me-2"></i>Visualização</h5>
                 </div>
                 <div class="card-body">
                     <div class="preview-container">
@@ -147,10 +147,10 @@
                             <img src="{{ url_for('documents.preview_document', id=documento.id) }}" alt="{{ documento.nome }}">
                         {% else %}
                             <div class="text-center">
-                                <i class="fas {{ documento.extensao|get_file_icon }} fa-5x mb-3 text-muted"></i>
+                                <i class="bi {{ documento.extensao|get_file_icon }} fs-5 mb-3 text-muted"></i>
                                 <p class="text-muted">Visualização não disponível para este tipo de arquivo</p>
                                 <a href="{{ url_for('documents.download_document', id=documento.id) }}" class="btn btn-primary">
-                                    <i class="fas fa-download me-2"></i>Fazer Download
+                                    <i class="bi bi-download me-2"></i>Fazer Download
                                 </a>
                             </div>
                         {% endif %}
@@ -162,7 +162,7 @@
             {% if documento.descricao %}
             <div class="card mb-4">
                 <div class="card-header">
-                    <h5 class="mb-0"><i class="fas fa-align-left me-2"></i>Descrição</h5>
+                    <h5 class="mb-0"><i class="bi bi-align-start me-2"></i>Descrição</h5>
                 </div>
                 <div class="card-body">
                     <p class="mb-0">{{ documento.descricao }}</p>
@@ -173,10 +173,10 @@
             <!-- Version History -->
             <div class="card mb-4">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0"><i class="fas fa-history me-2"></i>Histórico de Versões</h5>
+                    <h5 class="mb-0"><i class="bi bi-clock-history me-2"></i>Histórico de Versões</h5>
                     {% if can_edit %}
                     <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#newVersionModal">
-                        <i class="fas fa-plus me-1"></i>Nova Versão
+                        <i class="bi bi-plus-lg me-1"></i>Nova Versão
                     </button>
                     {% endif %}
                 </div>
@@ -197,13 +197,13 @@
                                     </div>
                                     {% if versao.comentario %}
                                     <div class="mt-2">
-                                        <i class="fas fa-comment me-1"></i>{{ versao.comentario }}
+                                        <i class="bi bi-chat-left-text me-1"></i>{{ versao.comentario }}
                                     </div>
                                     {% endif %}
                                 </div>
                                 {% if can_edit and versao.numero_versao != documento.versao_atual %}
                                 <button class="btn btn-sm btn-outline-primary" onclick="restoreVersion({{ versao.numero_versao }})">
-                                    <i class="fas fa-undo me-1"></i>Restaurar
+                                    <i class="bi bi-arrow-counterclockwise me-1"></i>Restaurar
                                 </button>
                                 {% endif %}
                             </div>
@@ -221,7 +221,7 @@
             <!-- Metadata -->
             <div class="card mb-4">
                 <div class="card-header">
-                    <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Informações</h5>
+                    <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>Informações</h5>
                 </div>
                 <div class="card-body">
                     <div class="metadata-item">
@@ -246,7 +246,7 @@
                         <div class="metadata-label">Pasta</div>
                         <div class="metadata-value">
                             {% if documento.pasta %}
-                                <i class="fas fa-folder me-1"></i>{{ documento.pasta.nome }}
+                                <i class="bi bi-folder me-1"></i>{{ documento.pasta.nome }}
                             {% else %}
                                 <span class="text-muted">Sem pasta</span>
                             {% endif %}
@@ -284,13 +284,13 @@
             <!-- Tags -->
             <div class="card mb-4">
                 <div class="card-header">
-                    <h5 class="mb-0"><i class="fas fa-tags me-2"></i>Tags</h5>
+                    <h5 class="mb-0"><i class="bi bi-tags me-2"></i>Tags</h5>
                 </div>
                 <div class="card-body">
                     {% if tags %}
                         {% for tag in tags %}
                         <span class="tag-badge">
-                            <i class="fas fa-tag me-1"></i>{{ tag }}
+                            <i class="bi bi-tag me-1"></i>{{ tag }}
                         </span>
                         {% endfor %}
                     {% else %}
@@ -303,10 +303,10 @@
             {% if is_owner or can_share %}
             <div class="card mb-4">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0"><i class="fas fa-lock me-2"></i>Permissões</h5>
+                    <h5 class="mb-0"><i class="bi bi-lock-fill me-2"></i>Permissões</h5>
                     {% if can_share %}
                     <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#shareModal">
-                        <i class="fas fa-share me-1"></i>Compartilhar
+                        <i class="bi bi-share me-1"></i>Compartilhar
                     </button>
                     {% endif %}
                 </div>
@@ -325,7 +325,7 @@
                             </div>
                             {% if is_owner %}
                             <button class="btn btn-sm btn-outline-danger" onclick="revokePermission({{ permissao.id }})">
-                                <i class="fas fa-times"></i>
+                                <i class="bi bi-x-lg"></i>
                             </button>
                             {% endif %}
                         </div>
@@ -341,13 +341,13 @@
             {% if is_owner %}
             <div class="card">
                 <div class="card-header">
-                    <h5 class="mb-0"><i class="fas fa-cog me-2"></i>Ações</h5>
+                    <h5 class="mb-0"><i class="bi bi-gear me-2"></i>Ações</h5>
                 </div>
                 <div class="card-body">
                     <div class="d-grid gap-2">
                         {% if can_delete %}
                         <button class="btn btn-danger" onclick="deleteDocument()">
-                            <i class="fas fa-trash me-2"></i>Excluir Documento
+                            <i class="bi bi-trash me-2"></i>Excluir Documento
                         </button>
                         {% endif %}
                     </div>

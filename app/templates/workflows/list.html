@@ -4,13 +4,13 @@
 <div class="container-fluid mt-4">
     <div class="row mb-4">
         <div class="col-md-8">
-            <h2><i class="fas fa-project-diagram"></i> Workflows de Aprovação</h2>
+            <h2><i class="bi bi-diagram-3"></i> Workflows de Aprovação</h2>
             <p class="text-muted">Gerencie processos de aprovação de documentos</p>
         </div>
         <div class="col-md-4 text-end">
             {% if current_user.has_permission('approve') %}
             <a href="{{ url_for('workflows.create_workflow') }}" class="btn btn-primary">
-                <i class="fas fa-plus"></i> Novo Workflow
+                <i class="bi bi-plus-lg"></i> Novo Workflow
             </a>
             {% endif %}
         </div>
@@ -60,14 +60,14 @@
                                     <a href="{{ url_for('workflows.edit_workflow', id=workflow.id) }}" 
                                        class="btn btn-outline-primary" 
                                        title="Editar">
-                                        <i class="fas fa-edit"></i>
+                                        <i class="bi bi-pencil"></i>
                                     </a>
                                     <button type="button" 
                                             class="btn btn-outline-{{ 'secondary' if workflow.ativo else 'success' }}" 
                                             onclick="toggleWorkflow({{ workflow.id }})"
                                             id="toggle-btn-{{ workflow.id }}"
                                             title="{{ 'Desativar' if workflow.ativo else 'Ativar' }}">
-                                        <i class="fas fa-{{ 'pause' if workflow.ativo else 'play' }}"></i>
+                                        <i class="bi {{ 'bi-pause-fill' if workflow.ativo else 'bi-play-fill' }}"></i>
                                     </button>
                                 </div>
                             </td>
@@ -80,7 +80,7 @@
     </div>
     {% else %}
     <div class="alert alert-info">
-        <i class="fas fa-info-circle"></i> Nenhum workflow cadastrado.
+        <i class="bi bi-info-circle"></i> Nenhum workflow cadastrado.
         {% if current_user.has_permission('approve') %}
         <a href="{{ url_for('workflows.create_workflow') }}">Criar o primeiro workflow</a>
         {% endif %}
@@ -113,7 +113,7 @@ function toggleWorkflow(workflowId) {
             const btn = document.getElementById(`toggle-btn-${workflowId}`);
             btn.className = `btn btn-outline-${data.ativo ? 'secondary' : 'success'}`;
             btn.title = data.ativo ? 'Desativar' : 'Ativar';
-            btn.innerHTML = `<i class="fas fa-${data.ativo ? 'pause' : 'play'}"></i>`;
+            btn.innerHTML = `<i class="bi ${data.ativo ? 'bi-pause-fill' : 'bi-play-fill'}"></i>`;
             
             // Show success message
             showAlert(data.message, 'success');

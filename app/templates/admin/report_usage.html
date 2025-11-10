@@ -8,15 +8,15 @@
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center">
                 <h1 class="h3 mb-0">
-                    <i class="fas fa-chart-line"></i> Relatório de Uso do Sistema
+                    <i class="bi bi-graph-up"></i> Relatório de Uso do Sistema
                 </h1>
                 <div>
                     <a href="{{ url_for('admin.report_usage', export='csv', data_inicio=request.args.get('data_inicio'), data_fim=request.args.get('data_fim')) }}" 
                        class="btn btn-success">
-                        <i class="fas fa-file-csv"></i> Exportar CSV
+                        <i class="bi bi-file-earmark-csv"></i> Exportar CSV
                     </a>
                     <a href="{{ url_for('admin.reports') }}" class="btn btn-secondary">
-                        <i class="fas fa-arrow-left"></i> Voltar
+                        <i class="bi bi-arrow-left"></i> Voltar
                     </a>
                 </div>
             </div>
@@ -42,7 +42,7 @@
                         </div>
                         
                         <button type="submit" class="btn btn-primary mb-2">
-                            <i class="fas fa-filter"></i> Filtrar
+                            <i class="bi bi-funnel"></i> Filtrar
                         </button>
                     </form>
                 </div>
@@ -65,7 +65,7 @@
                             </div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-upload fa-2x text-gray-300"></i>
+                            <i class="bi bi-upload fs-2 text-gray-300"></i>
                         </div>
                     </div>
                 </div>
@@ -85,7 +85,7 @@
                             </div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-sign-in-alt fa-2x text-gray-300"></i>
+                            <i class="bi bi-box-arrow-in-right fs-2 text-gray-300"></i>
                         </div>
                     </div>
                 </div>
@@ -105,7 +105,7 @@
                             </div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-download fa-2x text-gray-300"></i>
+                            <i class="bi bi-download fs-2 text-gray-300"></i>
                         </div>
                     </div>
                 </div>
@@ -125,7 +125,7 @@
                             </div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-users fa-2x text-gray-300"></i>
+                            <i class="bi bi-people-fill fs-2 text-gray-300"></i>
                         </div>
                     </div>
                 </div>
@@ -139,7 +139,7 @@
             <div class="card shadow">
                 <div class="card-header py-3">
                     <h6 class="m-0 font-weight-bold text-primary">
-                        <i class="fas fa-chart-area"></i> Atividade Diária
+                        <i class="bi bi-graph-up"></i> Atividade Diária
                     </h6>
                 </div>
                 <div class="card-body">
@@ -155,7 +155,7 @@
             <div class="card shadow">
                 <div class="card-header py-3">
                     <h6 class="m-0 font-weight-bold text-primary">
-                        <i class="fas fa-trophy"></i> Top 10 Usuários por Atividade
+                        <i class="bi bi-trophy"></i> Top 10 Usuários por Atividade
                     </h6>
                 </div>
                 <div class="card-body">

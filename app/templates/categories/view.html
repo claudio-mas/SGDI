@@ -22,9 +22,9 @@
         <div class="col-md-8">
             <h2>
                 {% if categoria.icone %}
-                <i class="fas {{ categoria.icone }}" style="color: {{ categoria.cor or '#007bff' }}"></i>
+                <i class="bi {{ categoria.icone }}" style="color: {{ categoria.cor or '#007bff' }}"></i>
                 {% else %}
-                <i class="fas fa-folder" style="color: {{ categoria.cor or '#007bff' }}"></i>
+                <i class="bi bi-folder" style="color: {{ categoria.cor or '#007bff' }}"></i>
                 {% endif %}
                 {{ categoria.nome }}
             </h2>
@@ -35,10 +35,10 @@
         <div class="col-md-4 text-end">
             {% if current_user.perfil and current_user.perfil.nome in ['Administrador', 'Gerente'] %}
             <a href="{{ url_for('categories.edit_category', id=categoria.id) }}" class="btn btn-secondary">
-                <i class="fas fa-edit"></i> Editar
+                <i class="bi bi-pencil"></i> Editar
             </a>
             <button type="button" class="btn btn-danger" onclick="confirmDelete()">
-                <i class="fas fa-trash"></i> Excluir
+                <i class="bi bi-trash"></i> Excluir
             </button>
             {% endif %}
         </div>
@@ -49,7 +49,7 @@
         <div class="col-md-4 mb-4">
             <div class="card">
                 <div class="card-header">
-                    <h5 class="mb-0"><i class="fas fa-chart-bar"></i> Estatísticas</h5>
+                    <h5 class="mb-0"><i class="bi bi-bar-chart"></i> Estatísticas</h5>
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
@@ -72,7 +72,7 @@
         <div class="col-md-8 mb-4">
             <div class="card">
                 <div class="card-header">
-                    <h5 class="mb-0"><i class="fas fa-folder-tree"></i> Subcategorias</h5>
+                    <h5 class="mb-0"><i class="bi bi-folder-tree"></i> Subcategorias</h5>
                 </div>
                 <div class="card-body">
                     {% if subcategories %}
@@ -83,9 +83,9 @@
                             <div class="d-flex w-100 justify-content-between align-items-center">
                                 <div>
                                     {% if subcat.icone %}
-                                    <i class="fas {{ subcat.icone }}" style="color: {{ subcat.cor or '#007bff' }}"></i>
+                                    <i class="bi {{ subcat.icone }}" style="color: {{ subcat.cor or '#007bff' }}"></i>
                                     {% else %}
-                                    <i class="fas fa-folder" style="color: {{ subcat.cor or '#007bff' }}"></i>
+                                    <i class="bi bi-folder" style="color: {{ subcat.cor or '#007bff' }}"></i>
                                     {% endif %}
                                     <strong>{{ subcat.nome }}</strong>
                                     {% if subcat.descricao %}
@@ -112,11 +112,11 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h5 class="mb-0"><i class="fas fa-file"></i> Documentos</h5>
+                    <h5 class="mb-0"><i class="bi bi-file-earmark"></i> Documentos</h5>
                 </div>
                 <div class="card-body">
                     <a href="{{ url_for('documents.list_documents', categoria_id=categoria.id) }}" class="btn btn-primary">
-                        <i class="fas fa-list"></i> Ver todos os documentos desta categoria
+                        <i class="bi bi-list"></i> Ver todos os documentos desta categoria
                     </a>
                 </div>
             </div>

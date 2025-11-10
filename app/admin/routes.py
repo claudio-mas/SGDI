@@ -190,7 +190,8 @@ def user_edit(user_id):
             user.perfil_id = form.perfil_id.data
             user.ativo = form.ativo.data
             
-            user_repo.update(user)
+            # Save changes
+            user_repo.save(user)
             
             # Log action
             audit_service.log_action(
@@ -231,7 +232,7 @@ def user_toggle_status(user_id):
     
     try:
         user.ativo = not user.ativo
-        user_repo.update(user)
+        user_repo.save(user)
         
         # Log action
         action = 'user_activate' if user.ativo else 'user_deactivate'
@@ -278,7 +279,7 @@ def user_reset_password(user_id):
             user.set_password(form.nova_senha.data)
             user.tentativas_login = 0
             user.bloqueado_ate = None
-            user_repo.update(user)
+            user_repo.save(user)
             
             # Log action
             audit_service.log_action(

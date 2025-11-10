@@ -7,7 +7,7 @@
             <div class="card">
                 <div class="card-header">
                     <h4>
-                        <i class="fas fa-project-diagram"></i>
+                        <i class="bi bi-diagram-3"></i>
                         {{ 'Editar Workflow' if workflow else 'Novo Workflow' }}
                     </h4>
                 </div>
@@ -51,7 +51,7 @@
                         </div>
 
                         <button type="button" class="btn btn-outline-primary mb-3" onclick="addStage()">
-                            <i class="fas fa-plus"></i> Adicionar Estágio
+                            <i class="bi bi-plus-lg"></i> Adicionar Estágio
                         </button>
 
                         {{ form.stages_json }}
@@ -60,10 +60,10 @@
 
                         <div class="d-flex justify-content-between">
                             <a href="{{ url_for('workflows.list_workflows') }}" class="btn btn-secondary">
-                                <i class="fas fa-times"></i> Cancelar
+                                <i class="bi bi-x-lg"></i> Cancelar
                             </a>
                             <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save"></i> Salvar Workflow
+                                <i class="bi bi-save"></i> Salvar Workflow
                             </button>
                         </div>
                     </form>
@@ -112,7 +112,7 @@ function addStage(stageData = null) {
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h6 class="mb-0">Estágio ${stageId + 1}</h6>
                 <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeStage(${stageId})">
-                    <i class="fas fa-trash"></i>
+                    <i class="bi bi-trash"></i>
                 </button>
             </div>
             

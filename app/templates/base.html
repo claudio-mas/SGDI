@@ -14,7 +14,7 @@
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link rel="preconnect" href="https://code.jquery.com" crossorigin>
     
-    <!-- Compiled CSS - Includes Bootstrap 5, FontAwesome, Layout, and Components -->
+    <!-- Compiled CSS - Includes Bootstrap 5, Layout, and Components -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}?v=1.0.0">
     
     <!-- Bootstrap Icons -->
@@ -156,9 +156,15 @@
                 <li class="nav-header">Organização</li>
                 
                 <li class="nav-item">
-                    <a class="nav-link {% if request.endpoint and request.endpoint.startswith('categories.') %}active{% endif %}" 
+                    <a class="nav-link {% if request.endpoint == 'categories.list_categories' %}active{% endif %}" 
                        href="{{ url_for('categories.list_categories') }}">
-                        <i class="bi bi-folder me-2"></i> Categorias
+                        <i class="bi bi-tag me-2"></i> Categorias
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.endpoint and 'folder' in request.endpoint %}active{% endif %}" 
+                       href="{{ url_for('categories.list_folders') }}">
+                        <i class="bi bi-folder me-2"></i> Pastas
                     </a>
                 </li>
                 <li class="nav-item">

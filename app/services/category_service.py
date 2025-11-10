@@ -101,7 +101,8 @@ class CategoryService:
                 raise ValueError('Não é possível mover a categoria para este pai (referência circular ou limite de profundidade)')
             categoria.categoria_pai_id = new_parent_id
         
-        categoria = self.category_repo.update(categoria)
+        # Save changes
+        self.category_repo.save(categoria)
         
         # Log action
         self.audit_service.log_action(
@@ -137,7 +138,7 @@ class CategoryService:
         
         # Deactivate category
         categoria.ativo = False
-        self.category_repo.update(categoria)
+        self.category_repo.save(categoria)
         
         # Log action
         self.audit_service.log_action(
@@ -290,7 +291,8 @@ class FolderService:
             
             pasta.pasta_pai_id = new_parent_id
         
-        pasta = self.folder_repo.update(pasta)
+        # Save changes
+        self.folder_repo.save(pasta)
         
         # Log action
         self.audit_service.log_action(

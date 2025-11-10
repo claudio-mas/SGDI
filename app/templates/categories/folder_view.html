@@ -21,7 +21,7 @@
     <div class="row mb-4">
         <div class="col-md-8">
             <h2>
-                <i class="fas fa-folder-open" style="color: {{ pasta.cor or '#ffc107' }}"></i>
+                <i class="bi bi-folder-open" style="color: {{ pasta.cor or '#ffc107' }}"></i>
                 {{ pasta.nome }}
             </h2>
             {% if pasta.descricao %}
@@ -29,17 +29,17 @@
             {% endif %}
             <p class="text-muted">
                 <small>
-                    <i class="fas fa-sitemap"></i> Caminho: {{ pasta.caminho_completo }}
-                    | <i class="fas fa-layer-group"></i> Nível: {{ pasta.nivel + 1 }}
+                    <i class="bi bi-diagram-2"></i> Caminho: {{ pasta.caminho_completo }}
+                    | <i class="bi bi-layers"></i> Nível: {{ pasta.nivel + 1 }}
                 </small>
             </p>
         </div>
         <div class="col-md-4 text-end">
             <a href="{{ url_for('categories.edit_folder', id=pasta.id) }}" class="btn btn-secondary">
-                <i class="fas fa-edit"></i> Editar
+                <i class="bi bi-pencil"></i> Editar
             </a>
             <button type="button" class="btn btn-danger" onclick="confirmDelete()">
-                <i class="fas fa-trash"></i> Excluir
+                <i class="bi bi-trash"></i> Excluir
             </button>
         </div>
     </div>
@@ -49,7 +49,7 @@
         <div class="col-md-4 mb-4">
             <div class="card">
                 <div class="card-header">
-                    <h5 class="mb-0"><i class="fas fa-chart-bar"></i> Estatísticas</h5>
+                    <h5 class="mb-0"><i class="bi bi-bar-chart"></i> Estatísticas</h5>
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
@@ -66,20 +66,20 @@
             <!-- Quick Actions -->
             <div class="card mt-3">
                 <div class="card-header">
-                    <h5 class="mb-0"><i class="fas fa-bolt"></i> Ações Rápidas</h5>
+                    <h5 class="mb-0"><i class="bi bi-lightning-fill"></i> Ações Rápidas</h5>
                 </div>
                 <div class="card-body">
                     <div class="d-grid gap-2">
                         <a href="{{ url_for('documents.upload', pasta_id=pasta.id) }}" class="btn btn-primary">
-                            <i class="fas fa-upload"></i> Upload de Documento
+                            <i class="bi bi-upload"></i> Upload de Documento
                         </a>
                         {% if pasta.nivel < 4 %}
                         <a href="{{ url_for('categories.create_folder') }}?parent={{ pasta.id }}" class="btn btn-secondary">
-                            <i class="fas fa-folder-plus"></i> Nova Subpasta
+                            <i class="bi bi-folder-plus"></i> Nova Subpasta
                         </a>
                         {% endif %}
                         <a href="{{ url_for('documents.list_documents', pasta_id=pasta.id) }}" class="btn btn-outline-primary">
-                            <i class="fas fa-list"></i> Ver Documentos
+                            <i class="bi bi-list"></i> Ver Documentos
                         </a>
                     </div>
                 </div>
@@ -90,7 +90,7 @@
         <div class="col-md-8 mb-4">
             <div class="card">
                 <div class="card-header">
-                    <h5 class="mb-0"><i class="fas fa-folder-tree"></i> Subpastas</h5>
+                    <h5 class="mb-0"><i class="bi bi-folder-tree"></i> Subpastas</h5>
                 </div>
                 <div class="card-body">
                     {% if subfolders %}
@@ -100,7 +100,7 @@
                             <div class="card h-100">
                                 <div class="card-body">
                                     <h5 class="card-title">
-                                        <i class="fas fa-folder" style="color: {{ subfolder.cor or '#ffc107' }}"></i>
+                                        <i class="bi bi-folder" style="color: {{ subfolder.cor or '#ffc107' }}"></i>
                                         <a href="{{ url_for('categories.view_folder', id=subfolder.id) }}">
                                             {{ subfolder.nome }}
                                         </a>
@@ -122,7 +122,7 @@
                     <p class="text-muted">Nenhuma subpasta</p>
                     {% if pasta.nivel < 4 %}
                     <a href="{{ url_for('categories.create_folder') }}?parent={{ pasta.id }}" class="btn btn-sm btn-primary">
-                        <i class="fas fa-plus"></i> Criar subpasta
+                        <i class="bi bi-plus-lg"></i> Criar subpasta
                     </a>
                     {% endif %}
                     {% endif %}
@@ -132,18 +132,18 @@
             <!-- Documents in this folder -->
             <div class="card mt-3">
                 <div class="card-header">
-                    <h5 class="mb-0"><i class="fas fa-file"></i> Documentos nesta Pasta</h5>
+                    <h5 class="mb-0"><i class="bi bi-file-earmark"></i> Documentos nesta Pasta</h5>
                 </div>
                 <div class="card-body">
                     {% if document_count > 0 %}
                     <p>Esta pasta contém <strong>{{ document_count }}</strong> documento(s).</p>
                     <a href="{{ url_for('documents.list_documents', pasta_id=pasta.id) }}" class="btn btn-primary">
-                        <i class="fas fa-list"></i> Ver todos os documentos
+                        <i class="bi bi-list"></i> Ver todos os documentos
                     </a>
                     {% else %}
                     <p class="text-muted">Nenhum documento nesta pasta</p>
                     <a href="{{ url_for('documents.upload', pasta_id=pasta.id) }}" class="btn btn-primary">
-                        <i class="fas fa-upload"></i> Upload de Documento
+                        <i class="bi bi-upload"></i> Upload de Documento
                     </a>
                     {% endif %}
                 </div>

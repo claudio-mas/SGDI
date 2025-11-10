@@ -13,9 +13,9 @@
     <div class="row">
         <div class="col-lg-8 mx-auto">
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h1><i class="fas fa-edit me-2"></i>Editar Documento</h1>
+                <h1><i class="bi bi-pencil me-2"></i>Editar Documento</h1>
                 <a href="{{ url_for('documents.view_document', id=documento.id) }}" class="btn btn-secondary">
-                    <i class="fas fa-arrow-left me-2"></i>Voltar
+                    <i class="bi bi-arrow-left me-2"></i>Voltar
                 </a>
             </div>
 
@@ -35,7 +35,7 @@
                 <div class="card-body">
                     <div class="d-flex align-items-center">
                         <div class="me-3">
-                            <i class="fas {{ documento.extensao|get_file_icon }} fa-3x"></i>
+                            <i class="bi {{ documento.extensao|get_file_icon }} fs-3"></i>
                         </div>
                         <div>
                             <h5 class="mb-1">{{ documento.nome_arquivo_original }}</h5>
@@ -51,7 +51,7 @@
             <!-- Edit Form -->
             <div class="card">
                 <div class="card-header">
-                    <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Informações do Documento</h5>
+                    <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>Informações do Documento</h5>
                 </div>
                 <div class="card-body">
                     <form method="POST" action="{{ url_for('documents.edit_document', id=documento.id) }}">
@@ -117,7 +117,7 @@
 
                         <div class="d-flex gap-2 mt-4">
                             <button type="submit" class="btn btn-primary flex-grow-1">
-                                <i class="fas fa-save me-2"></i>Salvar Alterações
+                                <i class="bi bi-save me-2"></i>Salvar Alterações
                             </button>
                             <a href="{{ url_for('documents.view_document', id=documento.id) }}" class="btn btn-secondary">
                                 Cancelar
@@ -130,21 +130,21 @@
             <!-- Additional Actions -->
             <div class="card mt-4">
                 <div class="card-header">
-                    <h5 class="mb-0"><i class="fas fa-cog me-2"></i>Ações Adicionais</h5>
+                    <h5 class="mb-0"><i class="bi bi-gear me-2"></i>Ações Adicionais</h5>
                 </div>
                 <div class="card-body">
                     <div class="row g-3">
                         <div class="col-md-6">
                             <div class="d-grid">
                                 <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#newVersionModal">
-                                    <i class="fas fa-file-upload me-2"></i>Enviar Nova Versão
+                                    <i class="bi bi-file-earmark-upload me-2"></i>Enviar Nova Versão
                                 </button>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="d-grid">
                                 <a href="{{ url_for('documents.download_document', id=documento.id) }}" class="btn btn-outline-success">
-                                    <i class="fas fa-download me-2"></i>Baixar Documento
+                                    <i class="bi bi-download me-2"></i>Baixar Documento
                                 </a>
                             </div>
                         </div>
@@ -167,7 +167,7 @@
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <div class="modal-body">
                     <div class="alert alert-info">
-                        <i class="fas fa-info-circle me-2"></i>
+                        <i class="bi bi-info-circle me-2"></i>
                         A nova versão deve ser do mesmo tipo do arquivo original ({{ documento.tipo_mime }})
                     </div>
                     <div class="mb-3">
@@ -182,7 +182,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                     <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-upload me-2"></i>Enviar Nova Versão
+                        <i class="bi bi-upload me-2"></i>Enviar Nova Versão
                     </button>
                 </div>
             </form>

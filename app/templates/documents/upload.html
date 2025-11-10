@@ -168,7 +168,7 @@
                         <!-- Submit Button -->
                         <div class="d-grid gap-2 mt-4">
                             <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
-                                <i class="fas fa-upload me-2"></i>Enviar Documento(s)
+                                <i class="bi bi-upload me-2"></i>Enviar Documento(s)
                             </button>
                         </div>
                     </form>
@@ -178,7 +178,7 @@
             <!-- Upload Tips -->
             <div class="card mt-4">
                 <div class="card-header">
-                    <i class="fas fa-info-circle me-2"></i>Dicas de Upload
+                    <i class="bi bi-info-circle me-2"></i>Dicas de Upload
                 </div>
                 <div class="card-body">
                     <ul class="mb-0">
@@ -281,12 +281,12 @@ $(document).ready(function() {
             const size = formatFileSize(file.size);
             
             fileItem.innerHTML = `
-                <i class="fas ${icon}"></i>
+                <i class="bi ${icon}"></i>
                 <div class="file-info">
                     <div class="file-name">${file.name}</div>
                     <div class="file-size">${size}</div>
                 </div>
-                <i class="fas fa-times remove-file" onclick="removeFile(${index})"></i>
+                <i class="bi bi-x-lg remove-file" onclick="removeFile(${index})"></i>
             `;
             
             fileItems.appendChild(fileItem);
@@ -304,18 +304,18 @@ $(document).ready(function() {
     function getFileIcon(filename) {
         const ext = filename.split('.').pop().toLowerCase();
         const iconMap = {
-            'pdf': 'fa-file-pdf text-danger',
-            'doc': 'fa-file-word text-primary',
-            'docx': 'fa-file-word text-primary',
-            'xls': 'fa-file-excel text-success',
-            'xlsx': 'fa-file-excel text-success',
-            'jpg': 'fa-file-image text-info',
-            'jpeg': 'fa-file-image text-info',
-            'png': 'fa-file-image text-info',
-            'tif': 'fa-file-image text-info',
-            'tiff': 'fa-file-image text-info'
+            'pdf': 'bi-file-earmark-pdf text-danger',
+            'doc': 'bi-file-earmark-word text-primary',
+            'docx': 'bi-file-earmark-word text-primary',
+            'xls': 'bi-file-earmark-excel text-success',
+            'xlsx': 'bi-file-earmark-excel text-success',
+            'jpg': 'bi-file-earmark-image text-info',
+            'jpeg': 'bi-file-earmark-image text-info',
+            'png': 'bi-file-earmark-image text-info',
+            'tif': 'bi-file-earmark-image text-info',
+            'tiff': 'bi-file-earmark-image text-info'
         };
-        return iconMap[ext] || 'fa-file';
+        return iconMap[ext] || 'bi-file-earmark';
     }
 
     function formatFileSize(bytes) {
@@ -336,7 +336,7 @@ $(document).ready(function() {
 
         // Show progress bar
         $('#uploadProgress').show();
-        $('#submitBtn').prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-2"></i>Enviando...');
+        $('#submitBtn').prop('disabled', true).html('<i class="bi bi-arrow-repeat spinner-border spinner-border-sm me-2"></i>Enviando...');
 
         // Simulate progress (in real implementation, use XMLHttpRequest for actual progress)
         let progress = 0;

@@ -8,10 +8,10 @@
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center">
                 <h1 class="h3 mb-0">
-                    <i class="fas fa-users-cog"></i> Gerenciar Usuários
+                    <i class="bi bi-people-fill-cog"></i> Gerenciar Usuários
                 </h1>
                 <a href="{{ url_for('admin.user_create') }}" class="btn btn-primary">
-                    <i class="fas fa-plus"></i> Novo Usuário
+                    <i class="bi bi-plus-lg"></i> Novo Usuário
                 </a>
             </div>
         </div>
@@ -54,11 +54,11 @@
                         </div>
                         
                         <button type="submit" class="btn btn-primary mb-2 mr-2">
-                            <i class="fas fa-search"></i> Filtrar
+                            <i class="bi bi-search"></i> Filtrar
                         </button>
                         
                         <a href="{{ url_for('admin.users') }}" class="btn btn-secondary mb-2">
-                            <i class="fas fa-times"></i> Limpar
+                            <i class="bi bi-x-lg"></i> Limpar
                         </a>
                     </form>
                 </div>
@@ -92,7 +92,7 @@
                                         <strong>{{ user.nome }}</strong>
                                         {% if user.bloqueado_ate and user.bloqueado_ate > now %}
                                         <span class="badge badge-danger ml-1" title="Conta bloqueada">
-                                            <i class="fas fa-lock"></i>
+                                            <i class="bi bi-lock-fill"></i>
                                         </span>
                                         {% endif %}
                                     </td>
@@ -119,7 +119,7 @@
                                         <div class="btn-group" role="group">
                                             <a href="{{ url_for('admin.user_edit', user_id=user.id) }}" 
                                                class="btn btn-sm btn-info" title="Editar">
-                                                <i class="fas fa-edit"></i>
+                                                <i class="bi bi-pencil"></i>
                                             </a>
                                             
                                             <button type="button" 
@@ -129,17 +129,17 @@
                                                     data-current-status="{{ 'active' if user.ativo else 'inactive' }}"
                                                     title="{{ 'Desativar' if user.ativo else 'Ativar' }}"
                                                     {% if user.id == current_user.id %}disabled{% endif %}>
-                                                <i class="fas fa-{{ 'ban' if user.ativo else 'check' }}"></i>
+                                                <i class="bi {{ 'bi-ban' if user.ativo else 'bi-check-lg' }}"></i>
                                             </button>
                                             
                                             <a href="{{ url_for('admin.user_reset_password', user_id=user.id) }}" 
                                                class="btn btn-sm btn-secondary" title="Redefinir Senha">
-                                                <i class="fas fa-key"></i>
+                                                <i class="bi bi-key"></i>
                                             </a>
                                             
                                             <a href="{{ url_for('admin.audit_user_activity', usuario_id=user.id) }}" 
                                                class="btn btn-sm btn-primary" title="Ver Atividade">
-                                                <i class="fas fa-history"></i>
+                                                <i class="bi bi-clock-history"></i>
                                             </a>
                                         </div>
                                     </td>
@@ -200,14 +200,14 @@ $(document).ready(function() {
                             .removeClass('btn-success').addClass('btn-warning')
                             .attr('title', 'Desativar')
                             .data('current-status', 'active')
-                            .html('<i class="fas fa-ban"></i>');
+                            .html('<i class="bi bi-ban"></i>');
                     } else {
                         badge.removeClass('badge-success').addClass('badge-secondary').text('Inativo');
                         $(`.toggle-status-btn[data-user-id="${userId}"]`)
                             .removeClass('btn-warning').addClass('btn-success')
                             .attr('title', 'Ativar')
                             .data('current-status', 'inactive')
-                            .html('<i class="fas fa-check"></i>');
+                            .html('<i class="bi bi-check-lg"></i>');
                     }
                     
                     // Show success message

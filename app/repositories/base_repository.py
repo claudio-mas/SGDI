@@ -89,7 +89,7 @@ class BaseRepository(Generic[T]):
     
     def update(self, id: int, **kwargs) -> Optional[T]:
         """
-        Update an existing record.
+        Update an existing record by ID.
         
         Args:
             id: Primary key of record to update
@@ -104,6 +104,20 @@ class BaseRepository(Generic[T]):
                 if hasattr(instance, key):
                     setattr(instance, key, value)
             self.session.commit()
+        return instance
+    
+    def save(self, instance: T) -> T:
+        """
+        Save (commit) an existing instance that is already tracked.
+        Use this when you've modified an instance and want to persist changes.
+        
+        Args:
+            instance: Model instance to save
+            
+        Returns:
+            The saved model instance
+        """
+        self.session.commit()
         return instance
     
     def delete(self, id: int) -> bool:

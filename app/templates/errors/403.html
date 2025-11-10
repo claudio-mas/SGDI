@@ -22,14 +22,14 @@
                 <div class="error-actions">
                     {% if current_user.is_authenticated %}
                     <a href="{{ url_for('documents.list_documents') }}" class="btn btn-primary btn-lg me-2">
-                        <i class="fas fa-home"></i> Voltar ao Início
+                        <i class="bi bi-house-door"></i> Voltar ao Início
                     </a>
                     <a href="{{ url_for('admin.dashboard') if current_user.perfil.nome == 'Administrador' else '#' }}" class="btn btn-outline-secondary btn-lg">
-                        <i class="fas fa-envelope"></i> Contatar Suporte
+                        <i class="bi bi-envelope"></i> Contatar Suporte
                     </a>
                     {% else %}
                     <a href="{{ url_for('auth.login') }}" class="btn btn-primary btn-lg">
-                        <i class="fas fa-sign-in-alt"></i> Fazer Login
+                        <i class="bi bi-box-arrow-in-right"></i> Fazer Login
                     </a>
                     {% endif %}
                 </div>
