@@ -10,7 +10,11 @@ class LogAuditoria(db.Model):
     """Audit log model for tracking all system operations"""
     __tablename__ = 'log_auditoria'
     
-    id = db.Column(db.BigInteger, primary_key=True)
+    # Use Integer with autoincrement to ensure SQLite (and other DBs) will
+    # automatically generate the primary key value on insert. Using
+    # BigInteger here previously caused NOT NULL constraint failures in the
+    # test DB where autoincrement wasn't applied.
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     usuario_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'), index=True)
     acao = db.Column(db.String(50), nullable=False, index=True)  # login, upload, download, edit, delete, etc.
     tabela = db.Column(db.String(50), index=True)  # Table/entity affected

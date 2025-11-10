@@ -70,7 +70,7 @@
                 </div>
                 <div class="card-body">
                     <div class="d-grid gap-2">
-                        <a href="{{ url_for('documents.upload_document', pasta_id=pasta.id) }}" class="btn btn-primary">
+                        <a href="{{ url_for('documents.upload', pasta_id=pasta.id) }}" class="btn btn-primary">
                             <i class="fas fa-upload"></i> Upload de Documento
                         </a>
                         {% if pasta.nivel < 4 %}
@@ -142,7 +142,7 @@
                     </a>
                     {% else %}
                     <p class="text-muted">Nenhum documento nesta pasta</p>
-                    <a href="{{ url_for('documents.upload_document', pasta_id=pasta.id) }}" class="btn btn-primary">
+                    <a href="{{ url_for('documents.upload', pasta_id=pasta.id) }}" class="btn btn-primary">
                         <i class="fas fa-upload"></i> Upload de Documento
                     </a>
                     {% endif %}

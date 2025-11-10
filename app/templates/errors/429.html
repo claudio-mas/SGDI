@@ -21,7 +21,7 @@
                     <strong>Dica:</strong> Aguarde cerca de 1 minuto antes de continuar suas atividades.
                 </div>
                 <div class="error-actions">
-                    <a href="{{ url_for('document.list_documents') if current_user.is_authenticated else url_for('auth.login') }}" class="btn btn-primary btn-lg">
+                    <a href="{{ url_for('documents.list_documents') if current_user.is_authenticated else url_for('auth.login') }}" class="btn btn-primary btn-lg">
                         <i class="fas fa-home"></i> Voltar ao Início
                     </a>
                 </div>

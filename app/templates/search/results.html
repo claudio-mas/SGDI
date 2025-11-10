@@ -193,11 +193,9 @@
             </nav>
             {% endif %}
             {% elif query %}
-            <div class="alert alert-info" role="alert">
-                <i class="bi bi-info-circle"></i> Nenhum documento encontrado para a busca "{{ query }}".
-                <br><br>
-                <strong>Sugestões:</strong>
-                <ul>
+            {% from 'components/empty_states.html' import empty_search %}
+            {{ empty_search(query) }}
+            {% endif %}
                     <li>Verifique a ortografia dos termos de busca</li>
                     <li>Tente usar palavras-chave diferentes</li>
                     <li>Use termos mais genéricos</li>

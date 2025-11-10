@@ -1,0 +1,200 @@
+{# ============================================
+   Empty States Components - Sistema GED
+   Illustrated states for empty data views
+   ============================================ #}
+
+{# Generic Empty State #}
+{% macro empty_state(icon='bi-inbox', title='Nenhum item encontrado', message='', action_text='', action_url='', action_icon='', icon_color='primary') %}
+<div class="empty-state text-center py-5 fade-in">
+    <div class="empty-state-icon mb-4">
+        <i class="bi {{ icon }} text-{{ icon_color }}" style="font-size: 6rem; opacity: 0.3;"></i>
+    </div>
+    <h3 class="empty-state-title mb-3">{{ title }}</h3>
+    {% if message %}
+    <p class="empty-state-message text-muted mb-4">{{ message }}</p>
+    {% endif %}
+    {% if action_text and action_url %}
+    <a href="{{ action_url }}" class="btn btn-primary btn-lg slide-up">
+        {% if action_icon %}<i class="bi {{ action_icon }} me-2"></i>{% endif %}
+        {{ action_text }}
+    </a>
+    {% endif %}
+</div>
+{% endmacro %}
+
+{# Empty Documents #}
+{% macro empty_documents() %}
+<div class="empty-state text-center py-5 fade-in">
+    <div class="empty-state-icon mb-4">
+        <i class="bi bi-file-earmark-text text-primary" style="font-size: 6rem; opacity: 0.3;"></i>
+    </div>
+    <h3 class="empty-state-title mb-3">Nenhum documento encontrado</h3>
+    <p class="empty-state-message text-muted mb-4">
+        Comece fazendo upload do seu primeiro documento para organizar seus arquivos.
+    </p>
+    <a href="{{ url_for('documents.upload') }}" class="btn btn-primary btn-lg slide-up">
+        <i class="bi bi-cloud-upload me-2"></i>
+        Enviar Primeiro Documento
+    </a>
+</div>
+{% endmacro %}
+
+{# Empty Search Results #}
+{% macro empty_search(query='') %}
+<div class="empty-state text-center py-5 fade-in">
+    <div class="empty-state-icon mb-4">
+        <i class="bi bi-search text-secondary" style="font-size: 6rem; opacity: 0.3;"></i>
+    </div>
+    <h3 class="empty-state-title mb-3">Nenhum resultado encontrado</h3>
+    <p class="empty-state-message text-muted mb-4">
+        {% if query %}
+        Sua busca por <strong>"{{ query }}"</strong> não retornou resultados.
+        {% else %}
+        Não encontramos nenhum documento com os filtros aplicados.
+        {% endif %}
+    </p>
+    <div class="d-flex gap-2 justify-content-center">
+        <button onclick="window.history.back()" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-2"></i>Voltar
+        </button>
+        <a href="{{ url_for('search.search') }}" class="btn btn-primary">
+            <i class="bi bi-search me-2"></i>Nova Busca
+        </a>
+    </div>
+</div>
+{% endmacro %}
+
+{# Empty Folders/Categories #}
+{% macro empty_folders() %}
+<div class="empty-state text-center py-5 fade-in">
+    <div class="empty-state-icon mb-4">
+        <i class="bi bi-folder-plus text-warning" style="font-size: 6rem; opacity: 0.3;"></i>
+    </div>
+    <h3 class="empty-state-title mb-3">Nenhuma pasta criada</h3>
+    <p class="empty-state-message text-muted mb-4">
+        Organize seus documentos criando pastas e categorias personalizadas.
+    </p>
+    <a href="{{ url_for('categories.create_folder') }}" class="btn btn-primary btn-lg slide-up">
+        <i class="bi bi-folder-plus me-2"></i>
+        Criar Primeira Pasta
+    </a>
+</div>
+{% endmacro %}
+
+{# Empty Workflows #}
+{% macro empty_workflows() %}
+<div class="empty-state text-center py-5 fade-in">
+    <div class="empty-state-icon mb-4">
+        <i class="bi bi-diagram-3 text-info" style="font-size: 6rem; opacity: 0.3;"></i>
+    </div>
+    <h3 class="empty-state-title mb-3">Nenhum workflow configurado</h3>
+    <p class="empty-state-message text-muted mb-4">
+        Configure workflows de aprovação para automatizar seus processos.
+    </p>
+    <a href="{{ url_for('workflows.create_workflow') }}" class="btn btn-primary btn-lg slide-up">
+        <i class="bi bi-plus-circle me-2"></i>
+        Criar Workflow
+    </a>
+</div>
+{% endmacro %}
+
+{# Empty Approvals #}
+{% macro empty_approvals() %}
+<div class="empty-state text-center py-5 fade-in">
+    <div class="empty-state-icon mb-4">
+        <i class="bi bi-check2-circle text-success" style="font-size: 6rem; opacity: 0.3;"></i>
+    </div>
+    <h3 class="empty-state-title mb-3">Nenhuma aprovação pendente</h3>
+    <p class="empty-state-message text-muted mb-4">
+        Você está em dia! Não há documentos aguardando sua aprovação no momento.
+    </p>
+    <a href="{{ url_for('documents.list_documents') }}" class="btn btn-outline-primary">
+        <i class="bi bi-file-earmark me-2"></i>
+        Ver Documentos
+    </a>
+</div>
+{% endmacro %}
+
+{# Empty Trash #}
+{% macro empty_trash() %}
+<div class="empty-state text-center py-5 fade-in">
+    <div class="empty-state-icon mb-4">
+        <i class="bi bi-trash text-muted" style="font-size: 6rem; opacity: 0.3;"></i>
+    </div>
+    <h3 class="empty-state-title mb-3">Lixeira vazia</h3>
+    <p class="empty-state-message text-muted mb-4">
+        Não há documentos na lixeira. Itens excluídos aparecerão aqui.
+    </p>
+    <a href="{{ url_for('documents.list_documents') }}" class="btn btn-outline-primary">
+        <i class="bi bi-arrow-left me-2"></i>
+        Voltar aos Documentos
+    </a>
+</div>
+{% endmacro %}
+
+{# Empty Notifications #}
+{% macro empty_notifications() %}
+<div class="empty-state text-center py-4 fade-in">
+    <div class="empty-state-icon-small mb-3">
+        <i class="bi bi-bell-slash"></i>
+    </div>
+    <h5 class="empty-state-title mb-2">Sem notificações</h5>
+    <p class="empty-state-message text-muted small mb-0">
+        Você está atualizado!
+    </p>
+</div>
+{% endmacro %}
+
+{# Error State #}
+{% macro error_state(title='Algo deu errado', message='', retry_text='', retry_action='') %}
+<div class="empty-state text-center py-5 fade-in">
+    <div class="empty-state-icon mb-4">
+        <i class="bi bi-exclamation-triangle text-danger" style="font-size: 6rem; opacity: 0.3;"></i>
+    </div>
+    <h3 class="empty-state-title mb-3">{{ title }}</h3>
+    {% if message %}
+    <p class="empty-state-message text-muted mb-4">{{ message }}</p>
+    {% endif %}
+    <div class="d-flex gap-2 justify-content-center">
+        {% if retry_action %}
+        <button onclick="{{ retry_action }}" class="btn btn-primary">
+            <i class="bi bi-arrow-clockwise me-2"></i>
+            {{ retry_text or 'Tentar Novamente' }}
+        </button>
+        {% endif %}
+        <a href="{{ url_for('documents.list_documents') }}" class="btn btn-outline-secondary">
+            <i class="bi bi-house me-2"></i>Ir para Início
+        </a>
+    </div>
+</div>
+{% endmacro %}
+
+{# No Permission State #}
+{% macro no_permission() %}
+<div class="empty-state text-center py-5 fade-in">
+    <div class="empty-state-icon mb-4">
+        <i class="bi bi-shield-lock text-warning" style="font-size: 6rem; opacity: 0.3;"></i>
+    </div>
+    <h3 class="empty-state-title mb-3">Acesso Negado</h3>
+    <p class="empty-state-message text-muted mb-4">
+        Você não tem permissão para acessar este recurso.<br>
+        Entre em contato com o administrador se acha que isso é um erro.
+    </p>
+    <a href="{{ url_for('documents.list_documents') }}" class="btn btn-outline-primary">
+        <i class="bi bi-arrow-left me-2"></i>
+        Voltar
+    </a>
+</div>
+{% endmacro %}
+
+{# Loading State (combines with loading component) #}
+{% macro loading_state(message='Carregando dados...') %}
+<div class="empty-state text-center py-5">
+    <div class="mb-4">
+        <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+            <span class="visually-hidden">Carregando...</span>
+        </div>
+    </div>
+    <p class="text-muted">{{ message }}</p>
+</div>
+{% endmacro %}

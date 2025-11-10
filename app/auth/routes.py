@@ -20,7 +20,7 @@ def login():
     """
     # Redirect if already logged in
     if current_user.is_authenticated:
-        return redirect(url_for('document.list_documents'))
+        return redirect(url_for('documents.list_documents'))
     
     form = LoginForm()
     
@@ -45,7 +45,7 @@ def login():
             next_page = request.args.get('next')
             if next_page:
                 return redirect(next_page)
-            return redirect(url_for('document.list_documents'))
+            return redirect(url_for('documents.list_documents'))
         else:
             flash(message, 'danger')
     
@@ -67,7 +67,7 @@ def logout():
     # Perform logout
     success, message = auth_service.logout(user_id)
     
-    flash('Você saiu do sistema com sucesso.', 'info')
+    # flash('Você saiu do sistema com sucesso.', 'info')
     return redirect(url_for('auth.login'))
 
 
@@ -78,6 +78,7 @@ def register():
 
 
 @auth_bp.route('/reset-password', methods=['GET', 'POST'])
+@auth_bp.route('/reset-password-request', methods=['GET', 'POST'])
 def reset_password_request():
     """
     Password reset request page
@@ -85,7 +86,7 @@ def reset_password_request():
     """
     # Redirect if already logged in
     if current_user.is_authenticated:
-        return redirect(url_for('document.list_documents'))
+        return redirect(url_for('documents.list_documents'))
     
     form = PasswordResetRequestForm()
     
@@ -121,7 +122,7 @@ def reset_password(token):
     """
     # Redirect if already logged in
     if current_user.is_authenticated:
-        return redirect(url_for('document.list_documents'))
+        return redirect(url_for('documents.list_documents'))
     
     auth_service = AuthService()
     

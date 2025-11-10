@@ -5,15 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>{% block title %}Sistema GED{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}Sistema de Gerenciamento Eletrônico de Documentos - Organize, gerencie e controle seus documentos com eficiência{% endblock %}">
     
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    
+    <!-- Preconnect to CDNs for better performance -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="preconnect" href="https://code.jquery.com" crossorigin>
+    
+    <!-- Compiled CSS - Includes Bootstrap 5, FontAwesome, Layout, and Components -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}?v=1.0.0">
     
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}?v=1.0.0">
+    <!-- UI overrides: focus outlines, accessibility helpers -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/ui_overrides.css') }}?v=1.0.0">
+    <!-- Animations & Transitions -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}?v=1.0.0">
     
     {% block extra_css %}{% endblock %}
 </head>
@@ -29,9 +41,8 @@
             
             <!-- Brand with Logo -->
             <a class="navbar-brand d-flex align-items-center" href="{{ url_for('documents.list_documents') }}">
-                <img src="{{ url_for('static', filename='assets/images/logo-inverse.png') }}" 
+                <img src="{{ url_for('static', filename='assets/images/python.png') }}" 
                      alt="Sistema GED" height="30" class="d-none d-md-inline me-2">
-                <span class="fw-bold">Sistema GED</span>
             </a>
             
             <!-- Mobile Toggle -->
@@ -123,8 +134,8 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {% if request.endpoint == 'documents.upload_document' %}active{% endif %}" 
-                       href="{{ url_for('documents.upload_document') }}">
+                    <a class="nav-link {% if request.endpoint == 'documents.upload' %}active{% endif %}" 
+                       href="{{ url_for('documents.upload') }}">
                         <i class="bi bi-cloud-upload me-2"></i> Upload de Documentos
                     </a>
                 </li>
@@ -189,8 +200,8 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {% if request.endpoint == 'admin.list_users' %}active{% endif %}" 
-                       href="{{ url_for('admin.list_users') }}">
+                    <a class="nav-link {% if request.endpoint in ['admin.users', 'admin.list_users'] %}active{% endif %}" 
+                       href="{{ url_for('admin.users') }}">
                         <i class="bi bi-people me-2"></i> Usuários
                     </a>
                 </li>
@@ -213,6 +224,16 @@
     
     <!-- Sidebar Overlay (for mobile) -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    
+    <!-- Global Loading Overlay -->
+    <div class="loading-overlay fade-in" id="globalLoadingOverlay" style="display: none;">
+        <div class="loading-overlay-content">
+            <div class="spinner-border text-light mb-3" role="status" style="width: 3rem; height: 3rem;">
+                <span class="visually-hidden">Carregando...</span>
+            </div>
+            <p class="text-light loading-message">Carregando...</p>
+        </div>
+    </div>
     {% endif %}
 
     <!-- Main Content Wrapper -->
@@ -229,12 +250,12 @@
         {% endblock %}
         {% endif %}
         
-        <!-- Flash Messages -->
-        <div id="flash-messages-container">
+        <!-- Flash Messages (a11y: announce changes) -->
+            <div id="flash-messages-container" aria-live="polite" aria-atomic="true">
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                     {% for category, message in messages %}
-                        <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                        <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show fade-in-down" role="alert">
                             {% if category == 'success' %}
                                 <i class="bi bi-check-circle me-2"></i>
                             {% elif category == 'error' or category == 'danger' %}
@@ -281,7 +302,11 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <!-- Main JavaScript -->
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}?v=1.0.0"></script>
+    <!-- UI helpers: disable submit buttons on send, focus flash messages -->
+    <script src="{{ url_for('static', filename='js/ui_helpers.js') }}?v=1.0.0"></script>
+    <!-- Animations & Loading States -->
+    <script src="{{ url_for('static', filename='js/animations.js') }}?v=1.0.0"></script>
     
     <!-- Sidebar Toggle Script -->
     {% if current_user and current_user.is_authenticated %}

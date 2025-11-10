@@ -21,7 +21,7 @@
                 </div>
                 <div class="error-actions">
                     {% if current_user.is_authenticated %}
-                    <a href="{{ url_for('document.list_documents') }}" class="btn btn-primary btn-lg me-2">
+                    <a href="{{ url_for('documents.list_documents') }}" class="btn btn-primary btn-lg me-2">
                         <i class="fas fa-home"></i> Voltar ao Início
                     </a>
                     <a href="{{ url_for('admin.dashboard') if current_user.perfil.nome == 'Administrador' else '#' }}" class="btn btn-outline-secondary btn-lg">

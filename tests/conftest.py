@@ -7,6 +7,7 @@ import tempfile
 from app import create_app, db
 from app.models.user import User, Perfil
 from app.models.document import Documento, Categoria
+from types import SimpleNamespace
 from werkzeug.security import generate_password_hash
 
 
@@ -69,7 +70,6 @@ def test_user(db_session):
     user.set_password('TestPassword123!')
     db_session.session.add(user)
     db_session.session.commit()
-    
     return user
 
 
@@ -103,7 +103,6 @@ def admin_user(db_session):
     user.set_password('AdminPassword123!')
     db_session.session.add(user)
     db_session.session.commit()
-    
     return user
 
 
@@ -117,8 +116,10 @@ def test_category(db_session):
     )
     db_session.session.add(categoria)
     db_session.session.commit()
-    
-    return categoria
+    # Return a lightweight object with only the attributes tests need (primarily .id)
+    # This avoids DetachedInstanceError in concurrent tests where ORM instances
+    # might be detached from their session when accessed in worker threads.
+    return SimpleNamespace(id=categoria.id)
 
 
 @pytest.fixture(scope='function')

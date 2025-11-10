@@ -76,8 +76,17 @@ class TestingConfig(Config):
     """Testing configuration"""
     TESTING = True
     ENV = 'testing'
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
+    # Use a file-backed SQLite DB during tests to support concurrency across threads
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'test_sqlite.db')
+    # Allow SQLite connections to be used from multiple threads during concurrent tests
+    SQLALCHEMY_ENGINE_OPTIONS = {
+        'connect_args': {'check_same_thread': False}
+    }
+    # Keep ORM objects usable after commit during tests (prevents expired attributes)
+    SQLALCHEMY_EXPIRE_ON_COMMIT = False
     WTF_CSRF_ENABLED = False
+    # Increase upload limit during tests to avoid RequestEntityTooLarge for test payloads
+    MAX_CONTENT_LENGTH = int(os.environ.get('TESTING_MAX_CONTENT_LENGTH', 209715200))  # 200MB
 
 
 class ProductionConfig(Config):

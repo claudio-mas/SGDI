@@ -24,7 +24,7 @@
                         {% endif %}
                     {% endwith %}
                     
-                    <form method="POST" action="{{ url_for('auth.login') }}">
+                    <form method="POST" action="{{ url_for('auth.login') }}" data-disable-on-submit="true">
                         {{ form.hidden_tag() }}
                         
                         <div class="mb-3">

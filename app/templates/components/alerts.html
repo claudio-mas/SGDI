@@ -1,7 +1,7 @@
 {# Alert/Notification Component #}
 
 {% macro alert(message, category='info', dismissible=true, icon=true) %}
-<div class="alert alert-{{ category }} {% if dismissible %}alert-dismissible{% endif %} fade show" role="alert">
+<div class="alert alert-{{ category }} {% if dismissible %}alert-dismissible{% endif %} fade show" role="alert" tabindex="-1">
     {% if icon %}
         {% if category == 'success' %}
             <i class="bi bi-check-circle-fill me-2"></i>

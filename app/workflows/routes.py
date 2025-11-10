@@ -287,6 +287,40 @@ def approve_document(id):
     return redirect(url_for('workflows.view_approval', id=id))
 
 
+# Backwards-compatible alias: allow POST to '/<id>/approve' in addition to '/approval/<id>/approve'
+try:
+    workflow_bp.add_url_rule('/<int:id>/approve', endpoint='approve_document_short', view_func=approve_document, methods=['POST'])
+except Exception:
+    pass
+
+
+@workflow_bp.route('/submit', methods=['POST'])
+@login_required
+def submit_for_approval():
+    """Endpoint to submit a document for a workflow (used by UI/tests)"""
+    try:
+        documento_id = request.form.get('documento_id', type=int)
+        workflow_id = request.form.get('workflow_id', type=int)
+
+        if not documento_id or not workflow_id:
+            return jsonify({'success': False, 'message': 'Missing parameters'}), 400
+
+        workflow_service = WorkflowService()
+        aprovacao = workflow_service.submit_for_approval(
+            documento_id=documento_id,
+            workflow_id=workflow_id,
+            submetido_por=current_user.id
+        )
+
+        return jsonify({'success': True, 'aprovacao_id': aprovacao.id})
+    except WorkflowNotFoundError:
+        return jsonify({'success': False, 'message': 'Workflow not found'}), 404
+    except WorkflowServiceError as e:
+        return jsonify({'success': False, 'message': str(e)}), 400
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+
 @workflow_bp.route('/approval/<int:id>/reject', methods=['POST'])
 @login_required
 def reject_document(id):

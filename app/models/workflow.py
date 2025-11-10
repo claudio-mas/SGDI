@@ -16,7 +16,7 @@ class Workflow(db.Model):
     configuracao_json = db.Column(db.Text, nullable=False)  # JSON with workflow stages and approvers
     ativo = db.Column(db.Boolean, default=True, nullable=False)
     data_criacao = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
-    criado_por = db.Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=False)
+    criado_por = db.Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=True)
     
     # Relationships
     criador = db.relationship('User', backref='workflows_criados')
@@ -55,6 +55,12 @@ class AprovacaoDocumento(db.Model):
     
     def __repr__(self):
         return f'<AprovacaoDocumento doc:{self.documento_id} status:{self.status}>'
+
+    def __init__(self, *args, **kwargs):
+        # Support legacy/test keyword 'usuario_solicitante_id' mapping to 'submetido_por'
+        if 'usuario_solicitante_id' in kwargs and 'submetido_por' not in kwargs:
+            kwargs['submetido_por'] = kwargs.pop('usuario_solicitante_id')
+        super().__init__(*args, **kwargs)
 
 
 class HistoricoAprovacao(db.Model):

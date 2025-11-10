@@ -118,7 +118,7 @@ class NotificationService:
                 expiration_text = expiration_date.strftime('%d/%m/%Y')
             
             # Generate document URL
-            document_url = url_for('document.view', id=documento.id, _external=True)
+            document_url = url_for('documents.view', id=documento.id, _external=True)
             
             # Prepare template context
             context = {
@@ -183,7 +183,7 @@ class NotificationService:
             upload_date = documento.data_upload.strftime('%d/%m/%Y %H:%M')
             
             # Generate document URL
-            document_url = url_for('document.view', id=documento.id, _external=True)
+            document_url = url_for('documents.view', id=documento.id, _external=True)
             
             # Prepare template context
             context = {
@@ -320,7 +320,7 @@ class NotificationService:
                 return False
             
             # Generate document URL
-            document_url = url_for('document.view', id=documento.id, _external=True)
+            document_url = url_for('documents.view', id=documento.id, _external=True)
             
             # Prepare template context
             context = {
@@ -384,7 +384,7 @@ class NotificationService:
                 return False
             
             # Generate document URL
-            document_url = url_for('document.view', id=documento.id, _external=True)
+            document_url = url_for('documents.view', id=documento.id, _external=True)
             
             # Prepare template context
             context = {

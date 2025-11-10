@@ -19,7 +19,7 @@ def admin_required(f):
         # Check if user has admin or auditor profile
         if not current_user.perfil or current_user.perfil.nome not in ['Administrator', 'Auditor']:
             flash('Privilégios de administrador ou auditor são necessários.', 'danger')
-            return redirect(url_for('document.list_documents'))
+            return redirect(url_for('documents.list_documents'))
         return f(*args, **kwargs)
     return decorated_function
 
@@ -87,6 +87,16 @@ def users():
         perfil_filter=perfil_filter,
         status_filter=status_filter
     )
+
+
+# Backwards-compatible endpoint name: some templates or legacy code may use
+# 'admin.list_users' — register an alias so both names work until all refs
+# are normalized.
+try:
+    admin_bp.add_url_rule('/users', endpoint='list_users', view_func=users)
+except Exception:
+    # If rule already exists during import in tests, ignore
+    pass
 
 
 @admin_bp.route('/users/create', methods=['GET', 'POST'])

@@ -4,8 +4,16 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
+    /* Empty State Customization */
+    .empty-state {
+        min-height: 60vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    
     .document-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -81,10 +89,10 @@
 {% block content %}
 <div class="container-fluid py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1><i class="fas fa-folder-open me-2"></i>Documentos</h1>
+        <h1><i class="bi bi-folder-open me-2"></i>Documentos</h1>
         <div class="d-flex gap-2">
             <a href="{{ url_for('documents.upload') }}" class="btn btn-primary">
-                <i class="fas fa-upload me-2"></i>Enviar Documento
+                <i class="bi bi-cloud-upload me-2"></i>Enviar Documento
             </a>
         </div>
     </div>
@@ -93,19 +101,19 @@
     <div class="filter-pills">
         <a href="{{ url_for('documents.list_documents', filter='all') }}" 
            class="filter-pill {% if filter_type == 'all' %}active{% endif %}">
-            <i class="fas fa-list me-1"></i>Todos
+            <i class="bi bi-list me-1"></i>Todos
         </a>
         <a href="{{ url_for('documents.list_documents', filter='my') }}" 
            class="filter-pill {% if filter_type == 'my' %}active{% endif %}">
-            <i class="fas fa-user me-1"></i>Meus Documentos
+            <i class="bi bi-person me-1"></i>Meus Documentos
         </a>
         <a href="{{ url_for('documents.list_documents', filter='recent') }}" 
            class="filter-pill {% if filter_type == 'recent' %}active{% endif %}">
-            <i class="fas fa-clock me-1"></i>Recentes
+            <i class="bi bi-clock me-1"></i>Recentes
         </a>
         <a href="{{ url_for('documents.list_documents', filter='trash') }}" 
            class="filter-pill {% if filter_type == 'trash' %}active{% endif %}">
-            <i class="fas fa-trash me-1"></i>Lixeira
+            <i class="bi bi-trash me-1"></i>Lixeira
         </a>
     </div>
 
@@ -130,10 +138,10 @@
                 <div class="col-md-3">
                     <div class="d-flex gap-2">
                         <button type="submit" class="btn btn-primary flex-grow-1">
-                            <i class="fas fa-search me-1"></i>Buscar
+                            <i class="bi bi-search me-1"></i>Buscar
                         </button>
                         <a href="{{ url_for('documents.list_documents', filter=filter_type) }}" class="btn btn-secondary">
-                            <i class="fas fa-times"></i>
+                            <i class="bi bi-x"></i>
                         </a>
                     </div>
                 </div>
@@ -145,17 +153,17 @@
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div class="bulk-actions" id="bulkActions">
             <button class="btn btn-sm btn-danger" onclick="bulkDelete()">
-                <i class="fas fa-trash me-1"></i>Excluir Selecionados
+                <i class="bi bi-trash me-1"></i>Excluir Selecionados
             </button>
         </div>
         <div class="ms-auto view-toggle">
             <a href="{{ url_for('documents.list_documents', filter=filter_type, view='table', q=search_query, categoria_id=selected_categoria) }}" 
                class="btn btn-sm {% if view_mode == 'table' %}btn-primary{% else %}btn-outline-primary{% endif %}">
-                <i class="fas fa-list"></i>
+                <i class="bi bi-list"></i>
             </a>
             <a href="{{ url_for('documents.list_documents', filter=filter_type, view='grid', q=search_query, categoria_id=selected_categoria) }}" 
                class="btn btn-sm {% if view_mode == 'grid' %}btn-primary{% else %}btn-outline-primary{% endif %}">
-                <i class="fas fa-th"></i>
+                <i class="bi bi-grid"></i>
             </a>
         </div>
     </div>
@@ -188,7 +196,7 @@
                                     <input type="checkbox" class="doc-checkbox" value="{{ doc.id }}" onchange="updateBulkActions()">
                                 </td>
                                 <td>
-                                    <i class="fas {{ get_file_icon(doc.extensao) }} me-2"></i>
+                                    <i class="bi {{ get_file_icon(doc.extensao) }} me-2"></i>
                                     <a href="{{ url_for('documents.view_document', id=doc.id) }}">{{ doc.nome }}</a>
                                 </td>
                                 <td>
@@ -205,26 +213,26 @@
                                     <div class="btn-group btn-group-sm">
                                         <a href="{{ url_for('documents.view_document', id=doc.id) }}" 
                                            class="btn btn-outline-primary" title="Visualizar">
-                                            <i class="fas fa-eye"></i>
+                                            <i class="bi bi-eye"></i>
                                         </a>
                                         <a href="{{ url_for('documents.download_document', id=doc.id) }}" 
                                            class="btn btn-outline-success" title="Download">
-                                            <i class="fas fa-download"></i>
+                                            <i class="bi bi-download"></i>
                                         </a>
                                         {% if doc.usuario_id == current_user.id %}
                                         <a href="{{ url_for('documents.edit_document', id=doc.id) }}" 
                                            class="btn btn-outline-warning" title="Editar">
-                                            <i class="fas fa-edit"></i>
+                                            <i class="bi bi-pencil"></i>
                                         </a>
                                         {% if filter_type == 'trash' %}
                                         <button onclick="restoreDocument({{ doc.id }})" 
                                                 class="btn btn-outline-info" title="Restaurar">
-                                            <i class="fas fa-undo"></i>
+                                            <i class="bi bi-arrow-counterclockwise"></i>
                                         </button>
                                         {% else %}
                                         <button onclick="deleteDocument({{ doc.id }})" 
                                                 class="btn btn-outline-danger" title="Excluir">
-                                            <i class="fas fa-trash"></i>
+                                            <i class="bi bi-trash"></i>
                                         </button>
                                         {% endif %}
                                         {% endif %}
@@ -241,9 +249,9 @@
         <!-- Grid View -->
         <div class="document-grid">
             {% for doc in documentos %}
-            <div class="document-card" onclick="window.location.href='{{ url_for('documents.view_document', id=doc.id) }}'">
+            <div class="document-card fade-in-up" onclick="window.location.href='{{ url_for('documents.view_document', id=doc.id) }}'">
                 <div class="document-icon">
-                    <i class="fas {{ get_file_icon(doc.extensao) }}"></i>
+                    <i class="bi {{ get_file_icon(doc.extensao) }}"></i>
                 </div>
                 <div class="document-name" title="{{ doc.nome }}">{{ doc.nome }}</div>
                 <div class="document-meta">
@@ -284,16 +292,14 @@
         </nav>
         {% endif %}
     {% else %}
-        <div class="alert alert-info">
-            <i class="fas fa-info-circle me-2"></i>
-            {% if filter_type == 'trash' %}
-                Nenhum documento na lixeira.
-            {% elif search_query %}
-                Nenhum documento encontrado para "{{ search_query }}".
-            {% else %}
-                Nenhum documento encontrado. <a href="{{ url_for('documents.upload') }}">Envie seu primeiro documento</a>.
-            {% endif %}
-        </div>
+        {% from 'components/empty_states.html' import empty_documents, empty_search, empty_trash %}
+        {% if filter_type == 'trash' %}
+            {{ empty_trash() }}
+        {% elif search_query %}
+            {{ empty_search(search_query) }}
+        {% else %}
+            {{ empty_documents() }}
+        {% endif %}
     {% endif %}
 </div>
 

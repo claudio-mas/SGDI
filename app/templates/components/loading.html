@@ -1,7 +1,11 @@
-{# Loading Spinner Component #}
+{# ============================================
+   Loading Components - Sistema GED
+   Spinners, Skeletons, Overlays & Progress
+   ============================================ #}
 
+{# Basic Spinner #}
 {% macro spinner(size='', color='primary', text='') %}
-<div class="text-center">
+<div class="text-center ged-spinner">
     <div class="spinner-border text-{{ color }} {% if size %}spinner-border-{{ size }}{% endif %}" role="status">
         <span class="visually-hidden">Carregando...</span>
     </div>
@@ -11,17 +15,19 @@
 </div>
 {% endmacro %}
 
+{# Full Page Loading Overlay #}
 {% macro spinner_overlay(id='loadingOverlay', text='Carregando...') %}
-<div class="loading-overlay" id="{{ id }}" style="display: none;">
+<div class="loading-overlay fade-in" id="{{ id }}" style="display: none;">
     <div class="loading-overlay-content">
-        <div class="spinner-border text-light" role="status">
+        <div class="spinner-border text-light mb-3" role="status" style="width: 3rem; height: 3rem;">
             <span class="visually-hidden">Carregando...</span>
         </div>
-        <p class="text-light mt-3">{{ text }}</p>
+        <p class="text-light">{{ text }}</p>
     </div>
 </div>
 {% endmacro %}
 
+{# Button with Loading State #}
 {% macro button_spinner(text='Carregando...', color='primary', size='') %}
 <button class="btn btn-{{ color }} {% if size %}btn-{{ size }}{% endif %}" type="button" disabled>
     <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
@@ -29,13 +35,23 @@
 </button>
 {% endmacro %}
 
+{# Inline Spinner (for small areas) #}
+{% macro inline_spinner(text='', color='primary') %}
+<div class="d-flex align-items-center">
+    <div class="spinner-border spinner-border-sm text-{{ color }} me-2" role="status">
+        <span class="visually-hidden">Carregando...</span>
+    </div>
+    {% if text %}<span class="text-muted">{{ text }}</span>{% endif %}
+</div>
+{% endmacro %}
+
 {% macro skeleton_loader(type='text', count=3) %}
 {% if type == 'text' %}
     {% for i in range(count) %}
-    <div class="skeleton skeleton-text mb-2"></div>
+    <div class="skeleton skeleton-text mb-2 animate-pulse"></div>
     {% endfor %}
 {% elif type == 'card' %}
-    <div class="card">
+    <div class="card animate-pulse">
         <div class="skeleton skeleton-image"></div>
         <div class="card-body">
             <div class="skeleton skeleton-text mb-2"></div>
@@ -43,8 +59,20 @@
             <div class="skeleton skeleton-text" style="width: 60%;"></div>
         </div>
     </div>
+{% elif type == 'document-card' %}
+    <div class="card mb-3 animate-pulse">
+        <div class="card-body">
+            <div class="d-flex align-items-center">
+                <div class="skeleton skeleton-icon me-3"></div>
+                <div class="flex-grow-1">
+                    <div class="skeleton skeleton-text mb-2" style="width: 80%;"></div>
+                    <div class="skeleton skeleton-text" style="width: 40%;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% elif type == 'table' %}
-    <table class="table">
+    <table class="table animate-pulse">
         <thead>
             <tr>
                 {% for i in range(count) %}
@@ -62,5 +90,59 @@
             {% endfor %}
         </tbody>
     </table>
+{% elif type == 'list' %}
+    {% for i in range(count) %}
+    <div class="d-flex align-items-center mb-3 animate-pulse">
+        <div class="skeleton skeleton-avatar me-3"></div>
+        <div class="flex-grow-1">
+            <div class="skeleton skeleton-text mb-2" style="width: 70%;"></div>
+            <div class="skeleton skeleton-text" style="width: 40%;"></div>
+        </div>
+    </div>
+    {% endfor %}
+{% elif type == 'grid' %}
+    <div class="row">
+        {% for i in range(count) %}
+        <div class="col-md-4 col-lg-3 mb-3">
+            <div class="card animate-pulse">
+                <div class="skeleton skeleton-image"></div>
+                <div class="card-body">
+                    <div class="skeleton skeleton-text mb-2"></div>
+                    <div class="skeleton skeleton-text" style="width: 60%;"></div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
 {% endif %}
+{% endmacro %}
+
+{# Progress Bar with Animation #}
+{% macro progress_bar(value=0, max=100, label='', color='primary', animated=true) %}
+<div class="progress" style="height: 25px;">
+    <div class="progress-bar {% if animated %}progress-bar-striped progress-bar-animated{% endif %} bg-{{ color }}" 
+         role="progressbar" 
+         style="width: {{ (value / max * 100)|int }}%;" 
+         aria-valuenow="{{ value }}" 
+         aria-valuemin="0" 
+         aria-valuemax="{{ max }}">
+        {% if label %}{{ label }}{% else %}{{ (value / max * 100)|int }}%{% endif %}
+    </div>
+</div>
+{% endmacro %}
+
+{# Dots Loading Animation #}
+{% macro dots_loading(color='primary') %}
+<div class="dots-loading">
+    <span class="dot bg-{{ color }}"></span>
+    <span class="dot bg-{{ color }}"></span>
+    <span class="dot bg-{{ color }}"></span>
+</div>
+{% endmacro %}
+
+{# Pulse Animation #}
+{% macro pulse(color='primary', size='md') %}
+<div class="pulse-container">
+    <div class="pulse-dot pulse-{{ size }} bg-{{ color }}"></div>
+</div>
 {% endmacro %}

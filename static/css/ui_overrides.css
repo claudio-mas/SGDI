@@ -1,0 +1,29 @@
+/* UI overrides: focus outlines and small visual improvements for accessibility */
+:focus {
+  outline: 3px solid #0d6efd33; /* light blue focus ring */
+  outline-offset: 2px;
+}
+
+/* Ensure visible focus for interactive elements */
+button:focus, a:focus, input:focus, select:focus, textarea:focus {
+  box-shadow: 0 0 0 0.2rem rgba(13,110,253,0.25);
+}
+
+/* Button consistency tweaks */
+.btn-primary {
+  border-radius: 0.375rem;
+}
+
+/* Improve visibility of off-canvas sidebar overlay */
+.sidebar-overlay.show {
+  background-color: rgba(0,0,0,0.45);
+}
+
+/* Simple skeleton styles used by loading macros */
+.skeleton { background: linear-gradient(90deg,#ececec,#f5f5f5,#ececec); border-radius:4px; }
+.skeleton-text { height: 12px; width:100%; }
+.skeleton-image { height: 140px; background:#ddd; }
+
+/* Make alerts keyboard-focusable style */
+.alert[tabindex] { outline: none; }
+.alert[tabindex]:focus { box-shadow: 0 0 0 0.2rem rgba(13,110,253,0.25); }

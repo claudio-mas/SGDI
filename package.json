@@ -1,0 +1,22 @@
+{
+  "name": "ged-sistema",
+  "version": "1.0.0",
+  "description": "Sistema de Gerenciamento Eletrônico de Documentos",
+  "scripts": {
+    "build:css": "sass --load-path=node_modules static/assets/base.scss static/css/base.css --style compressed --no-source-map",
+    "watch:css": "sass --load-path=node_modules static/assets/base.scss static/css/base.css --watch --style compressed --no-source-map",
+    "dev": "sass --load-path=node_modules static/assets/base.scss static/css/base.css --watch"
+  },
+  "keywords": [
+    "ged",
+    "flask",
+    "documentos"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@fortawesome/fontawesome-free": "^7.1.0",
+    "animate-sass": "^0.8.2",
+    "sass": "^1.70.0"
+  }
+}

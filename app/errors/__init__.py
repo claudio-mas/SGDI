@@ -205,6 +205,21 @@ def register_error_handlers(app):
             return jsonify({'error': 'Erro interno do servidor'}), 500
         
         return render_template('errors/500.html'), 500
+
+    @app.errorhandler(413)
+    def request_entity_too_large(error):
+        """Handle 413 Request Entity Too Large errors (file uploads too large)"""
+        app.logger.warning(
+            f'413 Error: Payload too large | '
+            f'User: {current_user.id if current_user.is_authenticated else "anonymous"} | '
+            f'IP: {request.remote_addr} | '
+            f'Path: {request.path}'
+        )
+
+        if request.is_json or request.accept_mimetypes.accept_json:
+            return jsonify({'error': 'Arquivo muito grande'}), 413
+
+        return render_template('errors/429.html'), 413
     
     @app.errorhandler(GEDException)
     def handle_ged_exception(error):

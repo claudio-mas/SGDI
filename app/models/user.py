@@ -15,6 +15,17 @@ class Perfil(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(50), unique=True, nullable=False)
     descricao = db.Column(db.Text)
+    # Permission flags (added to support tests and role-based checks)
+    pode_criar_documentos = db.Column(db.Boolean, default=False, nullable=False)
+    pode_editar_proprios = db.Column(db.Boolean, default=False, nullable=False)
+    pode_excluir_proprios = db.Column(db.Boolean, default=False, nullable=False)
+    pode_visualizar_todos = db.Column(db.Boolean, default=False, nullable=False)
+    pode_editar_todos = db.Column(db.Boolean, default=False, nullable=False)
+    pode_excluir_todos = db.Column(db.Boolean, default=False, nullable=False)
+    pode_gerenciar_usuarios = db.Column(db.Boolean, default=False, nullable=False)
+    pode_gerenciar_categorias = db.Column(db.Boolean, default=False, nullable=False)
+    pode_gerenciar_workflows = db.Column(db.Boolean, default=False, nullable=False)
+    pode_visualizar_auditoria = db.Column(db.Boolean, default=False, nullable=False)
     
     # Relationships
     usuarios = db.relationship('User', backref='perfil', lazy='dynamic')
@@ -40,7 +51,15 @@ class User(UserMixin, db.Model):
     
     # Relationships
     documentos = db.relationship('Documento', backref='usuario', lazy='dynamic', foreign_keys='Documento.usuario_id')
-    permissoes = db.relationship('Permissao', backref='usuario', lazy='dynamic')
+    # There are two foreign keys on Permissao that reference usuarios.id
+    # (usuario_id and concedido_por). Specify foreign_keys here so SQLAlchemy
+    # knows which column to use for this relationship (the permission's owner).
+    permissoes = db.relationship(
+        'Permissao',
+        backref='usuario',
+        lazy='dynamic',
+        foreign_keys='Permissao.usuario_id'
+    )
     password_resets = db.relationship('PasswordReset', backref='usuario', lazy='dynamic')
     
     def set_password(self, password):
