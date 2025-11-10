@@ -49,6 +49,7 @@ uploads/
 storage/
 
 # IDE
+.kiro/
 .vscode/
 .idea/
 *.swp
