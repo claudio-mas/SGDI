@@ -20,10 +20,16 @@ class Config:
     DATABASE_PASSWORD = os.environ.get('DATABASE_PASSWORD', '')
     DATABASE_DRIVER = os.environ.get('DATABASE_DRIVER', 'ODBC Driver 17 for SQL Server')
     
+    # SQLALCHEMY_DATABASE_URI = (
+    #     f"mssql+pyodbc://{DATABASE_USER}:{DATABASE_PASSWORD}@{DATABASE_SERVER}/"
+    #     f"{DATABASE_NAME}?driver={DATABASE_DRIVER.replace(' ', '+')}"
+    # )
+
     SQLALCHEMY_DATABASE_URI = (
         f"mssql+pyodbc://{DATABASE_USER}:{DATABASE_PASSWORD}@{DATABASE_SERVER}/"
-        f"{DATABASE_NAME}?driver={DATABASE_DRIVER.replace(' ', '+')}"
+        f"{DATABASE_NAME}?driver={DATABASE_DRIVER.replace(' ', '+')}&Encrypt=yes&TrustServerCertificate=yes"
     )
+    
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ECHO = False
     SQLALCHEMY_POOL_SIZE = 10
