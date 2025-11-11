@@ -623,3 +623,40 @@ body.has-sidebar {
         background-color: #fff;
     }
 }
+
+/* ============================================
+   Card Half Height Utility
+   ============================================ */
+.card-half {
+    /* responsive card heights for dashboard-like cards (increased 20%) */
+    height: 264px; /* 220px * 1.2 */
+    display: flex;
+    flex-direction: column;
+}
+
+.card-half .card-body {
+    /* allow body content to scroll if it overflows */
+    overflow: auto;
+    flex: 1 1 auto;
+    padding-bottom: 0.5rem;
+}
+
+.card-half .card-footer {
+    /* keep footer aligned to the bottom */
+    margin-top: auto;
+}
+
+/* Larger screens: increase card height for more content space */
+@media (min-width: 992px) {
+    .card-half { height: 312px; } /* 260px * 1.2 */
+}
+
+@media (min-width: 1200px) {
+    .card-half { height: 384px; } /* 320px * 1.2 */
+}
+
+/* Small screens: let card height be auto so content flows naturally */
+@media (max-width: 767.98px) {
+    .card-half { height: auto; }
+    .card-half .card-body { overflow: visible; }
+}
