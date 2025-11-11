@@ -41,7 +41,7 @@ class CategoryService:
             Created Categoria instance
         """
         # Create category
-        categoria = Categoria(
+        categoria = self.category_repo.create(
             nome=data['nome'],
             descricao=data.get('descricao'),
             categoria_pai_id=data.get('categoria_pai_id') or None,
@@ -51,15 +51,13 @@ class CategoryService:
             ativo=True
         )
         
-        categoria = self.category_repo.create(categoria)
-        
         # Log action
         self.audit_service.log_action(
-            user_id=user_id,
-            action='create_category',
-            table='categorias',
-            record_id=categoria.id,
-            data={'nome': categoria.nome}
+            usuario_id=user_id,
+            acao='create_category',
+            tabela='categorias',
+            registro_id=categoria.id,
+            dados={'nome': categoria.nome}
         )
         
         current_app.logger.info(f"Category created: {categoria.nome} by user {user_id}")
@@ -106,11 +104,11 @@ class CategoryService:
         
         # Log action
         self.audit_service.log_action(
-            user_id=user_id,
-            action='update_category',
-            table='categorias',
-            record_id=categoria.id,
-            data={'old': old_data, 'new': {'nome': categoria.nome, 'categoria_pai_id': categoria.categoria_pai_id}}
+            usuario_id=user_id,
+            acao='update_category',
+            tabela='categorias',
+            registro_id=categoria.id,
+            dados={'old': old_data, 'new': {'nome': categoria.nome, 'categoria_pai_id': categoria.categoria_pai_id}}
         )
         
         current_app.logger.info(f"Category updated: {categoria.nome} by user {user_id}")
@@ -142,11 +140,11 @@ class CategoryService:
         
         # Log action
         self.audit_service.log_action(
-            user_id=user_id,
-            action='delete_category',
-            table='categorias',
-            record_id=categoria.id,
-            data={'nome': categoria.nome}
+            usuario_id=user_id,
+            acao='delete_category',
+            tabela='categorias',
+            registro_id=categoria.id,
+            dados={'nome': categoria.nome}
         )
         
         current_app.logger.info(f"Category deleted: {categoria.nome} by user {user_id}")
@@ -222,7 +220,7 @@ class FolderService:
                 raise ValueError('Você não tem permissão para criar subpastas nesta pasta')
         
         # Create folder
-        pasta = Pasta(
+        pasta = self.folder_repo.create(
             nome=data['nome'],
             descricao=data.get('descricao'),
             pasta_pai_id=pasta_pai_id,
@@ -231,15 +229,13 @@ class FolderService:
             ordem=data.get('ordem', 0)
         )
         
-        pasta = self.folder_repo.create(pasta)
-        
         # Log action
         self.audit_service.log_action(
-            user_id=usuario_id,
-            action='create_folder',
-            table='pastas',
-            record_id=pasta.id,
-            data={'nome': pasta.nome}
+            usuario_id=usuario_id,
+            acao='create_folder',
+            tabela='pastas',
+            registro_id=pasta.id,
+            dados={'nome': pasta.nome}
         )
         
         current_app.logger.info(f"Folder created: {pasta.nome} by user {usuario_id}")
@@ -296,11 +292,11 @@ class FolderService:
         
         # Log action
         self.audit_service.log_action(
-            user_id=usuario_id,
-            action='update_folder',
-            table='pastas',
-            record_id=pasta.id,
-            data={'old': old_data, 'new': {'nome': pasta.nome, 'pasta_pai_id': pasta.pasta_pai_id}}
+            usuario_id=usuario_id,
+            acao='update_folder',
+            tabela='pastas',
+            registro_id=pasta.id,
+            dados={'old': old_data, 'new': {'nome': pasta.nome, 'pasta_pai_id': pasta.pasta_pai_id}}
         )
         
         current_app.logger.info(f"Folder updated: {pasta.nome} by user {usuario_id}")
@@ -335,19 +331,22 @@ class FolderService:
         if subfolders:
             raise ValueError(f'Não é possível excluir pasta com {len(subfolders)} subpasta(s)')
         
+        # Store folder name for logging (before deletion)
+        pasta_nome = pasta.nome
+        
         # Delete folder
-        self.folder_repo.delete(pasta)
+        self.folder_repo.delete(pasta_id)
         
         # Log action
         self.audit_service.log_action(
-            user_id=usuario_id,
-            action='delete_folder',
-            table='pastas',
-            record_id=pasta_id,
-            data={'nome': pasta.nome}
+            usuario_id=usuario_id,
+            acao='delete_folder',
+            tabela='pastas',
+            registro_id=pasta_id,
+            dados={'nome': pasta_nome}
         )
         
-        current_app.logger.info(f"Folder deleted: {pasta.nome} by user {usuario_id}")
+        current_app.logger.info(f"Folder deleted: {pasta_nome} by user {usuario_id}")
         return True
     
     def get_folder_breadcrumb(self, pasta_id: int) -> List[Pasta]:

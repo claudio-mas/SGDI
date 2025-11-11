@@ -93,7 +93,7 @@ class FolderForm(FlaskForm):
     nome = StringField(
         'Nome da Pasta',
         validators=[DataRequired('Nome é obrigatório'), Length(max=100)],
-        render_kw={'placeholder': 'Ex: Projetos 2024, Documentos Pessoais...'}
+        render_kw={'placeholder': 'Ex: Projetos 2025, Documentos Pessoais...'}
     )
     descricao = TextAreaField(
         'Descrição',
