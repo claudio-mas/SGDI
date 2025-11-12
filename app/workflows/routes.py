@@ -51,12 +51,20 @@ def create_workflow():
     form = WorkflowForm()
     
     # Get all active users for approver selection
-    users = User.query.filter_by(ativo=True).order_by(User.nome).all()
+    users_query = User.query.filter_by(ativo=True).order_by(User.nome).all()
+    # Convert users to JSON-serializable format
+    users = [
+        {'id': u.id, 'nome': u.nome, 'email': u.email}
+        for u in users_query
+    ]
     
     if form.validate_on_submit():
         try:
             # Parse stages from JSON
-            stages_data = json.loads(form.stages_json.data) if form.stages_json.data else []
+            stages_data = (
+                json.loads(form.stages_json.data)
+                if form.stages_json.data else []
+            )
             
             if not stages_data:
                 flash('Adicione pelo menos um estágio ao workflow', 'warning')
@@ -122,12 +130,20 @@ def edit_workflow(id):
     form = WorkflowForm(workflow_id=id, obj=workflow)
     
     # Get all active users for approver selection
-    users = User.query.filter_by(ativo=True).order_by(User.nome).all()
+    users_query = User.query.filter_by(ativo=True).order_by(User.nome).all()
+    # Convert users to JSON-serializable format
+    users = [
+        {'id': u.id, 'nome': u.nome, 'email': u.email}
+        for u in users_query
+    ]
     
     if form.validate_on_submit():
         try:
             # Parse stages from JSON
-            stages_data = json.loads(form.stages_json.data) if form.stages_json.data else []
+            stages_data = (
+                json.loads(form.stages_json.data)
+                if form.stages_json.data else []
+            )
             
             if not stages_data:
                 flash('Adicione pelo menos um estágio ao workflow', 'warning')
@@ -153,7 +169,10 @@ def edit_workflow(id):
                 ativo=form.ativo.data
             )
             
-            flash(f'Workflow "{form.nome.data}" atualizado com sucesso!', 'success')
+            flash(
+                f'Workflow "{form.nome.data}" atualizado com sucesso!',
+                'success'
+            )
             return redirect(url_for('workflows.list_workflows'))
             
         except WorkflowServiceError as e:
@@ -163,7 +182,8 @@ def edit_workflow(id):
     
     # Pre-populate stages JSON for editing
     if request.method == 'GET':
-        form.stages_json.data = json.dumps(workflow.configuracao.get('stages', []))
+        stages = workflow.configuracao.get('stages', [])
+        form.stages_json.data = json.dumps(stages)
     
     return render_template(
         'workflows/form.html',
