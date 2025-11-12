@@ -86,7 +86,7 @@ MAIL_DEFAULT_SENDER=noreply@example.com
 
 ### Email Templates
 - Responsive HTML design
-- Consistent branding with Sistema SGDI colors
+- Consistent branding with SGDI colors
 - Support for both HTML and plain text fallback
 - Dynamic content rendering with Jinja2
 

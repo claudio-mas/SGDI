@@ -1,6 +1,6 @@
 # Database Setup Guide
 
-This guide explains how to initialize and seed the Sistema SGDI database.
+This guide explains how to initialize and seed the SGDI database.
 
 ## Prerequisites
 

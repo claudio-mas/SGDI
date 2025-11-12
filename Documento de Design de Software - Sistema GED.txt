@@ -37,7 +37,7 @@ O documento est� organizado em:
 
 2. ARQUITETURA DO SISTEMA
 2.1 Vis�o Arquitetural
-O Sistema SGDI segue uma arquitetura em camadas (Layered Architecture) com padr�o MVC (Model-View- Controller) adaptado para Flask, combinada com princ�pios de Clean Architecture para garantir separa��o de responsabilidades e testabilidade.
+O SGDI segue uma arquitetura em camadas (Layered Architecture) com padr�o MVC (Model-View- Controller) adaptado para Flask, combinada com princ�pios de Clean Architecture para garantir separa��o de responsabilidades e testabilidade.
 
 
 ???????????????????????????????????????????????????????????????

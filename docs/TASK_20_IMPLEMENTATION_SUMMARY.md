@@ -1,7 +1,7 @@
 # Task 20 Implementation Summary
 
 ## Overview
-Successfully implemented backup and maintenance features for Sistema SGDI, including automated scripts for database backups, file storage backups, and system cleanup operations.
+Successfully implemented backup and maintenance features for SGDI, including automated scripts for database backups, file storage backups, and system cleanup operations.
 
 ## Completed Subtasks
 

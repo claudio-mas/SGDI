@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>{% block title %}Sistema SGDI{% endblock %}</title>
+    <title>{% block title %}SGDI{% endblock %}</title>
     <meta name="description" content="{% block meta_description %}Sistema de Gerenciamento Eletrônico de Documentos - Organize, gerencie e controle seus documentos com eficiência{% endblock %}">
     
     <!-- Favicon -->
@@ -43,12 +43,12 @@
             <a class="navbar-brand d-flex align-items-center" href="{{ url_for('documents.list_documents') }}">
                 {% if system_logo %}
                     <img src="{{ url_for('admin.uploaded_file', filename=system_logo) }}" 
-                         alt="Sistema SGDI" height="30" class="d-none d-md-inline me-2">
+                         alt="SGDI" height="30" class="d-none d-md-inline me-2">
                 {% else %}
                     <img src="{{ url_for('static', filename='assets/images/python.png') }}" 
-                         alt="Sistema SGDI" height="30" class="d-none d-md-inline me-2">
+                         alt="SGDI" height="30" class="d-none d-md-inline me-2">
                 {% endif %}
-                <span class="d-none d-md-inline">Sistema SGDI</span>
+                <span class="d-none d-md-inline">SGDI</span>
             </a>
             
             <!-- Mobile Toggle -->
@@ -168,17 +168,20 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('documents.list_documents') }}?filter=my_documents">
+                    <a class="nav-link {% if request.args.get('filter') == 'my' %}active{% endif %}" 
+                       href="{{ url_for('documents.list_documents') }}?filter=my">
                         <i class="bi bi-file-earmark-person me-2"></i> Meus Documentos
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('documents.list_documents') }}?filter=recent">
+                    <a class="nav-link {% if request.args.get('filter') == 'recent' %}active{% endif %}" 
+                       href="{{ url_for('documents.list_documents') }}?filter=recent">
                         <i class="bi bi-clock-history me-2"></i> Recentes
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('documents.list_documents') }}?filter=favorites">
+                    <a class="nav-link {% if request.args.get('filter') == 'favorites' %}active{% endif %}" 
+                       href="{{ url_for('documents.list_documents') }}?filter=favorites">
                         <i class="bi bi-star me-2"></i> Favoritos
                     </a>
                 </li>
@@ -297,7 +300,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-6 text-center text-md-start">
-                    <span class="text-muted">&copy; 2024 Sistema SGDI. Todos os direitos reservados.</span>
+                    <span class="text-muted">&copy; 2025 SGDI. Todos os direitos reservados.</span>
                 </div>
                 <div class="col-md-6 text-center text-md-end">
                     <span class="text-muted">Versão 1.0.0</span>

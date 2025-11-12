@@ -1,6 +1,6 @@
 # Database Migrations
 
-This directory contains Alembic database migrations for Sistema SGDI.
+This directory contains Alembic database migrations for SGDI.
 
 ## Setup
 

@@ -1,5 +1,5 @@
 """
-Database initialization script for Sistema SGDI
+Database initialization script for SGDI
 Creates all tables, indexes, constraints, and optionally seeds initial data
 
 This script:
@@ -212,7 +212,7 @@ def init_database(seed=True):
         bool: True if initialization successful, False otherwise
     """
     print("=" * 60)
-    print("Sistema SGDI - Database Initialization")
+    print("SGDI - Database Initialization")
     print("=" * 60)
     
     app = create_app(os.getenv('FLASK_ENV', 'development'))

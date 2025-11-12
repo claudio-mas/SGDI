@@ -1,8 +1,8 @@
-# Logging and Error Handling - Sistema SGDI
+# Logging and Error Handling - SGDI
 
 ## Overview
 
-This document describes the logging and error handling implementation for Sistema SGDI, covering application logging, error handlers, and custom exceptions.
+This document describes the logging and error handling implementation for SGDI, covering application logging, error handlers, and custom exceptions.
 
 ## Application Logging
 

@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}{{ documento.nome }} - Sistema SGDI{% endblock %}
+{% block title %}{{ documento.nome }} - SGDI{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -105,6 +105,12 @@
                 </p>
             </div>
             <div>
+                <button onclick="toggleFavorite({{ documento.id }}, this)" 
+                        class="btn btn-light btn-lg me-2 favorite-btn" 
+                        data-document-id="{{ documento.id }}"
+                        title="Favoritar">
+                    <i class="bi bi-star"></i>
+                </button>
                 <a href="{{ url_for('documents.download_document', id=documento.id) }}" class="btn btn-light btn-lg me-2">
                     <i class="bi bi-download me-2"></i>Download
                 </a>
@@ -387,6 +393,68 @@
         </div>
     </div>
 </div>
+
+<!-- Share Modal -->
+<div class="modal fade" id="shareModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-share me-2"></i>Compartilhar Documento</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="shareForm">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Selecione o Usuário</label>
+                        <select name="usuario_id" class="form-select" required id="userSelect">
+                            <option value="">Selecione um usuário...</option>
+                            <!-- Users will be loaded via JavaScript -->
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Permissões</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="permissions" value="leitura" id="permLeitura" checked>
+                            <label class="form-check-label" for="permLeitura">
+                                <i class="bi bi-eye me-1"></i>Leitura
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="permissions" value="edicao" id="permEdicao">
+                            <label class="form-check-label" for="permEdicao">
+                                <i class="bi bi-pencil me-1"></i>Edição
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="permissions" value="exclusao" id="permExclusao">
+                            <label class="form-check-label" for="permExclusao">
+                                <i class="bi bi-trash me-1"></i>Exclusão
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="permissions" value="compartilhar" id="permCompartilhar">
+                            <label class="form-check-label" for="permCompartilhar">
+                                <i class="bi bi-share me-1"></i>Compartilhar
+                            </label>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Data de Expiração (opcional)</label>
+                        <input type="date" name="data_expiracao" class="form-control" id="expirationDate">
+                        <small class="form-text text-muted">Deixe em branco para acesso permanente</small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-share me-1"></i>Compartilhar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block extra_js %}
@@ -461,6 +529,171 @@ function revokePermission(permissionId) {
             console.error(error);
         });
     }
+}
+
+function toggleFavorite(documentId, buttonElement) {
+    const icon = buttonElement.querySelector('i');
+    const wasFavorited = icon.classList.contains('bi-star-fill');
+    
+    fetch(`/documents/${documentId}/favorite`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token() }}'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            if (data.favorited) {
+                icon.classList.remove('bi-star');
+                icon.classList.add('bi-star-fill');
+                buttonElement.classList.add('text-warning');
+                buttonElement.title = 'Remover dos favoritos';
+            } else {
+                icon.classList.remove('bi-star-fill');
+                icon.classList.add('bi-star');
+                buttonElement.classList.remove('text-warning');
+                buttonElement.title = 'Favoritar';
+            }
+        } else {
+            alert('Erro ao processar favorito: ' + data.message);
+        }
+    })
+    .catch(error => {
+        alert('Erro ao processar favorito');
+        console.error(error);
+    });
+}
+
+// Load favorite status on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const favButton = document.querySelector('.favorite-btn');
+    if (favButton) {
+        const documentId = favButton.dataset.documentId;
+        fetch(`/documents/${documentId}/is-favorite`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.favorited) {
+                    const icon = favButton.querySelector('i');
+                    icon.classList.remove('bi-star');
+                    icon.classList.add('bi-star-fill');
+                    favButton.classList.add('text-warning');
+                    favButton.title = 'Remover dos favoritos';
+                }
+            })
+            .catch(error => console.error('Error checking favorite status:', error));
+    }
+
+    // Load users for sharing when modal opens
+    const shareModal = document.getElementById('shareModal');
+    if (shareModal) {
+        shareModal.addEventListener('show.bs.modal', function () {
+            loadUsersForSharing();
+        });
+    }
+
+    // Handle share form submission
+    const shareForm = document.getElementById('shareForm');
+    if (shareForm) {
+        shareForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            submitShareForm();
+        });
+    }
+});
+
+function loadUsersForSharing() {
+    const userSelect = document.getElementById('userSelect');
+    
+    // Show loading state
+    userSelect.innerHTML = '<option value="">Carregando usuários...</option>';
+    
+    fetch('/admin/users/list')
+        .then(response => response.json())
+        .then(data => {
+            userSelect.innerHTML = '<option value="">Selecione um usuário...</option>';
+            
+            if (data.users && data.users.length > 0) {
+                data.users.forEach(user => {
+                    // Don't show current user or already shared users
+                    const option = document.createElement('option');
+                    option.value = user.id;
+                    option.textContent = `${user.nome} (${user.email})`;
+                    userSelect.appendChild(option);
+                });
+            } else {
+                userSelect.innerHTML = '<option value="">Nenhum usuário disponível</option>';
+            }
+        })
+        .catch(error => {
+            console.error('Error loading users:', error);
+            userSelect.innerHTML = '<option value="">Erro ao carregar usuários</option>';
+        });
+}
+
+function submitShareForm() {
+    const form = document.getElementById('shareForm');
+    const formData = new FormData(form);
+    
+    // Get selected permissions
+    const permissions = [];
+    document.querySelectorAll('input[name="permissions"]:checked').forEach(checkbox => {
+        permissions.push(checkbox.value);
+    });
+    
+    if (permissions.length === 0) {
+        alert('Selecione pelo menos uma permissão');
+        return;
+    }
+    
+    const data = {
+        usuario_id: formData.get('usuario_id'),
+        tipo_permissao: permissions.join(','),
+        data_expiracao: formData.get('data_expiracao') || null
+    };
+    
+    if (!data.usuario_id) {
+        alert('Selecione um usuário');
+        return;
+    }
+    
+    // Convert FormData to URLSearchParams for form-encoded submission
+    const params = new URLSearchParams();
+    params.append('usuario_id', data.usuario_id);
+    params.append('tipo_permissao', data.tipo_permissao);
+    if (data.data_expiracao) {
+        params.append('data_expiracao', data.data_expiracao);
+    }
+    
+    fetch(`/documents/{{ documento.id }}/share`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': '{{ csrf_token() }}'
+        },
+        body: params
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Close modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('shareModal'));
+            modal.hide();
+            
+            // Show success message
+            alert('Documento compartilhado com sucesso!');
+            
+            // Reload page to show new permission
+            window.location.reload();
+        } else {
+            alert('Erro ao compartilhar documento: ' + (data.message || 'Erro desconhecido'));
+        }
+    })
+    .catch(error => {
+        console.error('Error sharing document:', error);
+        alert('Erro ao compartilhar documento');
+    });
 }
 </script>
 {% endblock %}

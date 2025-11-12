@@ -1,3 +1,3 @@
 """
-Test package for Sistema SGDI
+Test package for SGDI
 """

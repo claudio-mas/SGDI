@@ -2,7 +2,7 @@
 
 ## Overview
 
-Task 21 has been successfully completed. All deployment configuration files and comprehensive documentation have been created to support production deployment of Sistema SGDI on both Linux and Windows platforms.
+Task 21 has been successfully completed. All deployment configuration files and comprehensive documentation have been created to support production deployment of SGDI on both Linux and Windows platforms.
 
 ## Completed Sub-tasks
 
@@ -223,7 +223,7 @@ This implementation satisfies the following requirements from the design documen
 ## Files Structure
 
 ```
-Sistema SGDI/
+SGDI/
 ├── wsgi.py                                    # WSGI entry point
 ├── gunicorn_config.py                         # Gunicorn configuration
 └── deployment/
@@ -300,4 +300,4 @@ Task 21 is fully complete with comprehensive deployment configuration and docume
 - **Performance** optimization
 - **Backup** and maintenance procedures
 
-The Sistema SGDI application is now ready for production deployment on both Linux and Windows platforms with full documentation support.
+The SGDI application is now ready for production deployment on both Linux and Windows platforms with full documentation support.

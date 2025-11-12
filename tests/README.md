@@ -1,4 +1,4 @@
-# Sistema SGDI Test Suite
+# SGDI Test Suite
 
 ## Quick Start
 

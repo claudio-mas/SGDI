@@ -1,5 +1,5 @@
 """
-Security Testing for Sistema SGDI
+Security Testing for SGDI
 Tests authentication, authorization, CSRF, rate limiting, SQL injection, and XSS protection
 """
 import pytest

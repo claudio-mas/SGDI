@@ -1,5 +1,5 @@
 """
-Performance Testing for Sistema SGDI
+Performance Testing for SGDI
 Tests load handling, file upload performance, search performance, and page load times
 """
 import pytest

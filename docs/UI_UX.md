@@ -1,4 +1,4 @@
-# UI/UX - Sistema SGDI
+# UI/UX - SGDI
 
 ## Arquivos SCSS
 

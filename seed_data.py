@@ -1,5 +1,5 @@
 """
-Seed data script for Sistema SGDI
+Seed data script for SGDI
 Creates default profiles, categories, and admin user
 
 Requirements:
@@ -297,7 +297,7 @@ def main():
     4. Verification of seeded data
     """
     print("=" * 60)
-    print("Sistema SGDI - Database Seed Script")
+    print("SGDI - Database Seed Script")
     print("=" * 60)
     
     app = create_app(os.getenv('FLASK_ENV', 'development'))

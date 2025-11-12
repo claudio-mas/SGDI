@@ -1,6 +1,6 @@
-# Sistema SGDI - Deployment Guide
+# SGDI - Deployment Guide
 
-This guide provides step-by-step instructions for deploying Sistema SGDI in a production environment.
+This guide provides step-by-step instructions for deploying SGDI in a production environment.
 
 ## Table of Contents
 

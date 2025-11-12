@@ -117,7 +117,7 @@ class TrashCleanup:
 def main():
     """Main cleanup execution"""
     print("=" * 60)
-    print("Sistema SGDI - Trash Cleanup")
+    print("SGDI - Trash Cleanup")
     print("=" * 60)
     print(f"Started at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
     

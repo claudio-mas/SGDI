@@ -1,8 +1,8 @@
-# Testing Guide - Sistema SGDI
+# Testing Guide - SGDI
 
 ## Overview
 
-This document describes the testing strategy and procedures for Sistema SGDI. The test suite includes end-to-end integration tests, security tests, and performance tests to ensure the system meets all requirements.
+This document describes the testing strategy and procedures for SGDI. The test suite includes end-to-end integration tests, security tests, and performance tests to ensure the system meets all requirements.
 
 ## Test Structure
 

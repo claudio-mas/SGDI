@@ -1,7 +1,7 @@
 # Task 17: Security Middleware Implementation Summary
 
 ## Overview
-Implemented comprehensive security middleware for the Sistema SGDI application, including authentication decorators, permission checking, security headers, CSRF protection, and rate limiting.
+Implemented comprehensive security middleware for the SGDI application, including authentication decorators, permission checking, security headers, CSRF protection, and rate limiting.
 
 ## Implementation Details
 
@@ -410,7 +410,7 @@ To use the security middleware in existing routes:
 
 ## Conclusion
 
-Task 17 has been successfully completed. The Sistema SGDI application now has comprehensive security middleware including:
+Task 17 has been successfully completed. The SGDI application now has comprehensive security middleware including:
 - Robust authentication with session management
 - Fine-grained permission checking (role-based and resource-level)
 - Security headers to prevent common web attacks

@@ -1,6 +1,6 @@
 /**
  * ============================================
- * Sistema SGDI - Animations JavaScript
+ * SGDI - Animations JavaScript
  * Helpers for dynamic animations and loading states
  * ============================================
  */

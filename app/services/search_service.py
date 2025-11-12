@@ -344,10 +344,11 @@ class SearchService:
             ).distinct()
         
         elif filter_type == 'favorites':
-            # This would require a favorites table (not in current schema)
-            # For now, return empty results
-            # TODO: Implement favorites functionality when table is added
-            query = query.filter(Documento.id == -1)  # No results
+            # Favorite documents of current user
+            from app.models.document import Favorito
+            query = query.join(Favorito).filter(
+                Favorito.usuario_id == user_id
+            ).distinct()
         
         elif filter_type == 'pending_approval':
             # Documents pending approval (requires workflow integration)

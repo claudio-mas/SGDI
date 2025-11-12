@@ -174,7 +174,7 @@ class AuditLogCleanup:
 def main():
     """Main cleanup execution"""
     print("=" * 60)
-    print("Sistema SGDI - Audit Log Cleanup")
+    print("SGDI - Audit Log Cleanup")
     print("=" * 60)
     print(f"Started at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
     

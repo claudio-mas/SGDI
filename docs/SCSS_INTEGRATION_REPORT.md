@@ -266,7 +266,7 @@ Para mais informações, consulte:
 
 ## ✨ Conclusão
 
-A integração SCSS → CSS foi **concluída com sucesso**. O Sistema SGDI agora possui:
+A integração SCSS → CSS foi **concluída com sucesso**. O SGDI agora possui:
 
 ✅ **480.7 KB** de CSS otimizado  
 ✅ **Bootstrap 5** completo integrado  

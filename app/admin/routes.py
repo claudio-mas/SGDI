@@ -102,6 +102,29 @@ except Exception:
     pass
 
 
+@admin_bp.route('/users/list', methods=['GET'])
+@login_required
+def users_list_json():
+    """API endpoint to get users list in JSON format"""
+    from app.repositories.user_repository import UserRepository
+
+    user_repo = UserRepository()
+
+    # Get all active users except current user
+    all_users = user_repo.get_all()
+    users_list = [
+        {
+            'id': u.id,
+            'nome': u.nome,
+            'email': u.email
+        }
+        for u in all_users
+        if u.ativo and u.id != current_user.id
+    ]
+
+    return jsonify({'users': users_list})
+
+
 @admin_bp.route('/users/create', methods=['GET', 'POST'])
 @admin_required
 def user_create():

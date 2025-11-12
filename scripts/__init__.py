@@ -1,5 +1,5 @@
 """
-Sistema SGDI - Maintenance and Backup Scripts
+SGDI - Maintenance and Backup Scripts
 
 This package contains automated scripts for:
 - Database backups

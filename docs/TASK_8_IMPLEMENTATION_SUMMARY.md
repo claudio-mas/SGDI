@@ -1,7 +1,7 @@
 # Task 8 Implementation Summary: Permission and Sharing System
 
 ## Overview
-Successfully implemented a comprehensive permission and sharing system for the Sistema SGDI, including access control, permission management, and document sharing functionality.
+Successfully implemented a comprehensive permission and sharing system for the SGDI, including access control, permission management, and document sharing functionality.
 
 ## Completed Subtasks
 

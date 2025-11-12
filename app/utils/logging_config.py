@@ -1,5 +1,5 @@
 """
-Logging configuration for Sistema SGDI
+Logging configuration for SGDI
 Implements rotating file handlers with different log levels for environments
 """
 import logging
@@ -72,7 +72,7 @@ def setup_logging(app):
     
     # Log startup message
     app.logger.info('=' * 80)
-    app.logger.info(f'Sistema SGDI Application Started - Environment: {app.config.get("ENV", "unknown")}')
+    app.logger.info(f'SGDI Application Started - Environment: {app.config.get("ENV", "unknown")}')
     app.logger.info(f'Debug Mode: {app.config.get("DEBUG", False)}')
     app.logger.info(f'Log Level: {logging.getLevelName(log_level)}')
     app.logger.info('=' * 80)

@@ -1,5 +1,5 @@
 """
-Gunicorn configuration file for Sistema SGDI
+Gunicorn configuration file for SGDI
 """
 import multiprocessing
 import os
@@ -34,7 +34,7 @@ access_log_format = '%(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"
 # Process naming
 def on_starting(server):
     """Called just before the master process is initialized."""
-    print("Starting Gunicorn server for Sistema SGDI")
+    print("Starting Gunicorn server for SGDI")
 
 def on_reload(server):
     """Called to recycle workers during a reload via SIGHUP."""

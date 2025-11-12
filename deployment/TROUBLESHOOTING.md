@@ -1,6 +1,6 @@
-# Sistema SGDI - Troubleshooting Guide
+# SGDI - Troubleshooting Guide
 
-This guide provides solutions to common issues encountered during deployment and operation of Sistema SGDI.
+This guide provides solutions to common issues encountered during deployment and operation of SGDI.
 
 ## Table of Contents
 

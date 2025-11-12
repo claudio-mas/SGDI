@@ -23,6 +23,41 @@ class DocumentoTag(db.Model):
         return f'<DocumentoTag doc:{self.documento_id} tag:{self.tag_id}>'
 
 
+class Favorito(db.Model):
+    """Favorito model for user's favorite documents"""
+    __tablename__ = 'favoritos'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    usuario_id = db.Column(
+        db.Integer, 
+        db.ForeignKey('usuarios.id'), 
+        nullable=False, 
+        index=True
+    )
+    documento_id = db.Column(
+        db.Integer, 
+        db.ForeignKey('documentos.id'), 
+        nullable=False, 
+        index=True
+    )
+    data_favoritado = db.Column(
+        db.DateTime, 
+        default=datetime.utcnow, 
+        nullable=False
+    )
+    
+    __table_args__ = (
+        db.UniqueConstraint(
+            'usuario_id', 
+            'documento_id', 
+            name='uq_usuario_documento_favorito'
+        ),
+    )
+    
+    def __repr__(self):
+        return f'<Favorito user:{self.usuario_id} doc:{self.documento_id}>'
+
+
 class Categoria(db.Model):
     """Category model with hierarchical structure"""
     __tablename__ = 'categorias'
@@ -136,6 +171,11 @@ class Documento(db.Model):
     versoes = db.relationship('Versao', backref='documento', lazy='dynamic', cascade='all, delete-orphan')
     permissoes = db.relationship('Permissao', backref='documento', lazy='dynamic', cascade='all, delete-orphan')
     aprovacoes = db.relationship('AprovacaoDocumento', backref='documento', lazy='dynamic', cascade='all, delete-orphan')
+    favoritos = db.relationship('Favorito', backref='documento', lazy='dynamic', cascade='all, delete-orphan')
+    
+    def is_favorito_by(self, user_id):
+        """Check if document is favorited by user"""
+        return self.favoritos.filter_by(usuario_id=user_id).count() > 0
     
     @property
     def extensao(self):

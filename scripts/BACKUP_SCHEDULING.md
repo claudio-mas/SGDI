@@ -1,6 +1,6 @@
 # Backup Scheduling Guide
 
-This guide explains how to schedule automated backups for Sistema SGDI.
+This guide explains how to schedule automated backups for SGDI.
 
 ## Backup Scripts
 
@@ -80,7 +80,7 @@ crontab -e
 
 2. Create a new task:
    - **General Tab:**
-     - Name: "Sistema SGDI - Daily Database Backup"
+     - Name: "SGDI - Daily Database Backup"
      - Description: "Automated daily database backup"
      - Run whether user is logged on or not
      - Run with highest privileges

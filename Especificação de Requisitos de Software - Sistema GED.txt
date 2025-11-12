@@ -12,7 +12,7 @@ utilizando Flask como framework backend, SQL Server como banco de dados e Bootst
 frontend.
 
 1.2 Escopo do Produto
-O Sistema SGDI � uma aplica��o web corporativa que permite:
+O SGDI � uma aplica��o web corporativa que permite:
 
 & Digitaliza��o e armazenamento centralizado de documentos
 
@@ -66,7 +66,7 @@ Este documento est� organizado em tr�s se��es principais:
 
 2. DESCRI��O GERAL
 2.1 Perspectiva do Produto
-O Sistema SGDI � um produto independente que ser� integrado � infraestrutura corporativa existente. Ele substituir� processos manuais de arquivamento e consulta de documentos f�sicos.
+O SGDI � um produto independente que ser� integrado � infraestrutura corporativa existente. Ele substituir� processos manuais de arquivamento e consulta de documentos f�sicos.
 Interfaces do Sistema:
 
 & Interface de Usu�rio: Aplica��o web responsiva acess�vel via navegadores modernos

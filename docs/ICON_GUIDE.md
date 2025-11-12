@@ -1,4 +1,4 @@
-# Guia de Ícones - Sistema SGDI
+# Guia de Ícones - SGDI
 
 ## Padronização: Bootstrap Icons
 

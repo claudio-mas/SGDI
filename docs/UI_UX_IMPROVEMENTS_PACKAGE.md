@@ -1,4 +1,4 @@
-# 🎨 Pacote Visual UI/UX - Sistema SGDI
+# 🎨 Pacote Visual UI/UX - SGDI
 
 ## Implementação Completa - Issues #1, #2, #4, #11
 
@@ -9,7 +9,7 @@
 
 ## 📋 Resumo das Melhorias
 
-Este documento descreve as melhorias substanciais de UI/UX implementadas no Sistema SGDI, focando em **Loading States**, **Empty States**, **Padronização de Ícones** e **Micro-animações**.
+Este documento descreve as melhorias substanciais de UI/UX implementadas no SGDI, focando em **Loading States**, **Empty States**, **Padronização de Ícones** e **Micro-animações**.
 
 ---
 
@@ -413,4 +413,4 @@ GED.Toast.show('Sucesso!', 'success');
 
 **🎉 Implementação Completa!**
 
-Todas as melhorias do Pacote Visual foram implementadas com sucesso, trazendo uma experiência de usuário significativamente melhorada ao Sistema SGDI.
+Todas as melhorias do Pacote Visual foram implementadas com sucesso, trazendo uma experiência de usuário significativamente melhorada ao SGDI.

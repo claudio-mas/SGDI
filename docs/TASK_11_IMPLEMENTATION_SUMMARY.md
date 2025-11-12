@@ -1,7 +1,7 @@
 # Task 11 Implementation Summary: Authentication Controllers and Views
 
 ## Overview
-Successfully implemented complete authentication system with login/logout, password reset flow, and user profile management for Sistema SGDI.
+Successfully implemented complete authentication system with login/logout, password reset flow, and user profile management for SGDI.
 
 ## Implementation Date
 November 8, 2025

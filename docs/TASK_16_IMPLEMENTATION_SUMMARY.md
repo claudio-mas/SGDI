@@ -1,7 +1,7 @@
 # Task 16 Implementation Summary: Administration Dashboard
 
 ## Overview
-Successfully implemented a comprehensive administration dashboard for Sistema SGDI with user management, system settings, and reporting capabilities.
+Successfully implemented a comprehensive administration dashboard for SGDI with user management, system settings, and reporting capabilities.
 
 ## Completed Subtasks
 

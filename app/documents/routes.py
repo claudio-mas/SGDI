@@ -41,7 +41,7 @@ def _init_services():
 def list_documents():
     """List documents with filtering and pagination"""
     _init_services()
-    from app.models.document import Documento
+    from app.models.document import Documento, Favorito
     from app.models.permission import Permissao
     from datetime import datetime, timedelta
     from sqlalchemy import or_, and_
@@ -71,6 +71,12 @@ def list_documents():
             ),
             Documento.status == 'ativo',
             Documento.data_upload >= cutoff_date
+        ).distinct()
+    elif filter_type == 'favorites':
+        # Favorite documents of current user
+        documentos_query = Documento.query.join(Favorito).filter(
+            Favorito.usuario_id == current_user.id,
+            Documento.status == 'ativo'
         ).distinct()
     elif filter_type == 'trash':
         # Trash (deleted documents owned by user)
@@ -527,3 +533,73 @@ def edit_document(id):
     except Exception as e:
         flash(f'Erro ao carregar documento: {str(e)}', 'error')
         return redirect(url_for('documents.list_documents'))
+
+
+@document_bp.route('/<int:id>/favorite', methods=['POST'])
+@login_required
+def toggle_favorite(id):
+    """Toggle document favorite status"""
+    try:
+        from app.models.document import Documento, Favorito
+        
+        # Check if document exists and is accessible
+        documento = Documento.query.get_or_404(id)
+        
+        # Check if already favorited
+        favorito = Favorito.query.filter_by(
+            usuario_id=current_user.id,
+            documento_id=id
+        ).first()
+        
+        if favorito:
+            # Remove from favorites
+            db.session.delete(favorito)
+            db.session.commit()
+            return jsonify({
+                'success': True,
+                'favorited': False,
+                'message': 'Documento removido dos favoritos'
+            })
+        else:
+            # Add to favorites
+            novo_favorito = Favorito(
+                usuario_id=current_user.id,
+                documento_id=id
+            )
+            db.session.add(novo_favorito)
+            db.session.commit()
+            return jsonify({
+                'success': True,
+                'favorited': True,
+                'message': 'Documento adicionado aos favoritos'
+            })
+    
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({
+            'success': False,
+            'message': f'Erro ao processar favorito: {str(e)}'
+        }), 500
+
+
+@document_bp.route('/<int:id>/is-favorite', methods=['GET'])
+@login_required
+def is_favorite(id):
+    """Check if document is favorited by current user"""
+    try:
+        from app.models.document import Favorito
+        
+        favorito = Favorito.query.filter_by(
+            usuario_id=current_user.id,
+            documento_id=id
+        ).first()
+        
+        return jsonify({
+            'favorited': favorito is not None
+        })
+    
+    except Exception as e:
+        return jsonify({
+            'favorited': False,
+            'error': str(e)
+        }), 500

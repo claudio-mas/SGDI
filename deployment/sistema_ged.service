@@ -1,5 +1,5 @@
 [Unit]
-Description=Sistema SGDI - Electronic Document Management System
+Description=SGDI - Electronic Document Management System
 After=network.target
 
 [Service]

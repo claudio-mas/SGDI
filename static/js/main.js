@@ -1,5 +1,5 @@
 /**
- * Sistema SGDI - Main JavaScript
+ * SGDI - Main JavaScript
  * Common utilities and functionality
  */
 
@@ -455,7 +455,7 @@ const GED = {
 // Document Ready
 // ============================================
 $(document).ready(function() {
-    console.log('Sistema SGDI initialized');
+    console.log('SGDI initialized');
     
     // Initialize tooltips
     const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));

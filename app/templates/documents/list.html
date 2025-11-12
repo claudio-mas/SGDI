@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Documentos - Sistema SGDI{% endblock %}
+{% block title %}Documentos - SGDI{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
@@ -211,6 +211,12 @@
                                 <td>{{ doc.usuario.nome }}</td>
                                 <td>
                                     <div class="btn-group btn-group-sm">
+                                        <button onclick="toggleFavorite({{ doc.id }}, this)" 
+                                                class="btn btn-outline-warning favorite-btn" 
+                                                data-document-id="{{ doc.id }}"
+                                                title="Favoritar">
+                                            <i class="bi bi-star"></i>
+                                        </button>
                                         <a href="{{ url_for('documents.view_document', id=doc.id) }}" 
                                            class="btn btn-outline-primary" title="Visualizar">
                                             <i class="bi bi-eye"></i>
@@ -424,5 +430,65 @@ function bulkDelete() {
         });
     }
 }
+
+function toggleFavorite(documentId, buttonElement) {
+    event.stopPropagation(); // Prevent card click
+    
+    const icon = buttonElement.querySelector('i');
+    const wasFavorited = icon.classList.contains('bi-star-fill');
+    
+    fetch(`/documents/${documentId}/favorite`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token() }}'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            if (data.favorited) {
+                icon.classList.remove('bi-star');
+                icon.classList.add('bi-star-fill');
+                buttonElement.classList.remove('btn-outline-warning');
+                buttonElement.classList.add('btn-warning');
+                buttonElement.title = 'Remover dos favoritos';
+            } else {
+                icon.classList.remove('bi-star-fill');
+                icon.classList.add('bi-star');
+                buttonElement.classList.remove('btn-warning');
+                buttonElement.classList.add('btn-outline-warning');
+                buttonElement.title = 'Favoritar';
+            }
+        } else {
+            alert('Erro ao processar favorito: ' + data.message);
+        }
+    })
+    .catch(error => {
+        alert('Erro ao processar favorito');
+        console.error(error);
+    });
+}
+
+// Load favorite status for all documents on page
+document.addEventListener('DOMContentLoaded', function() {
+    const favButtons = document.querySelectorAll('.favorite-btn');
+    favButtons.forEach(button => {
+        const documentId = button.dataset.documentId;
+        fetch(`/documents/${documentId}/is-favorite`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.favorited) {
+                    const icon = button.querySelector('i');
+                    icon.classList.remove('bi-star');
+                    icon.classList.add('bi-star-fill');
+                    button.classList.remove('btn-outline-warning');
+                    button.classList.add('btn-warning');
+                    button.title = 'Remover dos favoritos';
+                }
+            })
+            .catch(error => console.error('Error checking favorite status:', error));
+    });
+});
 </script>
 {% endblock %}
