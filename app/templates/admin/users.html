@@ -91,21 +91,21 @@
                                     <td>
                                         <strong>{{ user.nome }}</strong>
                                         {% if user.bloqueado_ate and user.bloqueado_ate > now %}
-                                        <span class="badge badge-danger ml-1" title="Conta bloqueada">
+                                        <span class="badge bg-danger ms-1" title="Conta bloqueada">
                                             <i class="bi bi-lock-fill"></i>
                                         </span>
                                         {% endif %}
                                     </td>
                                     <td>{{ user.email }}</td>
                                     <td>
-                                        <span class="badge badge-info">
-                                            {{ user.perfil.nome if user.perfil else 'N/A' }}
+                                        <span class="badge bg-info text-dark">
+                                            <i class="bi bi-person-badge me-1"></i>{{ user.perfil.nome if user.perfil else 'N/A' }}
                                         </span>
                                     </td>
                                     <td>
-                                        <span class="badge badge-{{ 'success' if user.ativo else 'secondary' }}" 
+                                        <span class="badge bg-{{ 'success' if user.ativo else 'secondary' }}" 
                                               id="status-badge-{{ user.id }}">
-                                            {{ 'Ativo' if user.ativo else 'Inativo' }}
+                                            <i class="bi bi-{{ 'check-circle-fill' if user.ativo else 'x-circle-fill' }} me-1"></i>{{ 'Ativo' if user.ativo else 'Inativo' }}
                                         </span>
                                     </td>
                                     <td>
@@ -118,7 +118,10 @@
                                     <td>
                                         <div class="btn-group" role="group">
                                             <a href="{{ url_for('admin.user_edit', user_id=user.id) }}" 
-                                               class="btn btn-sm btn-info" title="Editar">
+                                               class="btn btn-sm btn-info" 
+                                               title="Editar usuário"
+                                               data-bs-toggle="tooltip"
+                                               data-bs-placement="top">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
                                             
@@ -127,18 +130,26 @@
                                                     data-user-id="{{ user.id }}"
                                                     data-user-name="{{ user.nome }}"
                                                     data-current-status="{{ 'active' if user.ativo else 'inactive' }}"
-                                                    title="{{ 'Desativar' if user.ativo else 'Ativar' }}"
+                                                    data-bs-toggle="tooltip"
+                                                    data-bs-placement="top"
+                                                    title="{{ 'Desativar usuário' if user.ativo else 'Ativar usuário' }}"
                                                     {% if user.id == current_user.id %}disabled{% endif %}>
-                                                <i class="bi {{ 'bi-ban' if user.ativo else 'bi-check-lg' }}"></i>
+                                                <i class="bi {{ 'bi-toggle-on' if user.ativo else 'bi-toggle-off' }}"></i>
                                             </button>
                                             
                                             <a href="{{ url_for('admin.user_reset_password', user_id=user.id) }}" 
-                                               class="btn btn-sm btn-secondary" title="Redefinir Senha">
+                                               class="btn btn-sm btn-secondary" 
+                                               title="Redefinir senha do usuário"
+                                               data-bs-toggle="tooltip"
+                                               data-bs-placement="top">
                                                 <i class="bi bi-key"></i>
                                             </a>
                                             
                                             <a href="{{ url_for('admin.audit_user_activity', usuario_id=user.id) }}" 
-                                               class="btn btn-sm btn-primary" title="Ver Atividade">
+                                               class="btn btn-sm btn-primary" 
+                                               title="Ver histórico de atividades"
+                                               data-bs-toggle="tooltip"
+                                               data-bs-placement="top">
                                                 <i class="bi bi-clock-history"></i>
                                             </a>
                                         </div>
@@ -164,17 +175,32 @@
 {% block scripts %}
 <script>
 $(document).ready(function() {
+    // Initialize Bootstrap tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+    
     // Initialize DataTables
     $('#usersTable').DataTable({
         "language": {
             "url": "//cdn.datatables.net/plug-ins/1.13.4/i18n/pt-BR.json"
         },
         "pageLength": 25,
-        "order": [[0, "desc"]]
+        "order": [[0, "desc"]],
+        "drawCallback": function() {
+            // Reinitialize tooltips after table redraw
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+                new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        }
     });
     
-    // Toggle user status
-    $('.toggle-status-btn').click(function() {
+    // Toggle user status - using event delegation for DataTables compatibility
+    $(document).on('click', '.toggle-status-btn', function(e) {
+        e.preventDefault();
+        
         const userId = $(this).data('user-id');
         const userName = $(this).data('user-name');
         const currentStatus = $(this).data('current-status');
@@ -194,21 +220,32 @@ $(document).ready(function() {
                 if (response.success) {
                     // Update badge
                     const badge = $(`#status-badge-${userId}`);
+                    const toggleBtn = $(`.toggle-status-btn[data-user-id="${userId}"]`);
+                    
                     if (response.ativo) {
-                        badge.removeClass('badge-secondary').addClass('badge-success').text('Ativo');
-                        $(`.toggle-status-btn[data-user-id="${userId}"]`)
+                        badge.removeClass('bg-secondary').addClass('bg-success')
+                            .html('<i class="bi bi-check-circle-fill me-1"></i>Ativo');
+                        toggleBtn
                             .removeClass('btn-success').addClass('btn-warning')
-                            .attr('title', 'Desativar')
+                            .attr('title', 'Desativar usuário')
                             .data('current-status', 'active')
-                            .html('<i class="bi bi-ban"></i>');
+                            .html('<i class="bi bi-toggle-on"></i>');
                     } else {
-                        badge.removeClass('badge-success').addClass('badge-secondary').text('Inativo');
-                        $(`.toggle-status-btn[data-user-id="${userId}"]`)
+                        badge.removeClass('bg-success').addClass('bg-secondary')
+                            .html('<i class="bi bi-x-circle-fill me-1"></i>Inativo');
+                        toggleBtn
                             .removeClass('btn-warning').addClass('btn-success')
-                            .attr('title', 'Ativar')
+                            .attr('title', 'Ativar usuário')
                             .data('current-status', 'inactive')
-                            .html('<i class="bi bi-check-lg"></i>');
+                            .html('<i class="bi bi-toggle-off"></i>');
                     }
+                    
+                    // Reinitialize tooltip
+                    var tooltip = bootstrap.Tooltip.getInstance(toggleBtn[0]);
+                    if (tooltip) {
+                        tooltip.dispose();
+                    }
+                    new bootstrap.Tooltip(toggleBtn[0]);
                     
                     // Show success message
                     showAlert('success', response.message);

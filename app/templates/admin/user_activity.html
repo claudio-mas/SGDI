@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+
+{% block title %}Histórico de Atividades - {{ user.nome }} - SGDI{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h1 class="h3 mb-0">
+                    <i class="bi bi-clock-history"></i> Histórico de Atividades
+                </h1>
+                <a href="{{ url_for('admin.users') }}" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Voltar
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Info Card -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <strong><i class="bi bi-person-fill me-2"></i>Usuário:</strong>
+                            <p class="mb-0">{{ user.nome }}</p>
+                        </div>
+                        <div class="col-md-3">
+                            <strong><i class="bi bi-envelope-fill me-2"></i>Email:</strong>
+                            <p class="mb-0">{{ user.email }}</p>
+                        </div>
+                        <div class="col-md-3">
+                            <strong><i class="bi bi-person-badge me-2"></i>Perfil:</strong>
+                            <p class="mb-0">{{ user.perfil.nome if user.perfil else 'N/A' }}</p>
+                        </div>
+                        <div class="col-md-3">
+                            <strong><i class="bi bi-activity me-2"></i>Total de Ações:</strong>
+                            <p class="mb-0">{{ total_actions }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Activity Table -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-list-ul me-2"></i>Registro de Atividades</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="activityTable">
+                            <thead>
+                                <tr>
+                                    <th>Data/Hora</th>
+                                    <th>Ação</th>
+                                    <th>Tabela</th>
+                                    <th>Registro ID</th>
+                                    <th>IP</th>
+                                    <th>Detalhes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for log in activity %}
+                                <tr>
+                                    <td>
+                                        <small>{{ log.data_hora.strftime('%d/%m/%Y %H:%M:%S') if log.data_hora else 'N/A' }}</small>
+                                    </td>
+                                    <td>
+                                        {% if log.acao == 'CREATE' %}
+                                            <span class="badge bg-success"><i class="bi bi-plus-circle me-1"></i>Criar</span>
+                                        {% elif log.acao == 'UPDATE' %}
+                                            <span class="badge bg-warning text-dark"><i class="bi bi-pencil me-1"></i>Atualizar</span>
+                                        {% elif log.acao == 'DELETE' %}
+                                            <span class="badge bg-danger"><i class="bi bi-trash me-1"></i>Excluir</span>
+                                        {% elif log.acao == 'LOGIN' %}
+                                            <span class="badge bg-primary"><i class="bi bi-box-arrow-in-right me-1"></i>Login</span>
+                                        {% elif log.acao == 'LOGOUT' %}
+                                            <span class="badge bg-secondary"><i class="bi bi-box-arrow-right me-1"></i>Logout</span>
+                                        {% elif log.acao == 'DOWNLOAD' %}
+                                            <span class="badge bg-info"><i class="bi bi-download me-1"></i>Download</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">{{ log.acao }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <code>{{ log.tabela or 'N/A' }}</code>
+                                    </td>
+                                    <td>
+                                        {{ log.registro_id or '-' }}
+                                    </td>
+                                    <td>
+                                        <small class="text-muted">{{ log.ip_address or 'N/A' }}</small>
+                                    </td>
+                                    <td>
+                                        {% if log.dados %}
+                                            <button class="btn btn-sm btn-outline-secondary" 
+                                                    type="button" 
+                                                    data-bs-toggle="collapse" 
+                                                    data-bs-target="#details-{{ log.id }}"
+                                                    title="Ver detalhes">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                        {% else %}
+                                            <span class="text-muted">-</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% if log.dados %}
+                                <tr class="collapse" id="details-{{ log.id }}">
+                                    <td colspan="6" class="bg-light">
+                                        <div class="p-3">
+                                            <strong>Detalhes:</strong>
+                                            <pre class="mb-0 mt-2"><code>{{ log.dados | tojson(indent=2) }}</code></pre>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endif %}
+                                {% else %}
+                                <tr>
+                                    <td colspan="6" class="text-center text-muted">
+                                        Nenhuma atividade registrada para este usuário
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+$(document).ready(function() {
+    // Initialize DataTables
+    $('#activityTable').DataTable({
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/1.13.4/i18n/pt-BR.json"
+        },
+        "pageLength": 50,
+        "order": [[0, "desc"]],
+        "columnDefs": [
+            { "orderable": false, "targets": 5 }
+        ]
+    });
+});
+</script>
+{% endblock %}

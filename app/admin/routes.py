@@ -704,28 +704,26 @@ def audit_document_trail(documento_id):
 @admin_required
 def audit_user_activity(usuario_id):
     """Get activity history for a specific user"""
+    from app.repositories.user_repository import UserRepository
+
     audit_service = AuditService()
-    
+    user_repo = UserRepository()
+
+    # Get user info
+    user = user_repo.get_by_id(usuario_id)
+    if not user:
+        flash('Usuário não encontrado', 'danger')
+        return redirect(url_for('admin.users'))
+
     limit = request.args.get('limit', 100, type=int)
     logs = audit_service.get_user_activity(usuario_id, limit=limit)
-    
-    logs_data = []
-    for log in logs:
-        logs_data.append({
-            'id': log.id,
-            'acao': log.acao,
-            'tabela': log.tabela,
-            'registro_id': log.registro_id,
-            'dados': log.dados,
-            'ip_address': log.ip_address,
-            'data_hora': log.data_hora.isoformat() if log.data_hora else None
-        })
-    
-    return jsonify({
-        'usuario_id': usuario_id,
-        'total_actions': len(logs_data),
-        'activity': logs_data
-    })
+
+    return render_template(
+        'admin/user_activity.html',
+        user=user,
+        activity=logs,
+        total_actions=len(logs)
+    )
 
 
 @admin_bp.route('/audit/recent')
